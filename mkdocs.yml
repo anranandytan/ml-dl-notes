@@ -1,0 +1,111 @@
+site_name: ML & DL Notes
+site_url: https://anranandytan.github.io/ml-dl-notes
+site_description: >
+  Step-by-step derivations in machine learning and probabilistic deep learning,
+  ordered by knowledge dependency.
+site_author: Anran (Andy) Tan
+
+repo_url: https://github.com/anranandytan/ml-dl-notes
+repo_name: anranandytan/ml-dl-notes
+edit_uri: ""   # hides the "edit on GitHub" pencil icon
+
+theme:
+  name: material
+  custom_dir: overrides          # for any future template tweaks
+  font: false                    # disable Google Fonts — we set fonts in CSS
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant          # SPA-style fast navigation
+    - navigation.top              # back-to-top button
+    - navigation.sections         # group nav items under section headers
+    - search.highlight            # highlight search terms in content
+    - content.code.copy           # copy button on code blocks
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  # MathJax config must come before the MathJax script
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search:
+      lang: en
+
+markdown_extensions:
+  # Math support
+  - pymdownx.arithmatex:
+      generic: true
+  # Code blocks
+  - pymdownx.highlight:
+      anchor_linenums: false
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  # Typography
+  - pymdownx.smartsymbols
+  - pymdownx.tilde
+  # Admonitions (> **Note.** blocks)
+  - admonition
+  - pymdownx.details
+  # Tables and checklists
+  - tables
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  # Misc
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: false           # no ¶ anchors cluttering headings
+      toc_depth: 3
+
+nav:
+  - Home: index.md
+  - "I. Foundations":
+    - "01 · Fundamentals":              01_Fundamentals.md
+    - "02 · Statistical Learning Theory": 02_LearningTheory.md
+  - "II. Regression & Linear Models":
+    - "03 · Regression":                03_Regression.md
+    - "04 · Bayesian Regression":       04_BayesianRegression.md
+    - "05 · Logistic Regression & SVM": 05_LinearMethods.md
+  - "III. Kernel Methods & GPs":
+    - "06 · Kernel Methods":            06_Kernels.md
+    - "07 · Gaussian Process":          07_GaussianProcess.md
+  - "IV. Tree Methods & Neural Nets":
+    - "08 · Decision Trees":            08_DecisionTrees.md
+    - "09 · Ensembles & Boosting":      09_Ensembles.md
+    - "10 · Neural Networks":           10_NeuralNetworks.md
+  - "V. Probabilistic Graphical Models":
+    - "11 · Gaussian Graphical Models": 11_GraphicalModels.md
+    - "12 · EM Algorithm":              12_EM.md
+    - "13 · Variational Inference":     13_VariationalInference.md
+    - "14 · MCMC":                      14_MCMC.md
+  - "VI. Sequential Models":
+    - "15 · Hidden Markov Model":       15_HMM.md
+    - "16 · Kalman Filter":             16_KalmanFilter.md
+    - "17 · Particle Filter":           17_ParticleFilter.md
+    - "18 · Conditional Random Field":  18_CRF.md
+  - "VII. Deep Generative Models":
+    - "19 · Generative Models":         19_GenerativeModels.md
+    - "20 · Restricted Boltzmann Machine": 20_RBM.md
+    - "21 · Variational Autoencoder":   21_VAE.md
+    - "22 · GAN":                       22_GAN.md
+    - "23 · Diffusion Models":          23_Diffusion.md
+  - "VIII. Unsupervised & Modern":
+    - "24 · Clustering":                24_Clustering.md
+    - "25 · Spectral Clustering":       25_SpectralClustering.md
+    - "26 · Transformers & RLHF":       26_Transformers.md
