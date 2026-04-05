@@ -1,0 +1,239 @@
+# EM Algorithm
+
+> **Keywords:** expectation-maximisation, latent variables, ELBO, marginal likelihood, Q-function, monotonic improvement, Gaussian mixture model
+
+---
+
+## 1. Motivation & Intuition
+
+Many probabilistic models involve **latent (unobserved) variables** $z$ alongside observed data $x$. Examples include:
+
+- **Gaussian Mixture Models (GMM):** $x$ is a data point; $z$ is the (unknown) cluster assignment.
+- **Hidden Markov Models (HMM):** $x$ is an observation sequence; $z$ is the (unknown) hidden state sequence.
+- **Factor Analysis / PCA:** $x$ is high-dimensional data; $z$ is a low-dimensional latent code.
+
+In all these cases, the **marginal likelihood** $p(x|\theta) = \int p(x,z|\theta)\,dz$ is what we want to maximise over $\theta$, but the integral is typically intractable — either because the space of $z$ is large (summing over exponentially many assignments) or because the integral has no closed form.
+
+**The EM idea.** Instead of directly maximising $\log p(x|\theta)$, alternate between two steps:
+
+1. **E-step:** Compute (or approximate) the posterior $p(z|x,\theta^{(t)})$ — infer what the latent variables probably are, given the current parameter estimate.
+2. **M-step:** Maximise the expected complete-data log-likelihood $\mathbb{E}_{z|x,\theta^{(t)}}[\log p(x,z|\theta)]$ over $\theta$ — pretend we know $z$ (in expectation) and fit the parameters.
+
+The guarantee: every EM iteration **never decreases** the marginal log-likelihood $\log p(x|\theta)$.
+
+The intuition is a coordinate ascent on the ELBO (see Section 4): the E-step ascends in $q$, the M-step ascends in $\theta$.
+
+---
+
+## 2. Historical Context
+
+| Year | Event |
+|------|-------|
+| 1950s | Individual special cases of EM (e.g., factor analysis updates, mixture model fitting) developed independently. |
+| 1977 | **Dempster, Laird & Rubin** unify all these special cases under the name "EM algorithm" in their landmark paper, prove the monotonic improvement guarantee, and give a general convergence theory. |
+| 1983 | Wu proves convergence of EM to a stationary point under regularity conditions. |
+| 1990s | EM becomes the standard algorithm for training HMMs (Baum-Welch algorithm is a special case), mixture models, and factor analysis. |
+| 2000s | **Variational EM** replaces the exact E-step with an approximate posterior $q(z)$, connecting EM to variational inference and VAEs. |
+
+---
+
+## 3. Setup
+
+Let the elements of the problem be:
+
+| Symbol | Meaning |
+|--------|---------|
+| $x$ | **Observed data** |
+| $z$ | **Latent variables** (unobserved) |
+| $(x, z)$ | **Complete data** (if $z$ were known, estimation would be easy) |
+| $\theta$ | **Parameters** to be estimated |
+
+Our goal is to find:
+$$\hat{\theta} = \arg\max_\theta\;\log p(x|\theta)$$
+
+The **complete-data log-likelihood** $\log p(x,z|\theta)$ is typically easy to maximise. The difficulty is that $z$ is unobserved, so we cannot use it directly.
+
+---
+
+## 4. The ELBO Decomposition
+
+The key identity underlying EM is a decomposition of the marginal log-likelihood $\log p(x|\theta)$.
+
+Introduce an **arbitrary distribution** $q(z)$ over the latent variables. Starting from:
+$$\log p(x|\theta) = \log p(x,z|\theta) - \log p(z|x,\theta)$$
+
+Multiply both sides by $q(z)$ and integrate over $z$:
+
+**Left-hand side:**
+$$\int q(z)\,\log p(x|\theta)\,dz = \log p(x|\theta)\int q(z)\,dz = \log p(x|\theta)$$
+
+since $\log p(x|\theta)$ does not depend on $z$ and $q(z)$ is a normalised density.
+
+**Right-hand side:** Add and subtract $\log q(z)$:
+$$\int q(z)\!\left[\log p(x,z|\theta) - \log p(z|x,\theta)\right]dz = \int q(z)\!\left[\log\frac{p(x,z|\theta)}{q(z)} - \log\frac{p(z|x,\theta)}{q(z)}\right]dz$$
+
+Define:
+$$\text{ELBO}(q,\theta) \;:=\; \int q(z)\log\frac{p(x,z|\theta)}{q(z)}\,dz \;=\; \mathbb{E}_{q}\!\left[\log p(x,z|\theta)\right] - \mathbb{E}_{q}\!\left[\log q(z)\right]$$
+
+$$D_{\text{KL}}(q(z)\|p(z|x,\theta)) \;:=\; \int q(z)\log\frac{q(z)}{p(z|x,\theta)}\,dz \;\geq\; 0 \quad\text{(always non-negative)}$$
+
+Note the sign in the second term:
+$$\int q(z)\log\frac{p(z|x,\theta)}{q(z)}\,dz = -D_{\text{KL}}(q(z)\|p(z|x,\theta))$$
+
+Therefore:
+
+$$\boxed{\log p(x|\theta) = \text{ELBO}(q,\theta) + D_{\text{KL}}(q(z)\|p(z|x,\theta))}$$
+
+Since $D_{\text{KL}} \geq 0$, the ELBO is always a **lower bound** on $\log p(x|\theta)$:
+$$\text{ELBO}(q,\theta) \leq \log p(x|\theta)$$
+
+The bound is **tight** (equality holds) if and only if $D_{\text{KL}} = 0$, i.e., $q(z) = p(z|x,\theta)$.
+
+---
+
+## 5. The EM Algorithm as Coordinate Ascent on the ELBO
+
+### 5.1 E-Step: Tighten the Bound
+
+Fix $\theta = \theta^{(t)}$ and choose $q$ to make the ELBO as tight as possible:
+
+$$q^*(z) = \arg\min_{q}\; D_{\text{KL}}(q(z)\|p(z|x,\theta^{(t)})) = p(z|x,\theta^{(t)})$$
+
+Setting $q(z) = p(z|x,\theta^{(t)})$ makes $D_{\text{KL}} = 0$, so:
+$$\text{ELBO}(q^*, \theta^{(t)}) = \log p(x|\theta^{(t)})$$
+
+The ELBO is now tight at the current $\theta^{(t)}$.
+
+The E-step computes (or approximates) the posterior $p(z|x,\theta^{(t)})$. With $q$ fixed at this posterior, the ELBO becomes:
+
+$$\text{ELBO}(q^*,\theta) = \int p(z|x,\theta^{(t)})\log\frac{p(x,z|\theta)}{p(z|x,\theta^{(t)})}\,dz$$
+
+$$= \underbrace{\int p(z|x,\theta^{(t)})\log p(x,z|\theta)\,dz}_{Q(\theta,\,\theta^{(t)})} - \underbrace{\int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t)})\,dz}_{\text{constant w.r.t. }\theta}$$
+
+Since the second term does not depend on $\theta$, maximising the ELBO over $\theta$ is equivalent to maximising $Q(\theta, \theta^{(t)})$.
+
+### 5.2 M-Step: Maximise the ELBO
+
+Fix $q = p(z|x,\theta^{(t)})$ and maximise the ELBO over $\theta$:
+
+$$\theta^{(t+1)} = \arg\max_\theta\;\text{ELBO}(q^*,\theta) = \arg\max_\theta\;Q(\theta,\theta^{(t)})$$
+
+where:
+
+$$\boxed{Q(\theta,\theta^{(t)}) = \mathbb{E}_{z|x,\theta^{(t)}}\!\left[\log p(x,z|\theta)\right] = \int p(z|x,\theta^{(t)})\,\log p(x,z|\theta)\,dz}$$
+
+This is the **expected complete-data log-likelihood**, i.e. the log-likelihood we would have if we could observe $z$, averaged over its posterior distribution given the current parameters. For many models (exponential families), this maximisation has a closed-form solution.
+
+### 5.3 The EM Update in Full
+
+$$\theta^{(t+1)} = \arg\max_\theta\;\mathbb{E}_{z|x,\theta^{(t)}}\!\left[\log p(x,z|\theta)\right]$$
+
+---
+
+## 6. Proof of Monotonic Improvement
+
+**Theorem.** The EM algorithm satisfies $\log p(x|\theta^{(t+1)}) \geq \log p(x|\theta^{(t)})$ for all $t$.
+
+**Proof.** Define:
+$$Q(\theta,\theta^{(t)}) = \int p(z|x,\theta^{(t)})\log p(x,z|\theta)\,dz$$
+$$H(\theta,\theta^{(t)}) = \int p(z|x,\theta^{(t)})\log p(z|x,\theta)\,dz$$
+
+From the identity $\log p(x|\theta) = \log p(x,z|\theta) - \log p(z|x,\theta)$, integrating both sides against $p(z|x,\theta^{(t)})$:
+
+$$\log p(x|\theta) = Q(\theta,\theta^{(t)}) - H(\theta,\theta^{(t)}) \quad \text{for all } \theta$$
+
+Evaluating the difference between $\theta^{(t+1)}$ and $\theta^{(t)}$:
+
+$$\log p(x|\theta^{(t+1)}) - \log p(x|\theta^{(t)}) = \underbrace{\big[Q(\theta^{(t+1)},\theta^{(t)}) - Q(\theta^{(t)},\theta^{(t)})\big]}_{\geq\, 0} - \underbrace{\big[H(\theta^{(t+1)},\theta^{(t)}) - H(\theta^{(t)},\theta^{(t)})\big]}_{\leq\, 0}$$
+
+**First term is $\geq 0$:** By the definition of the M-step, $\theta^{(t+1)}$ maximises $Q(\theta, \theta^{(t)})$, so $Q(\theta^{(t+1)},\theta^{(t)}) \geq Q(\theta^{(t)},\theta^{(t)})$.
+
+**Second term is $\leq 0$:** Compute $H(\theta^{(t+1)},\theta^{(t)}) - H(\theta^{(t)},\theta^{(t)})$:
+
+$$= \int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t+1)})\,dz - \int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t)})\,dz$$
+
+$$= \int p(z|x,\theta^{(t)})\log\frac{p(z|x,\theta^{(t+1)})}{p(z|x,\theta^{(t)})}\,dz = -D_{\text{KL}}\!\left(p(z|x,\theta^{(t)})\;\big\|\;p(z|x,\theta^{(t+1)})\right) \leq 0$$
+
+The inequality holds because KL divergence is always non-negative (by Jensen's inequality applied to the concave $\log$). Therefore:
+
+$$\log p(x|\theta^{(t+1)}) - \log p(x|\theta^{(t)}) \geq 0 \qquad \square$$
+
+**Remarks:**
+- The proof shows monotonic improvement is guaranteed for **any** M-step that increases $Q$, not just the exact maximiser. This is the basis for **generalised EM (GEM)**, where the M-step is replaced by any ascent step.
+- EM converges to a **stationary point** of $\log p(x|\theta)$ (local maximum or saddle point), not necessarily the global maximum.
+- The convergence rate is linear, with rate determined by the fraction of "missing information" (Fisher's missing information principle).
+
+---
+
+## 7. Concrete Example: Gaussian Mixture Model (GMM)
+
+A GMM with $K$ components models:
+$$p(x|\theta) = \sum_{k=1}^{K} \pi_k\,\mathcal{N}(x|\mu_k, \Sigma_k), \qquad \theta = \{\pi_k, \mu_k, \Sigma_k\}_{k=1}^K$$
+
+The latent variable $z \in \{1,\ldots,K\}$ is the component assignment. The complete-data distribution:
+$$p(x,z|\theta) = p(z|\theta)\,p(x|z,\theta) = \pi_z\,\mathcal{N}(x|\mu_z, \Sigma_z)$$
+
+### 7.1 E-Step: Compute Responsibilities
+
+$$r_{ik} := p(z_i = k \mid x_i, \theta^{(t)}) = \frac{\pi_k^{(t)}\,\mathcal{N}(x_i|\mu_k^{(t)}, \Sigma_k^{(t)})}{\sum_{j=1}^K \pi_j^{(t)}\,\mathcal{N}(x_i|\mu_j^{(t)}, \Sigma_j^{(t)})}$$
+
+This is just Bayes' rule: $r_{ik}$ is the posterior probability that data point $x_i$ belongs to cluster $k$.
+
+### 7.2 M-Step: Update Parameters
+
+$$Q(\theta,\theta^{(t)}) = \sum_{i=1}^N\sum_{k=1}^K r_{ik}\left[\log\pi_k + \log\mathcal{N}(x_i|\mu_k,\Sigma_k)\right]$$
+
+Maximising over each set of parameters (subject to $\sum_k \pi_k = 1$):
+
+$$N_k = \sum_{i=1}^N r_{ik} \quad\text{(effective number of points in cluster }k\text{)}$$
+
+$$\pi_k^{(t+1)} = \frac{N_k}{N}, \qquad \mu_k^{(t+1)} = \frac{\sum_i r_{ik}\,x_i}{N_k}, \qquad \Sigma_k^{(t+1)} = \frac{\sum_i r_{ik}(x_i-\mu_k^{(t+1)})(x_i-\mu_k^{(t+1)})^\top}{N_k}$$
+
+These are **soft-assignment** analogues of the hard $k$-means updates, with $r_{ik}$ playing the role of fractional membership.
+
+---
+
+## 8. Connection to Variational Inference
+
+In the exact EM algorithm, the E-step requires computing $p(z|x,\theta^{(t)})$ exactly, which may itself be intractable. **Variational EM** replaces the exact posterior with a tractable approximation $q_\phi(z) \approx p(z|x,\theta)$ from a parametric family (e.g., a mean-field factorisation).
+
+The objective becomes:
+$$\max_{\theta,\phi}\;\text{ELBO}(q_\phi, \theta) = \mathbb{E}_{q_\phi(z)}\!\left[\log p(x,z|\theta)\right] - D_{\text{KL}}(q_\phi(z)\|p(z))$$
+
+This is precisely the **VAE objective**: $\theta$ are the decoder parameters, $\phi$ are the encoder parameters, and the KL term regularises the approximate posterior toward a simple prior.
+
+---
+
+## 9. Summary
+
+```
+Goal: max_θ  log p(x|θ)  [intractable due to latent z]
+
+Key identity:
+  log p(x|θ)  =  ELBO(q, θ)  +  KL(q(z) ‖ p(z|x,θ))
+              ≥  ELBO(q, θ)        [since KL ≥ 0]
+
+EM = coordinate ascent on ELBO:
+
+  E-step:  q ← p(z|x, θ^(t))         [KL → 0, bound tightens]
+  M-step:  θ ← argmax_θ Q(θ, θ^(t))  [ascend in θ]
+
+Guarantee:  log p(x|θ^(t+1)) ≥ log p(x|θ^(t))   [monotone]
+```
+
+The proof uses two facts:
+1. The M-step ensures $Q(\theta^{(t+1)}, \theta^{(t)}) \geq Q(\theta^{(t)}, \theta^{(t)})$.
+2. Jensen's inequality ensures $H(\theta^{(t+1)}, \theta^{(t)}) - H(\theta^{(t)}, \theta^{(t)}) = -D_{\text{KL}} \leq 0$.
+
+Together these guarantee each iteration increases the marginal log-likelihood.
+
+---
+
+## 10. References
+
+1. **Dempster, A. P., Laird, N. M., & Rubin, D. B.** (1977). Maximum likelihood from incomplete data via the EM algorithm. *Journal of the Royal Statistical Society: Series B*, 39(1), 1–38. [The original EM paper; introduces the Q-function and monotone convergence proof.]
+2. **Wu, C. F. J.** (1983). On the convergence properties of the EM algorithm. *The Annals of Statistics*, 11(1), 95–103. [Formal convergence proof under regularity conditions.]
+3. **Bishop, C. M.** (2006). *Pattern Recognition and Machine Learning*. Springer. §9.2 (GMM via EM), §9.3 (EM in general), §9.4 (The EM algorithm in general).
+4. **Murphy, K. P.** (2012). *Machine Learning: A Probabilistic Perspective*. MIT Press. Ch. 11 (Mixture models and EM).
+5. **Neal, R. M. & Hinton, G. E.** (1998). A view of the EM algorithm that justifies incremental, sparse, and other variants. In *Learning in Graphical Models* (pp. 355–368). [Interprets EM as coordinate ascent on a free energy / ELBO — the key connection to variational inference.]
+6. **Kingma, D. P. & Welling, M.** (2014). Auto-encoding variational Bayes. *ICLR 2014*. [VAE = variational EM with amortised inference.]
