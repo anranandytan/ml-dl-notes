@@ -116,13 +116,13 @@ For binary classification with $y \in \{+1, -1\}$ and predicted $\hat{y}$:
 
 $$\text{Misclassification error} = \frac{FP+FN}{n} = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[y_i \neq \hat{y}_i]$$
 
-$$\text{TPR (Sensitivity, Recall)} = \frac{TP}{\#\text{Pos}} = \frac{\sum_i \mathbf{1}[y_i=\hat{y}_i=1]}{\sum_i \mathbf{1}[y_i=1]}$$
+$$\text{TPR (Sensitivity, Recall)} = \frac{TP}{N_+} = \frac{\sum_i \mathbf{1}[y_i=\hat{y}_i=1]}{\sum_i \mathbf{1}[y_i=1]}$$
 
-$$\text{TNR (Specificity)} = \frac{TN}{\#\text{Neg}} = \frac{\sum_i \mathbf{1}[y_i=\hat{y}_i=-1]}{\sum_i \mathbf{1}[y_i=-1]}$$
+$$\text{TNR (Specificity)} = \frac{TN}{N_-} = \frac{\sum_i \mathbf{1}[y_i=\hat{y}_i=-1]}{\sum_i \mathbf{1}[y_i=-1]}$$
 
-$$\text{FPR} = \frac{FP}{\#\text{Neg}} = 1 - \text{TNR}$$
+$$\text{FPR} = \frac{FP}{N_-} = 1 - \text{TNR}$$
 
-$$\text{Precision} = \frac{TP}{\#\text{predicted positive}}$$
+$$\text{Precision} = \frac{TP}{N_{\hat{+}}}$$
 
 $$F_1 = 2\cdot\frac{\text{Precision}\times\text{Recall}}{\text{Precision}+\text{Recall}}$$
 
@@ -136,7 +136,7 @@ Each threshold gives one point on the curve. A random classifier lies on the dia
 
 AUC is a **rank statistic**: it equals the probability that a randomly chosen positive is ranked higher (by $f$) than a randomly chosen negative:
 
-$$\text{AUC} = \frac{1}{\#\text{Pos}\cdot\#\text{Neg}}\sum_{i\in\text{Pos}}\sum_{k\in\text{Neg}}\mathbf{1}[f(x_i) > f(x_k)]$$
+$$\text{AUC} = \frac{1}{N_+ \cdot N_-}\sum_{i\in\text{Pos}}\sum_{k\in\text{Neg}}\mathbf{1}[f(x_i) > f(x_k)]$$
 
 AUC optimisation is therefore equivalent to **supervised bipartite ranking**.
 
@@ -148,7 +148,7 @@ When positives are rare:
 3. Examine the confusion matrix separately for FP and FN.
 4. Weigh losses for positives and negatives differently:
 
-$$\frac{1}{n}\left(C_{\text{imb}}\sum_{i:y_i=1}\ell(y_i,f(x_i)) + \sum_{k:y_k=-1}\ell(y_k,f(x_k))\right) + \text{Reg}(f)$$
+$$\frac{1}{n}\!\left(C_{\text{imb}}\sum_{i:y_i=1}\ell(y_i,f(x_i)) + \sum_{k:y_k=-1}\ell(y_k,f(x_k))\right) + \text{Reg}(f)$$
 
 ---
 

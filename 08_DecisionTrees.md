@@ -45,7 +45,7 @@ All standard algorithms grow a tree greedily:
 
 **Training probability at leaf $j$:**
 
-$$\left[\frac{\#\text{pos}_j}{\#\text{pos}_j + \#\text{neg}_j},\;\frac{\#\text{neg}_j}{\#\text{pos}_j + \#\text{neg}_j}\right]$$
+$$\left[\frac{n^{+}_j}{n^{+}_j + n^{-}_j},\;\frac{n^{-}_j}{n^{+}_j + n^{-}_j}\right]$$
 
 ---
 
@@ -61,7 +61,7 @@ Entropy is 0 when the distribution is pure (one class dominates) and maximal whe
 
 **Information Gain** of splitting on feature $A$, which partitions the data into $J$ branches:
 
-$$\text{Gain}(S, A) = H\!\left(\frac{\#\text{pos}}{\#\text{pos}+\#\text{neg}}, \frac{\#\text{neg}}{\#\text{pos}+\#\text{neg}}\right) - \sum_{j=1}^J \frac{\#\text{pos}_j + \#\text{neg}_j}{\#\text{pos}+\#\text{neg}}\,H\!\left(\frac{\#\text{pos}_j}{\#\text{pos}_j+\#\text{neg}_j}, \frac{\#\text{neg}_j}{\#\text{pos}_j+\#\text{neg}_j}\right)$$
+$$\text{Gain}(S, A) = H\!\left(\frac{n_+}{n_+ + n_-}, \frac{n_-}{n_+ + n_-}\right) - \sum_{j=1}^J \frac{n^{+}_j + n^{-}_j}{n_+ + n_-}\,H\!\left(\frac{n^{+}_j}{n^{+}_j+n^{-}_j}, \frac{n^{-}_j}{n^{+}_j+n^{-}_j}\right)$$
 
 This is the reduction in entropy achieved by the split. A gain of 0 means the feature carries no information about the label.
 
@@ -112,7 +112,7 @@ At each node, find feature $j$ and split point $s$ to minimise the weighted Gini
 
 **Pruning (Minimum Cost Complexity):** Each candidate subtree is assigned a cost:
 
-$$\text{cost}(\text{subtree}) = \sum_{\text{leaves } j}\sum_{x_i\in\text{leaf }j} \mathbf{1}[y_i \neq \text{leaf's class}] + C \cdot \#\text{leaves}$$
+$$\text{cost}(\text{subtree}) = \sum_{\text{leaves } j}\sum_{x_i\in\text{leaf }j} \mathbf{1}[y_i \neq \text{leaf's class}] + C \cdot |	ext{leaves}|$$
 
 Choose the subtree with the lowest cost. Increasing $C$ prunes more aggressively.
 
@@ -126,13 +126,13 @@ The optimal leaf values are simply the means: $C_1 = \bar{y}_{\text{left}}$, $C_
 
 **Regression tree cost:**
 
-$$\text{cost} = \sum_{\text{leaves }j}\sum_{x_i\in S_j}(y_i-\bar{y}_{S_j})^2 + C\cdot\#\text{leaves}$$
+$$\text{cost} = \sum_{\text{leaves }j}\sum_{x_i\in S_j}(y_i-\bar{y}_{S_j})^2 + C\cdot|	ext{leaves}|$$
 
 ### 6.3 Analytical Bound on Tree Size
 
 **Basic Size Bound.** Given any reference objective value $R^c$, any optimal tree $\text{tree}^*$ satisfies:
 
-$$\#\text{leaves in tree}^* \leq \left\lfloor \frac{R^c}{C}\right\rfloor$$
+$$|\text{leaves}(\text{tree}^*)| \leq \left\lfloor \frac{R^c}{C}\right\rfloor$$
 
 This is because each additional leaf must reduce the unregularised objective by at least $C$.
 
@@ -153,7 +153,7 @@ GOSDT finds **provably optimal** sparse decision trees — no splitting or pruni
 
 ### 7.1 Objective
 
-$$R(\text{tree},\{(x_i,y_i)\}) = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[y_i \neq \hat{y}_i^{\text{tree}}] + \lambda \cdot \#\text{leaves}(\text{tree}), \quad \text{depth}(\text{tree}) \leq D$$
+$$R(\text{tree},\{(x_i,y_i)\}) = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[y_i \neq \hat{y}_i^{\text{tree}}] + \lambda \cdot |	ext{leaves}|(\text{tree}), \quad \text{depth}(\text{tree}) \leq D$$
 
 - $\lambda$ (soft): penalises the number of leaves (sparsity).
 - $D$ (hard): caps the depth of the tree.
@@ -178,7 +178,7 @@ Each subproblem (a node in the search space) is identified by a **bit-vector** $
 For each subproblem $p$ (identified by data subset $s$):
 
 $$p.\text{lb} = 0 + 2\lambda \qquad \text{(at least 2 leaves needed)}$$
-$$p.\text{ub} = \frac{\#\text{minority labels in }s}{n} + \lambda \qquad \text{(trivial leaf solution)}$$
+$$p.\text{ub} = \frac{n_{\min}(s)}{n} + \lambda \qquad \text{(trivial leaf solution)}$$
 
 **Theorem 1.** If $p.\text{ub} - p.\text{lb} \leq 0$, then the trivial (leaf) solution is already optimal for this subproblem — no further splitting can improve it.
 
