@@ -1,11 +1,9 @@
-/* mkdocs-material requires a MathJax config script loaded before mathjax itself */
 window.MathJax = {
   tex: {
     inlineMath:  [["\\(", "\\)"]],
     displayMath: [["\\[", "\\]"]],
     processEscapes: true,
     processEnvironments: true,
-    packages: { "[+]": ["boldsymbol"] },
   },
   options: {
     ignoreHtmlClass: ".*|",
@@ -13,8 +11,9 @@ window.MathJax = {
   },
 };
 
-/* pymdownx.arithmatex emits $...$ and $$...$$ as-is;
-   tell MathJax to also handle those delimiters */
 document$.subscribe(() => {
-  MathJax.typesetPromise?.();
+  MathJax.startup.output.clearCache();
+  MathJax.typesetClear();
+  MathJax.texReset();
+  MathJax.typesetPromise();
 });
