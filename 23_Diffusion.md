@@ -220,10 +220,10 @@ $$\min_\theta \mathbb{E}\left[\lVert s_\theta(x_t, t) - \nabla\log p_t(x_t)\rVer
 is intractable because $\nabla\log p_t(x_t)$ requires integrating over all $x_0$.
 
 **Denoising score matching** (Vincent, 2011) replaces this with a tractable surrogate. Define $h_{x_0}(v) = \lVert v - \frac{x_0-x_t}{t}\rVert^2$. Then:
-$$L(v) = \mathbb{E}_{x_0 \mid x_t}\left[\left\lVert v - \nabla\log p_t(x_t)\right\rVert^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
+$$L(v) = \mathbb{E}_{x_0, x_t}\left[\left\lVert v - \nabla\log p_t(x_t)\right\rVert^2\right] = \mathbb{E}_{x_0, x_t}[h_{x_0}(v)] + \text{const}$$
 
 Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^{\ast}) = 0$:
-$$\mathbb{E}_{x_0 \mid x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
+$$\mathbb{E}_{x_0,\,x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
 
 Therefore, minimising over $(x_0, x_t)$ jointly:
 
@@ -258,7 +258,7 @@ The score generalises to:
 $$\nabla\log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{\sigma_t^2}$$
 
 and the score matching loss is:
-$$\min_\theta \mathbb{E}_{x_0, \epsilon\sim\mathcal{N}(0,I), x_t = x_0+\sigma_t\epsilon}\left[\left\lVert s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\rVert^2\right]$$
+$$\min_\theta \mathbb{E}_{x_0,\,\epsilon,\,x_t}\left[\left\lVert s_{{\theta}}(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\rVert^2\right]$$
 
 ### 6.2 Probability Flow ODE
 
@@ -277,7 +277,7 @@ To generate samples, run the probability flow ODE backward from $t = T$ (noise) 
 
 $$x_{t-\delta} = x_t + (\sigma_{t-\delta} - \sigma_t)\cdot\frac{\varepsilon_\theta(x_t, t)}{\sigma_t}\cdot\sigma_t = x_t + \frac{\sigma_{t-\delta}-\sigma_t}{\sigma_t}\cdot\varepsilon_\theta(x_t,t)\cdot\sigma_t$$
 
-More precisely, from the ODE $dx_t = \dot{\sigma}_t\sigma_t\nabla\log p_t(x_t) dt$ (going forward), the reverse step integrates:
+More precisely, from the forward ODE $dx_t = \dot{\sigma}_{t}\sigma_{t}\nabla\log p_t(x_t)\,dt$, the reverse step integrates:
 $$x_{t-\delta} = x_t + \nabla\log p_t(x_t)\int_{t-\delta}^{t}\dot{\sigma}_s\sigma_s ds = x_t + \nabla\log p_t(x_t)\cdot\frac{\sigma_t^2 - \sigma_{t-\delta}^2}{2}$$
 
 In terms of $\varepsilon_\theta(x_t, t) = \sigma_t\nabla\log p_t(x_t)$:
@@ -286,7 +286,7 @@ $$\boxed{x_{t-\delta} = x_t + (\sigma_{t-\delta}-\sigma_t) \varepsilon_\theta(x_
 
 This is the **DDIM** update rule. Since it is deterministic (no added noise), we can take large steps ($\delta$ large) and need far fewer steps than stochastic DDPM sampling.
 
-**VP/DDPM form.** In the variance-preserving parameterisation, define $\bar{x}_t = x_t/\sqrt{1+\sigma_t^2}$, $\alpha_t = 1/(1+\sigma_t^2)$. The DDIM update becomes:
+**VP/DDPM form.** In the variance-preserving parameterisation, define $\bar{x}_{t} = x_t/\sqrt{1+\sigma_{t}^2}$, $\alpha_{t} = 1/(1+\sigma_{t}^2)$. The DDIM update becomes:
 $$\bar{x}_{t-\delta} = \sqrt{\alpha_{t-\delta}}\left(\frac{\bar{x}_t}{\sqrt{\alpha_t}} + \varepsilon_\theta(\bar{x}_t)\left(\sqrt{\frac{1-\alpha_{t-\delta}}{\alpha_{t-\delta}}} - \sqrt{\frac{1-\alpha_t}{\alpha_t}}\right)\right)$$
 
 ### 6.4 Stochastic Sampler: Reverse SDE + Langevin
@@ -328,8 +328,8 @@ $$x_{t+\delta} \approx x_t + \nabla\log\pi(x_t)\int_t^{t+\delta}\frac{c(s)^2}{2}
 
 ### 7.2 Convergence Rate (Log-Sobolev Inequality)
 
-If $\pi \propto e^{-U(x)}$ satisfies the **$\rho$-Log-Sobolev Inequality (LSI)** — meaning for any smooth $f$ with $\mathbb{E}_\pi[f^2]=1$:
-$$\text{Ent}_\pi(f^2) := \mathbb{E}_\pi[f^2\log f^2] \leq \frac{2}{\rho}\mathbb{E}_\pi[\lVert \nabla f\rVert^2]$$
+If $\pi \propto e^{-U(x)}$ satisfies the **$\rho$-Log-Sobolev Inequality (LSI)** — meaning for any smooth $f$ with $\mathbb{E}_{{\pi}}[f^2]=1$:
+$$\text{Ent}_{{\pi}}(f^2) := \mathbb{E}_{{\pi}}[f^2\log f^2] \leq \frac{2}{\rho}\mathbb{E}_{{\pi}}[\lVert \nabla f\rVert^2]$$
 
 then the Langevin dynamics converge exponentially fast:
 
@@ -383,7 +383,7 @@ $$= (1-\omega) \nabla\log p_t(x) + \omega \nabla\log p_t(x \mid c)$$
 **Training:** Train a single network $\varepsilon_\theta(x_t, t, c)$ that handles both conditional and unconditional generation. During training, randomly drop the condition (replace $c$ with a null token $\varnothing$) with some probability (typically 10–20%). The same network then approximates both $\varepsilon_\theta(x_t,t,c)$ and $\varepsilon_\theta(x_t,t,\varnothing) \approx$ unconditional noise.
 
 **Inference:** Combine the two outputs with scale $\omega$:
-$$\tilde{\varepsilon}_\theta(x_t, t, c) = (1-\omega) \varepsilon_\theta(x_t, t, \varnothing) + \omega \varepsilon_\theta(x_t, t, c)$$
+$$\tilde{\varepsilon}_{{\theta}}(x_t, t, c) = (1-\omega)\,\varepsilon_{{\theta}}(x_t, t, \varnothing) + \omega\,\varepsilon_{{\theta}}(x_t, t, c)$$
 
 In practice, $\omega \in [1.5, 7.5]$ gives a good trade-off between sample quality and diversity. CFG does not require a separate classifier and scales naturally to open-domain conditioning.
 

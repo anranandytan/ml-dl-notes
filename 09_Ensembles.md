@@ -114,10 +114,10 @@ Based on the Shapley value from cooperative game theory: add features one at a t
 
 $$\phi_j = \sum_{S\subseteq F\setminus\{j\}}\frac{|S|!(|F|-|S|-1)!}{|F|!}\left[f_{S\cup\{j\}}(x_{S\cup\{j\}})-f_S(x_S)\right]$$
 
-where $f_S(x_S) = \mathbb{E}_{\mathbf{X}_{\bar{S}}}[f(x_S, \mathbf{X}_{\bar{S}})|\mathbf{X}_S=x_S]$ is the model's prediction marginalising out the features not in $S$.
+where $f_S(x_S) = \mathbb{E}[f(x_S, X_{\bar{S}}) \mid X_S = x_S]$ is the model's prediction marginalising out the features not in $S$ (expectation over $X_{\bar{S}}$).
 
 **Approximations:**
-- Feature independence: $f_S(x_S)\approx \mathbb{E}_{\mathbf{X}_{\bar{S}}}[f(x_S,\mathbf{X}_{\bar{S}})]$.
+- Feature independence: $f_S(x_S)\approx \mathbb{E}[f(x_S, X_{\bar{S}})]$.
 - Linear model: $f_S(x_S)\approx f([x_S, \mathbb{E}[\mathbf{X}_{\bar{S}}]])$.
 
 ### 2.4 Model Class Reliance (MCR) — The Rashomon Set

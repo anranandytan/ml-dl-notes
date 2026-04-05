@@ -8,24 +8,24 @@
 
 The **Variational Autoencoder** unifies two ideas:
 
-1. **Deep latent variable models** — learn a low-dimensional latent representation $z$ that captures the underlying structure of data $x$, with a neural network decoder $p_\theta(x|z)$ mapping latent codes to observations.
-2. **Variational inference** — since the true posterior $p_\theta(z\mid x)$ is intractable, approximate it with a learned encoder $q_\phi(z|x)$.
+1. **Deep latent variable models** — learn a low-dimensional latent representation $z$ that captures the underlying structure of data $x$, with a neural network decoder $p_{\theta}(x\mid z)$ mapping latent codes to observations.
+2. **Variational inference** — since the true posterior $p_{\theta}(z\mid x)$ is intractable, approximate it with a learned encoder $q_{\phi}(z\mid x)$.
 
 **Relationship to GMM.** A Gaussian Mixture Model (GMM) can be seen as a simple latent variable model:
 - $z \sim \text{Categorical}(1,\ldots,K)$: discrete cluster assignment.
-- $x|z=k \sim \mathcal{N}(\mu_k, \Sigma_k)$: Gaussian within each cluster.
+- $x\mid z=k \sim \mathcal{N}(\mu_k, \Sigma_k)$: Gaussian within each cluster.
 
 A VAE generalises this to a **continuous, infinite mixture**:
 - $z \sim \mathcal{N}(0, I)$: continuous, Gaussian latent variable.
-- $x|z \sim \mathcal{N}(\mu_\theta(z), \Sigma_\theta(z))$: mean and covariance are **neural network outputs**.
+- $x\mid z \sim \mathcal{N}(\mu_{\theta}(z), \Sigma_{\theta}(z))$: mean and covariance are **neural network outputs**.
 
 This allows the model to capture far richer distributions than a finite Gaussian mixture.
 
-**Why is $p_\theta(z\mid x)$ intractable?** The marginal likelihood:
+**Why is $p_{\theta}(z\mid x)$ intractable?** The marginal likelihood:
 
-$$p_\theta(x) = \int p_\theta(x|z)\,p(z)\,dz$$
+$$p_{\theta}(x) = \int p_{\theta}(x\mid z)\,p(z)\,dz$$
 
-requires integrating over the entire latent space — an intractable high-dimensional integral. Without $p_\theta(x)$, the posterior $p_\theta(z|x) = p_\theta(x|z)p(z)/p_\theta(x)$ cannot be evaluated.
+requires integrating over the entire latent space — an intractable high-dimensional integral. Without $p_{\theta}(x)$, the posterior $p_{\theta}(z\mid x) = p_{\theta}(x\mid z)p(z)/p_{\theta}(x)$ cannot be evaluated.
 
 ---
 
@@ -45,13 +45,13 @@ requires integrating over the entire latent space — an intractable high-dimens
 
 **Prior:** $p(z) = \mathcal{N}(0, I)$
 
-**Likelihood (decoder):** $p_\theta(x|z) = \mathcal{N}(\mu_\theta(z), \Sigma_\theta(z))$
+**Likelihood (decoder):** $p_{\theta}(x\mid z) = \mathcal{N}(\mu_{\theta}(z), \Sigma_{\theta}(z))$
 
-where $\mu_\theta$ and $\Sigma_\theta$ are neural networks with parameters $\theta$.
+where $\mu_{\theta}$ and $\Sigma_{\theta}$ are neural networks with parameters $\theta$.
 
 **Joint distribution:**
 
-$$p_\theta(x) = \int p_\theta(x,z)\,dz = \int p(z)\,p_\theta(x|z)\,dz$$
+$$p_{\theta}(x) = \int p_{\theta}(x,z)\,dz = \int p(z)\,p_{\theta}(x\mid z)\,dz$$
 
 This marginal is **intractable** for flexible decoders — no closed form exists.
 
@@ -59,36 +59,36 @@ This marginal is **intractable** for flexible decoders — no closed form exists
 
 ## 4. ELBO Decomposition
 
-Following the standard variational inference derivation, introduce an approximate posterior (encoder) $q_\phi(z|x)$. The ELBO decomposition gives:
+Following the standard variational inference derivation, introduce an approximate posterior (encoder) $q_{\phi}(z\mid x)$. The ELBO decomposition gives:
 
-$$\log p_\theta(x) = \underbrace{\mathcal{L}(\theta, \phi; x)}_{\text{ELBO}} + D_{\text{KL}}\big(q_\phi(z|x)\,\|\,p_\theta(z|x)\big)$$
+$$\log p_{\theta}(x) = \underbrace{\mathcal{L}(\theta, \phi; x)}_{\text{ELBO}} + D_{\text{KL}}\big(q_{\phi}(z\mid x)\,\|\,p_{\theta}(z\mid x)\big)$$
 
 Since $D_{\text{KL}} \geq 0$:
 
-$$\log p_\theta(x) \geq \mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x,z) - \log q_\phi(z|x)\right]$$
+$$\log p_{\theta}(x) \geq \mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_{\phi}(z\mid x)}\left[\log p_{\theta}(x,z) - \log q_{\phi}(z\mid x)\right]$$
 
 The ELBO can be written in two equivalent forms:
 
 **Form 1 — Joint and entropy:**
 
-$$\mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x, z)\right] + H\left[q_\phi(z|x)\right]$$
+$$\mathcal{L}(\theta, \phi; x) = \mathbb{E}_{q_{\phi}(z\mid x)}\left[\log p_{\theta}(x, z)\right] + H\left[q_{\phi}(z\mid x)\right]$$
 
 **Form 2 — Reconstruction minus KL:**
 
-$$\mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x|z)\right]}_{\text{reconstruction term}} - \underbrace{D_{\text{KL}}\big(q_\phi(z|x)\,\|\,p(z)\big)}_{\text{regularisation term}}$$
+$$\mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_{\phi}(z\mid x)}\left[\log p_{\theta}(x\mid z)\right]}_{\text{reconstruction term}} - \underbrace{D_{\text{KL}}\big(q_{\phi}(z\mid x)\,\|\,p(z)\big)}_{\text{regularisation term}}$$
 
 **Derivation of Form 2:** Starting from Form 1:
 
-$$\mathbb{E}_{q_\phi}[\log p_\theta(x,z)] + H[q_\phi] = \mathbb{E}_{q_\phi}[\log p_\theta(x|z) + \log p(z)] - \mathbb{E}_{q_\phi}[\log q_\phi(z|x)]$$
+$$\mathbb{E}_{q_{\phi}}[\log p_{\theta}(x,z)] + H[q_{\phi}] = \mathbb{E}_{q_{\phi}}[\log p_{\theta}(x\mid z) + \log p(z)] - \mathbb{E}_{q_{\phi}}[\log q_{\phi}(z\mid x)]$$
 
-$$= \mathbb{E}_{q_\phi}[\log p_\theta(x|z)] + \mathbb{E}_{q_\phi}[\log p(z) - \log q_\phi(z|x)]$$
+$$= \mathbb{E}_{q_{\phi}}[\log p_{\theta}(x\mid z)] + \mathbb{E}_{q_{\phi}}[\log p(z) - \log q_{\phi}(z\mid x)]$$
 
-$$= \mathbb{E}_{q_\phi}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x)\,\|\,p(z))$$
+$$= \mathbb{E}_{q_{\phi}}[\log p_{\theta}(x\mid z)] - D_{\text{KL}}(q_{\phi}(z\mid x)\,\|\,p(z))$$
 
 **Interpretation of the two terms:**
 
-- **Reconstruction term** $\mathbb{E}_{q_\phi}[\log p_\theta(x|z)]$: How well the decoder reconstructs $x$ from latent samples $z\sim q_\phi(z|x)$. Maximising this pushes $q_\phi$ to produce latent codes from which the decoder can recover $x$.
-- **KL regularisation** $D_{\text{KL}}(q_\phi(z|x)\|p(z))$: How far the approximate posterior is from the prior $\mathcal{N}(0,I)$. Minimising this forces $q_\phi(z|x)$ to stay close to the prior, preventing the encoder from collapsing to deterministic point masses and regularising the latent space.
+- **Reconstruction term** $\mathbb{E}_{q}[\log p_{\theta}(x\mid z)]$: How well the decoder reconstructs $x$ from latent samples $z\sim q_{\phi}(z\mid x)$. Maximising this pushes $q_{\phi}$ to produce latent codes from which the decoder can recover $x$.
+- **KL regularisation** $D_{\text{KL}}(q_{\phi}(z\mid x)\|p(z))$: How far the approximate posterior is from the prior $\mathcal{N}(0,I)$. Minimising this forces $q_{\phi}(z\mid x)$ to stay close to the prior, preventing the encoder from collapsing to deterministic point masses and regularising the latent space.
 
 ---
 
@@ -96,26 +96,26 @@ $$= \mathbb{E}_{q_\phi}[\log p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x)\,\|\,p(z
 
 The ELBO optimisation has a natural EM interpretation:
 
-**E-step:** Fix $\theta$; tighten the bound by choosing $q_\phi(z|x) = p_\theta(z|x)$, making $D_{\text{KL}} = 0$. The ELBO then equals $\log p_\theta(x)$ and the ELBO reduces to:
+**E-step:** Fix $\theta$; tighten the bound by choosing $q_{\phi}(z\mid x) = p_{\theta}(z\mid x)$, making $D_{\text{KL}} = 0$. The ELBO then equals $\log p_{\theta}(x)$ and the ELBO reduces to:
 
-$$\mathcal{L} = \mathbb{E}_{p_\theta(z|x)}\left[\log p_\theta(x,z)\right] + \text{const}$$
+$$\mathcal{L} = \mathbb{E}_{p_{\theta}(z\mid x)}\left[\log p_{\theta}(x,z)\right] + \text{const}$$
 
 This is the EM Q-function.
 
 **M-step:** Fix $q$; maximise ELBO over $\theta$:
 
-$$\theta^{\ast} = \arg\max_\theta \mathbb{E}_{p_\theta(z|x)}\left[\log p_\theta(x,z)\right]$$
+$$\theta^{\ast} = \arg\max_{\theta} \mathbb{E}_{p_{\theta}(z\mid x)}\left[\log p_{\theta}(x,z)\right]$$
 
 **VAE vs. EM:**
 
 | | EM | VAE |
 |---|---|---|
-| **E-step** | Compute exact posterior $p_\theta(z\mid x)$ | Fit neural network encoder $q_\phi(z\mid x) \approx p_\theta(z\mid x)$ |
+| **E-step** | Compute exact posterior $p_{\theta}(z\mid x)$ | Fit neural network encoder $q_{\phi}(z\mid x) \approx p_{\theta}(z\mid x)$ |
 | **M-step** | Optimise $\theta$ analytically | Gradient ascent on $\theta$ |
 | **Scales to** | Small models with conjugacy | Large neural networks |
 | **Posterior** | Exact (expensive) | Approximate (fast, amortised) |
 
-The VAE replaces the exact E-step with **amortised inference**: train $q_\phi$ once across all data, so that inference for a new $x$ is a single encoder forward pass.
+The VAE replaces the exact E-step with **amortised inference**: train $q_{\phi}$ once across all data, so that inference for a new $x$ is a single encoder forward pass.
 
 ---
 
@@ -123,29 +123,29 @@ The VAE replaces the exact E-step with **amortised inference**: train $q_\phi$ o
 
 The full VAE objective jointly optimises $\theta$ (decoder) and $\phi$ (encoder):
 
-$$\langle\hat{\theta}, \hat{\phi}\rangle = \arg\max_{\theta, \phi} \mathcal{L}(\theta, \phi; x) = \arg\max_{\theta,\phi} \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x|z)\right] - D_{\text{KL}}\big(q_\phi(z|x)\,\|\,p(z)\big)$$
+$$\langle\hat{\theta}, \hat{\phi}\rangle = \arg\max_{\theta, \phi} \mathcal{L}(\theta, \phi; x) = \arg\max_{\theta,\phi} \mathbb{E}_{q_{\phi}(z\mid x)}\left[\log p_{\theta}(x\mid z)\right] - D_{\text{KL}}\big(q_{\phi}(z\mid x)\,\|\,p(z)\big)$$
 
 ### 6.1 Encoder (Inference Network)
 
 The encoder outputs the parameters of the approximate posterior:
 
-$$q_\phi(z|x) = \mathcal{N}\big(z\,|\,\mu_\phi(x),\,\text{diag}(\sigma_\phi^2(x))\big)$$
+$$q_{\phi}(z\mid x) = \mathcal{N}\big(z\,|\,\mu_{\phi}(x),\,\text{diag}(\sigma_{\phi}^2(x))\big)$$
 
-where $\mu_\phi(x) \in \mathbb{R}^d$ and $\sigma_\phi^2(x) \in \mathbb{R}^d_{>0}$ are neural network outputs.
+where $\mu_{\phi}(x) \in \mathbb{R}^d$ and $\sigma_{\phi}^2(x) \in \mathbb{R}^d_{>0}$ are neural network outputs.
 
 ### 6.2 Reparameterisation
 
-To backpropagate through the sampling step $z \sim q_\phi(z|x)$, use the reparameterisation trick:
+To backpropagate through the sampling step $z \sim q_{\phi}(z\mid x)$, use the reparameterisation trick:
 
-$$\varepsilon \sim \mathcal{N}(0, I), \qquad z = \mu_\phi(x) + \sigma_\phi(x)\odot\varepsilon$$
+$$\varepsilon \sim \mathcal{N}(0, I), \qquad z = \mu_{\phi}(x) + \sigma_{\phi}(x)\odot\varepsilon$$
 
-The randomness is isolated in $\varepsilon$, which has no parameters. The gradient flows deterministically through $\mu_\phi$ and $\sigma_\phi$.
+The randomness is isolated in $\varepsilon$, which has no parameters. The gradient flows deterministically through $\mu_{\phi}$ and $\sigma_{\phi}$.
 
 ### 6.3 KL in Closed Form
 
-For Gaussian $q_\phi$ and standard Gaussian prior $p(z)=\mathcal{N}(0,I)$, the KL has an analytic form:
+For Gaussian $q_{\phi}$ and standard Gaussian prior $p(z)=\mathcal{N}(0,I)$, the KL has an analytic form:
 
-$$D_{\text{KL}}\big(\mathcal{N}(\mu_\phi, \text{diag}(\sigma_\phi^2))\,\|\,\mathcal{N}(0,I)\big) = \frac{1}{2}\sum_{j=1}^d\left(\mu_{\phi,j}^2 + \sigma_{\phi,j}^2 - \log\sigma_{\phi,j}^2 - 1\right)$$
+$$D_{\text{KL}}\big(\mathcal{N}(\mu_{\phi}, \text{diag}(\sigma_{\phi}^2))\,\|\,\mathcal{N}(0,I)\big) = \frac{1}{2}\sum_{j=1}^d\left(\mu_{\phi,j}^2 + \sigma_{\phi,j}^2 - \log\sigma_{\phi,j}^2 - 1\right)$$
 
 This requires no sampling — it is computed analytically and backpropagated exactly.
 
@@ -179,7 +179,7 @@ A well-trained VAE has several desirable properties of its latent space:
 - **Completeness:** Any point sampled from the prior $p(z)=\mathcal{N}(0,I)$ decodes to a plausible output — not just points that were encoded from training data.
 - **Interpolation:** A linear interpolation between two latent codes produces a smooth visual transition between the corresponding decoded images.
 
-These properties follow from the KL regularisation: by forcing $q_\phi(z|x)$ toward $\mathcal{N}(0,I)$, the encoder cannot map different inputs to widely separated or disjoint regions of the latent space.
+These properties follow from the KL regularisation: by forcing $q_{\phi}(z\mid x)$ toward $\mathcal{N}(0,I)$, the encoder cannot map different inputs to widely separated or disjoint regions of the latent space.
 
 ---
 
@@ -187,8 +187,8 @@ These properties follow from the KL regularisation: by forcing $q_\phi(z|x)$ tow
 
 | Extension | Idea | Reference |
 |---|---|---|
-| **$\beta$-VAE** | Upweight KL: $\mathcal{L} = \mathbb{E}[\log p_\theta(x\mid z)] - \beta\cdot D_{\text{KL}}$ for $\beta>1$. Encourages disentangled representations. | Higgins et al. (2017) |
-| **IWAE** | Replace ELBO with a tighter importance-weighted bound: $\log\mathbb{E}\left[\frac{p_\theta(x,z)}{q_\phi(z\mid x)}\right]$. Lower variance, tighter bound. | Burda et al. (2016) |
+| **$\beta$-VAE** | Upweight KL: $\mathcal{L} = \mathbb{E}[\log p_{\theta}(x\mid z)] - \beta\cdot D_{\text{KL}}$ for $\beta>1$. Encourages disentangled representations. | Higgins et al. (2017) |
+| **IWAE** | Replace ELBO with a tighter importance-weighted bound: $\log\mathbb{E}\left[\frac{p_{\theta}(x,z)}{q_{\phi}(z\mid x)}\right]$. Lower variance, tighter bound. | Burda et al. (2016) |
 | **VQ-VAE** | Discrete latent space via vector quantisation; avoids posterior collapse. | van den Oord et al. (2017) |
 | **Latent Diffusion** | Run a diffusion model in the VAE's latent space for high-quality generation. | Rombach et al. (2022) |
 

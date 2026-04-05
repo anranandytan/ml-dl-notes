@@ -152,11 +152,11 @@ $$p(x)\propto\exp\left(-\frac{1}{2}(x-\mu)^\top\Lambda(x-\mu)\right)$$
 
 Expanding (and defining $h=\Lambda\mu$):
 
-$$= \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
+$$p(x) \propto \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
 
 Decomposing by pairs of variables:
 
-$$= \exp\left(\sum_i \left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right) + \sum_{i<j}\left(-\lambda_{ij}x_ix_j\right)\right)$$
+$$p(x) \propto \exp\left(\sum_i (-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i) + \sum_{i<j}(-\lambda_{ij}x_ix_j)\right)$$
 
 This gives us:
 - **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$
