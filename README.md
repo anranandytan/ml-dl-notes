@@ -44,15 +44,15 @@ Personal course notes on machine learning and probabilistic deep learning. Files
          │
          ▼
 03 Regression ──────────────────────────────────────────────┐
-         │                                                   │
-         ▼                                                   ▼
+         │                                                  │
+         ▼                                                  ▼
 04 Bayesian Regression ──► 07 Gaussian Process    (Bayesian view of 03 and 06)
          │
          ▼
 05 Linear Methods ──► 06 Kernels ──► 07 Gaussian Process
 
 08 Decision Trees ──► 09 Ensembles
-10 Neural Networks ──────────────────────────────────────────► 26 Transformers
+10 Neural Networks ─► 26 Transformers
 
 11 Graphical Models
          │
