@@ -1,4 +1,4 @@
-# ML 07 — Regression: OLS, Ridge, and Lasso
+# 03 — Regression
 
 > **Keywords:** ordinary least squares, hat matrix, ridge regression, regularisation path, Lasso, sparsity, Bayesian interpretation
 

@@ -1,4 +1,4 @@
-# Diffusion Models
+# 23 — Diffusion Models
 
 > **Keywords:** score matching, stochastic differential equation, Fokker-Planck, Langevin dynamics, DDPM, DDIM, classifier guidance, classifier-free guidance, flow matching
 

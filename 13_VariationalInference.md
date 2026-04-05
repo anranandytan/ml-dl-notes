@@ -1,4 +1,4 @@
-# DL 05 — Stochastic Gradient Variational Inference (SGVI)
+# 13 — Variational Inference
 
 > **Keywords:** variational inference, ELBO, mean-field, CAVI, score function estimator, REINFORCE, control variate, reparameterisation trick, amortised inference, VAE
 

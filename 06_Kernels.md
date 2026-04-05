@@ -1,4 +1,4 @@
-# ML 06 — Kernel Methods, RKHS, and Kernel Regression
+# 06 — Kernel Methods and RKHS
 
 > **Keywords:** polynomial kernel, RBF kernel, inner product, Hilbert space, RKHS, reproducing property, Mercer's theorem, representer theorem, kernel ridge regression, kernel regression
 
@@ -8,7 +8,7 @@
 
 Many learning algorithms depend on the data only through **inner products** $x_i^\top x_l$. By replacing this inner product with a **kernel function**:
 
-$$k(x_i, x_l) = \langle\Phi(x_i), \Phi(x_l)\rangle_\mathcal{H}$$
+$$k(x_i, x_l) = \langle\Phi(x_i), \Phi(x_l)\rangle_{\mathcal{H}}$$
 
 we implicitly map the data into a high- or infinite-dimensional feature space $\mathcal{H}$ without ever computing $\Phi(x)$ explicitly. All we need is the ability to evaluate $k(\cdot,\cdot)$.
 
@@ -32,7 +32,7 @@ For degree $d$: $k(x,z)=(x^\top z+c)^d$ implicitly maps to a feature space conta
 
 ## 3. Gaussian (RBF) Kernel
 
-$$k(x,z) = \exp\!\left(-\frac{\|x-z\|^2}{\sigma^2}\right)$$
+$$k(x,z) = \exp\!\left(-\frac{\lVert x-z\rVert^2}{\sigma^2}\right)$$
 
 This corresponds to an **infinite-dimensional** feature space. It is translation-invariant ($k$ depends only on $x-z$).
 
@@ -77,7 +77,7 @@ So $\Phi(x) := k(x,\cdot)\in H_k$ and $k(x,z)=\langle\Phi(x),\Phi(z)\rangle_{H_k
 
 Define the feature map $\Phi(x) = k(\cdot,x)$. The RKHS is:
 
-$$H_k = \overline{\text{span}\{k(\cdot,x):x\in\mathcal{X}\}} = \left\{f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i):\alpha_i\in\mathbb{R},\;m<\infty\right\}$$
+$$H_k = \Bigl\{f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i) : \alpha_i\in\mathbb{R},\;m<\infty\Bigr\}$$
 
 (with completion for infinite sums). The inner product for $f=\sum_i\alpha_ik(\cdot,x_i)$ and $g=\sum_j\beta_jk(\cdot,x_j')$:
 

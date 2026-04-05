@@ -1,4 +1,4 @@
-# ML 03 — Ensembles, Variable Importance, Boosting, and GAMs
+# 09 — Ensembles, Boosting, and GAMs
 
 > **Keywords:** bagging, random forest, OOB error, variable importance, model reliance, SHAP, AdaBoost, coordinate descent, exponential loss, GAM, FastSparse
 

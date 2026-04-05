@@ -1,4 +1,4 @@
-# Generative Models
+# 19 — Generative Models
 
 > **Keywords:** generative model, explicit density, implicit density, latent variable, reparameterisation trick, stochastic backpropagation, VAE, GAN, normalising flow, diffusion model
 

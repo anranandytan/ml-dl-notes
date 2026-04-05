@@ -1,4 +1,4 @@
-# DL 06 — Markov Chain Monte Carlo (MCMC)
+# 14 — Markov Chain Monte Carlo
 
 > **Keywords:** Monte Carlo integration, Markov chain, stationary distribution, detailed balance, Metropolis-Hastings, Gibbs sampling, burn-in, mixing, ergodicity
 
@@ -139,7 +139,7 @@ This is the importance weight ratio. Works well when $q$ is a good approximation
 
 When the target is a joint distribution $\pi(\theta_1, \ldots, \theta_p)$, Gibbs sampling cycles through variables, sampling each from its **full conditional** while holding all others fixed:
 
-$$\theta_j^{(t+1)} \sim p\!\left(\theta_j \mid \theta_1^{(t+1)}, \ldots, \theta_{j-1}^{(t+1)}, \theta_{j+1}^{(t)}, \ldots, \theta_p^{(t)}\right)$$
+$$\theta_{j}^{(t+1)} \sim p\!\left(\theta_j \mid \theta_1^{(t+1)}, \ldots, \theta_{j-1}^{(t+1)}, \theta_{j+1}^{(t)}, \ldots, \theta_p^{(t)}\right)$$
 
 No proposal distribution is needed, and every sample is accepted — provided the full conditionals can be sampled from.
 
@@ -147,7 +147,7 @@ No proposal distribution is needed, and every sample is accepted — provided th
 
 Propose $\theta^*$ by sampling from the full conditional of $\theta_j$. The MH acceptance ratio is:
 
-$$\alpha = \frac{\pi(\theta_j^*)\,\pi(\theta_{-j})\,p(\theta_j^{(t)}\mid\theta_{-j})}{\pi(\theta_j^{(t)})\,\pi(\theta_{-j})\,p(\theta_j^*\mid\theta_{-j})} = \frac{\pi(\theta_j^*\mid\theta_{-j})\,p(\theta_j^{(t)}\mid\theta_{-j})}{\pi(\theta_j^{(t)}\mid\theta_{-j})\,p(\theta_j^*\mid\theta_{-j})} = 1$$
+$$\alpha = \frac{\pi(\theta_{j}^{*})\,\pi(\theta_{-j})\,p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)})\,\pi(\theta_{-j})\,p(\theta_{j}^{*}\mid\theta_{-j})} = \frac{\pi(\theta_{j}^{*}\mid\theta_{-j})\,p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)}\mid\theta_{-j})\,p(\theta_{j}^{*}\mid\theta_{-j})} = 1$$
 
 The ratio is always 1 because the proposal is exactly the target conditional. Gibbs sampling thus has 100% acceptance rate.
 

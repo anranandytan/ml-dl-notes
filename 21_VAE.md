@@ -1,4 +1,4 @@
-# Variational Autoencoder (VAE)
+# 21 — Variational Autoencoder
 
 > **Keywords:** VAE, ELBO, amortised inference, reparameterisation trick, encoder, decoder, latent space, generative model
 

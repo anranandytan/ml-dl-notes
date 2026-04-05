@@ -1,4 +1,4 @@
-# ML 05 — Logistic Regression, Convex Optimisation, and SVM
+# 05 — Logistic Regression, Convex Optimisation, and SVM
 
 > **Keywords:** logistic regression, odds ratio, MLE, convex function, Lagrangian, KKT conditions, strong duality, SVM, support vectors, soft margin, SMO
 
@@ -96,12 +96,12 @@ For convex problems satisfying Slater's condition, strong duality holds.
 If $x^*$, $\alpha^*$, $\beta^*$ satisfy all four KKT conditions simultaneously, then $x^*$ is primal-optimal and $(\alpha^*,\beta^*)$ are dual-optimal (under strong duality):
 
 1. **Primal feasibility:** $g_i(x^*)\leq 0$ and $h_i(x^*)=0$.
-2. **Dual feasibility:** $\alpha_i^*\geq 0$.
-3. **Complementary slackness:** $\alpha_i^*g_i(x^*)=0$ for all $i$.  
+2. **Dual feasibility:** $\alpha_{i}^{*}\geq 0$.
+3. **Complementary slackness:** $\alpha_{i}^{*}g_i(x^*)=0$ for all $i$.  
    (Either the constraint is active $g_i=0$, or the multiplier is zero $\alpha_i=0$.)
 4. **Lagrangian stationarity:**
 
-$$\nabla_x\mathcal{L}(x^*,\alpha^*,\beta^*) = \nabla f(x^*) + \sum_i\alpha_i^*\nabla g_i(x^*) + \sum_i\beta_i^*\nabla h_i(x^*) = 0$$
+$$\nabla_x\mathcal{L}(x^*,\alpha^*,\beta^*) = \nabla f(x^*) + \sum_i\alpha_{i}^{*}\nabla g_i(x^*) + \sum_i\beta_{i}^{*}\nabla h_i(x^*) = 0$$
 
 **Theorem (KKT):** Under strong duality, any primal-dual optimal pair must satisfy all four KKT conditions, and any point satisfying all four is primal/dual optimal.
 
@@ -159,9 +159,9 @@ This is a quadratic program (QP) in $\alpha$.
 
 **Recovering the primal:**
 
-$$\lambda^* = \sum_{i:\alpha_i>0}\alpha_i^*y_ix_i, \qquad \lambda_0^* = 1 - \min_{i:y_i=1}(\lambda^*)^\top x_i$$
+$$\lambda^* = \sum_{i:\alpha_i>0}\alpha_{i}^{*}y_ix_i, \qquad \lambda_0^* = 1 - \min_{i:y_i=1}(\lambda^*)^\top x_i$$
 
-**Support vectors:** points with $\alpha_i^*>0$ — they lie exactly on the margin boundary and are the only points that determine $\lambda^*$.
+**Support vectors:** points with $\alpha_{i}^{*}>0$ — they lie exactly on the margin boundary and are the only points that determine $\lambda^*$.
 
 ### 3.4 Soft-Margin SVM (Non-Separable Case)
 

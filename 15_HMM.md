@@ -1,4 +1,4 @@
-# Hidden Markov Model (HMM)
+# 15 — Hidden Markov Model
 
 > **Keywords:** hidden Markov model, forward-backward algorithm, Baum-Welch, Viterbi, filtering, smoothing, prediction, EM algorithm
 

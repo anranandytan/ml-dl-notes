@@ -1,4 +1,4 @@
-# ML 04 — Neural Networks, CNNs, and Self-Supervised Learning
+# 10 — Neural Networks and CNNs
 
 > **Keywords:** backpropagation, sigmoid, cross-entropy, softmax, CNN, ResNet, dropout, transfer learning, contrastive learning
 

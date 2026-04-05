@@ -1,4 +1,4 @@
-# DL 11 — Restricted Boltzmann Machine (RBM)
+# 20 — Restricted Boltzmann Machine
 
 > **Keywords:** energy-based model, Boltzmann distribution, restricted Boltzmann machine, visible units, hidden units, contrastive divergence, persistent CD, free energy, deep belief network
 

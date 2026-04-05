@@ -1,4 +1,4 @@
-# ML 09 — Clustering
+# 24 — Clustering
 
 > **Keywords:** K-means, coordinate descent, convergence, hierarchical agglomerative clustering, linkage, dendrogram, distance metric
 

@@ -1,4 +1,4 @@
-# DL 08 — Kalman Filter
+# 16 — Kalman Filter
 
 > **Keywords:** linear Gaussian state space model, predict-update cycle, Kalman gain, innovation, covariance propagation, RTS smoother, Kalman EM, online Bayesian regression
 
@@ -79,11 +79,11 @@ Assume $P(z_{t-1} \mid x_{1:t-1}) = \mathcal{N}(\mu_{t-1}, \Sigma_{t-1})$.
 
 Since $z_t = Az_{t-1} + B + \varepsilon_t$ is an affine function of $z_{t-1}$ plus independent Gaussian noise:
 
-$$\mu_t^* = A\mu_{t-1} + B$$
+$$\mu_{t}^{*} = A\mu_{t-1} + B$$
 
-$$\Sigma_t^* = A\Sigma_{t-1}A^\top + Q$$
+$$\Sigma_{t}^{*} = A\Sigma_{t-1}A^\top + Q$$
 
-$$P(z_t \mid x_{1:t-1}) = \mathcal{N}(\mu_t^*, \Sigma_t^*)$$
+$$P(z_t \mid x_{1:t-1}) = \mathcal{N}(\mu_{t}^{*}, \Sigma_{t}^{*})$$
 
 The predicted covariance grows: the process noise $Q$ adds uncertainty that will be reduced in the update step.
 
@@ -93,35 +93,35 @@ The predicted covariance grows: the process noise $Q$ adds uncertainty that will
 
 The state $z_t$ and observation $x_t$ are jointly Gaussian given $x_{1:t-1}$:
 
-$$\begin{pmatrix}z_t \\ x_t\end{pmatrix} \Bigg\vert x_{1:t-1} \sim \mathcal{N}\!\left(\begin{pmatrix}\mu_t^* \\ C\mu_t^*+D\end{pmatrix},\;\begin{pmatrix}\Sigma_t^* & \Sigma_t^*C^\top \\ C\Sigma_t^* & C\Sigma_t^*C^\top+R\end{pmatrix}\right)$$
+$$\begin{pmatrix}z_t \\ x_t\end{pmatrix} \Bigg\vert x_{1:t-1} \sim \mathcal{N}\!\left(\begin{pmatrix}\mu_{t}^{*} \\ C\mu_{t}^{*}+D\end{pmatrix},\;\begin{pmatrix}\Sigma_{t}^{*} & \Sigma_{t}^{*}C^\top \\ C\Sigma_{t}^{*} & C\Sigma_{t}^{*}C^\top+R\end{pmatrix}\right)$$
 
-The cross-covariance $\text{Cov}(z_t, x_t) = \Sigma_t^* C^\top$ follows from $x_t = Cz_t + D + \delta_t$ with $\delta_t$ independent of $z_t$.
+The cross-covariance $\text{Cov}(z_t, x_t) = \Sigma_{t}^{*} C^\top$ follows from $x_t = Cz_t + D + \delta_t$ with $\delta_t$ independent of $z_t$.
 
 Applying the **Gaussian conditional formula** ($a \mid b \sim \mathcal{N}(\mu_a + \Sigma_{ab}\Sigma_{bb}^{-1}(b - \mu_b), \Sigma_{aa} - \Sigma_{ab}\Sigma_{bb}^{-1}\Sigma_{ba})$):
 
 **Innovation:**
 
-$$\nu_t = x_t - (C\mu_t^* + D)$$
+$$\nu_t = x_t - (C\mu_{t}^{*} + D)$$
 
 **Innovation covariance:**
 
-$$S_t = C\Sigma_t^*C^\top + R$$
+$$S_t = C\Sigma_{t}^{*}C^\top + R$$
 
 **Kalman gain:**
 
-$$\boxed{K_t = \Sigma_t^* C^\top S_t^{-1} = \Sigma_t^*C^\top(C\Sigma_t^*C^\top + R)^{-1}}$$
+$$\boxed{K_t = \Sigma_{t}^{*} C^\top S_t^{-1} = \Sigma_{t}^{*}C^\top(C\Sigma_{t}^{*}C^\top + R)^{-1}}$$
 
 **Updated mean and covariance:**
 
-$$\boxed{\mu_t = \mu_t^* + K_t\nu_t}$$
+$$\boxed{\mu_t = \mu_{t}^{*} + K_t\nu_t}$$
 
-$$\boxed{\Sigma_t = (I - K_tC)\Sigma_t^*}$$
+$$\boxed{\Sigma_t = (I - K_tC)\Sigma_{t}^{*}}$$
 
-**Why $(I - K_tC)\Sigma_t^*$?** From the conditional Gaussian formula: $\Sigma_t = \Sigma_t^* - \Sigma_t^*C^\top S_t^{-1}C\Sigma_t^* = \Sigma_t^* - K_tC\Sigma_t^* = (I-K_tC)\Sigma_t^*$.
+**Why $(I - K_tC)\Sigma_{t}^{*}$?** From the conditional Gaussian formula: $\Sigma_t = \Sigma_{t}^{*} - \Sigma_{t}^{*}C^\top S_t^{-1}C\Sigma_{t}^{*} = \Sigma_{t}^{*} - K_tC\Sigma_{t}^{*} = (I-K_tC)\Sigma_{t}^{*}$.
 
 **Interpreting $K_t$:**
 - If $R \to 0$ (exact measurements): $K_t \to C^{-1}$ — trust the observation completely.
-- If $\Sigma_t^* \to 0$ (certain prediction): $K_t \to 0$ — trust the prediction completely.
+- If $\Sigma_{t}^{*} \to 0$ (certain prediction): $K_t \to 0$ — trust the prediction completely.
 - In general: $K_t$ trades off prediction uncertainty vs. measurement uncertainty.
 
 ---

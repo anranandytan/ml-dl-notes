@@ -1,4 +1,4 @@
-# ML Fundamentals: Problems, Evaluation, and Cross-Validation
+# 01 — ML Fundamentals
 
 > **Keywords:** supervised learning, unsupervised learning, loss function, risk, regularisation, ROC curve, AUC, cross-validation, data leakage
 

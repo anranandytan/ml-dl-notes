@@ -1,4 +1,4 @@
-# ML 02 — Decision Trees
+# 08 — Decision Trees
 
 > **Keywords:** information gain, Gini index, C4.5, CART, pruning, GOSDT, branch-and-bound, optimal sparse trees
 

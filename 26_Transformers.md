@@ -1,4 +1,4 @@
-# ML 10 — Transformers, Reinforcement Learning, and AI Ethics
+# 26 — Transformers and RLHF
 
 > **Keywords:** attention, self-attention, multi-head attention, positional encoding, transformer, RLHF, reward model, PPO, AI ethics, privacy
 

@@ -1,4 +1,4 @@
-# DL 02 — Gaussian Process
+# 07 — Gaussian Process
 
 > **Keywords:** Gaussian process, kernel function, positive semi-definite, weight-space view, function-space view, GP regression, marginal likelihood, hyperparameter optimisation, Cholesky factorisation
 
@@ -132,14 +132,14 @@ The $\sigma^2 I$ term adds noise variance to the diagonal of the kernel matrix.
 
 ### 5.3 Joint Distribution of Training and Test Points
 
-For test inputs $X^*=(x_1^*,\ldots,x_M^*)^\top$, the **joint prior** over $(Y, f(X^*))$ is Gaussian. By the GP prior:
+For test inputs $X^{*}=(x_1^*,\ldots,x_M^*)^\top$, the **joint prior** over $(Y, f(X^{*}))$ is Gaussian. By the GP prior:
 
-$$\begin{pmatrix}Y \\ f(X^*)\end{pmatrix} \sim \mathcal{N}\!\left(\mathbf{0},\; \begin{pmatrix}K(X,X)+\sigma^2 I & K(X,X^*) \\ K(X^*,X) & K(X^*,X^*)\end{pmatrix}\right)$$
+$$\begin{pmatrix}Y \\ f(X^{*})\end{pmatrix} \sim \mathcal{N}\!\left(\mathbf{0},\; \begin{pmatrix}K(X,X)+\sigma^2 I & K(X,X^{*}) \\ K(X^{*},X) & K(X^{*},X^{*})\end{pmatrix}\right)$$
 
 where:
-- $K(X,X^*)\in\mathbb{R}^{N\times M}$: training-test cross-covariance; $[K(X,X^*)]_{ij}=k(x_i,x_j^*)$.
-- $K(X^*,X)=K(X,X^*)^\top\in\mathbb{R}^{M\times N}$: test-training cross-covariance.
-- $K(X^*,X^*)\in\mathbb{R}^{M\times M}$: test-test prior covariance.
+- $K(X,X^{*})\in\mathbb{R}^{N\times M}$: training-test cross-covariance; $[K(X,X^{*})]_{ij}=k(x_i,x_{j}^{*})$.
+- $K(X^{*},X)=K(X,X^{*})^\top\in\mathbb{R}^{M\times N}$: test-training cross-covariance.
+- $K(X^{*},X^{*})\in\mathbb{R}^{M\times M}$: test-test prior covariance.
 
 ### 5.4 Posterior by Gaussian Conditioning
 
@@ -149,17 +149,17 @@ $$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\!\left(\begin{pmatrix}\mu_a\\\
 
 then $b\mid a\sim\mathcal{N}(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(a-\mu_a),\; \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab})$.
 
-Applying with $a=Y$, $b=f(X^*)$, $\mu_a=\mu_b=0$:
+Applying with $a=Y$, $b=f(X^{*})$, $\mu_a=\mu_b=0$:
 
-$$\boxed{P(f(X^*)\mid Y, X, X^*) = \mathcal{N}(\mu^*,\; \Sigma^*)}$$
+$$\boxed{P(f(X^{*})\mid Y, X, X^{*}) = \mathcal{N}(\mu^*,\; \Sigma^*)}$$
 
-$$\mu^* = K(X^*,X)\big(K(X,X)+\sigma^2 I\big)^{-1}Y$$
+$$\mu^* = K(X^{*},X)\big(K(X,X)+\sigma^2 I\big)^{-1}Y$$
 
-$$\Sigma^* = K(X^*,X^*) - K(X^*,X)\big(K(X,X)+\sigma^2 I\big)^{-1}K(X,X^*)$$
+$$\Sigma^* = K(X^{*},X^{*}) - K(X^{*},X)\big(K(X,X)+\sigma^2 I\big)^{-1}K(X,X^{*})$$
 
-**Reading the posterior mean:** $\mu^*_j = \sum_{i=1}^N \alpha_i k(x_i,x_j^*)$ where $\alpha = (K+\sigma^2I)^{-1}Y$. Each training point contributes to the prediction at $x_j^*$ in proportion to its kernel similarity $k(x_i,x_j^*)$ and its weight $\alpha_i$.
+**Reading the posterior mean:** $\mu_{j}^{*} = \sum_{i=1}^N \alpha_i k(x_i,x_{j}^{*})$ where $\alpha = (K+\sigma^2I)^{-1}Y$. Each training point contributes to the prediction at $x_{j}^{*}$ in proportion to its kernel similarity $k(x_i,x_{j}^{*})$ and its weight $\alpha_i$.
 
-**Reading the posterior variance:** $\Sigma^*$ starts from the prior covariance $K(X^*,X^*)$ and subtracts $K(X^*,X)(K+\sigma^2I)^{-1}K(X,X^*)$ — the reduction due to observing $Y$. Uncertainty decreases monotonically as more data are added.
+**Reading the posterior variance:** $\Sigma^*$ starts from the prior covariance $K(X^{*},X^{*})$ and subtracts $K(X^{*},X)(K+\sigma^2I)^{-1}K(X,X^{*})$ — the reduction due to observing $Y$. Uncertainty decreases monotonically as more data are added.
 
 ### 5.5 Predictive Distribution for Noisy Observations
 

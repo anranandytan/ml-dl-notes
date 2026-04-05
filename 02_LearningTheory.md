@@ -1,4 +1,4 @@
-# ML 08 — Statistical Learning Theory
+# 02 — Statistical Learning Theory
 
 > **Keywords:** true risk, empirical risk, Hoeffding's inequality, union bound, Ockham's Razor bound, growth function, VC dimension, VC bound, bias-variance, approximation-estimation decomposition
 
@@ -71,7 +71,7 @@ $$R^{\text{true}}(f) - R^{\text{emp}}(f) \leq \sqrt{\frac{\log(1/\delta)}{2n}}$$
 
 For a finite class $\mathcal{F}=\{f_1,\ldots,f_M\}$, we want a bound that holds simultaneously for all $f\in\mathcal{F}$.
 
-Define "bad events" $C_j = \{$training set $\mathbf{Z}$ where $R^{\text{true}}(g_j)-R^{\text{emp}}(g_j)\geq\epsilon\}$.
+Define "bad events" $C_j = \{\text{training set } \mathbf{Z} \text{ where } R^{\text{true}}(g_j)-R^{\text{emp}}(g_j)\geq\epsilon\}$.
 
 **Union bound:** $\mathbb{P}[C_1\cup\cdots\cup C_M]\leq\sum_{j=1}^M\mathbb{P}[C_j]$.
 
@@ -116,21 +116,21 @@ The Ockham's Razor bound requires $|\mathcal{F}|<\infty$. For infinite function 
 
 ### 4.1 Growth Function
 
-**Definition.** The **growth function** $S_\mathcal{F}(n)$ is the maximum number of distinct labellings that $\mathcal{F}$ can produce on any $n$ points:
+**Definition.** The **growth function** $S_{\mathcal{F}}(n)$ is the maximum number of distinct labellings that $\mathcal{F}$ can produce on any $n$ points:
 
-$$S_\mathcal{F}(n) = \sup_{(z_1,\ldots,z_n)}|\mathcal{F}_{z_1,\ldots,z_n}|$$
+$$S_{\mathcal{F}}(n) = \sup_{(z_1,\ldots,z_n)}|\mathcal{F}_{z_1,\ldots,z_n}|$$
 
 where $\mathcal{F}_{z_1,\ldots,z_n} = \{(f(z_1),\ldots,f(z_n)):f\in\mathcal{F}\}$.
 
-Clearly $S_\mathcal{F}(n)\leq 2^n$ (at most $2^n$ binary labellings of $n$ points).
+Clearly $S_{\mathcal{F}}(n)\leq 2^n$ (at most $2^n$ binary labellings of $n$ points).
 
 **Theorem (Growth Function Bound; Vapnik-Chervonenkis).** For any $\delta>0$, with probability at least $1-\delta$:
 
-$$R^{\text{true}}(f) \leq R^{\text{emp}}(f) + 2\sqrt{\frac{\log S_\mathcal{F}(2n)+\log(4/\delta)}{n}} \quad\forall f\in\mathcal{F}$$
+$$R^{\text{true}}(f) \leq R^{\text{emp}}(f) + 2\sqrt{\frac{\log S_{\mathcal{F}}(2n)+\log(4/\delta)}{n}} \quad\forall f\in\mathcal{F}$$
 
 ### 4.2 VC Dimension
 
-**Definition.** $\mathcal{F}$ **shatters** a set $\{z_1,\ldots,z_n\}$ if $S_\mathcal{F}(n)=2^n$ on those points (every labelling is achievable).
+**Definition.** $\mathcal{F}$ **shatters** a set $\{z_1,\ldots,z_n\}$ if $S_{\mathcal{F}}(n)=2^n$ on those points (every labelling is achievable).
 
 **VC dimension** $h=\text{VC}(\mathcal{F})$: the largest $n$ for which there exists a set of $n$ points that $\mathcal{F}$ shatters.
 
@@ -147,7 +147,7 @@ $$R^{\text{true}}(f) \leq R^{\text{emp}}(f) + 2\sqrt{\frac{\log S_\mathcal{F}(2n
 
 **Lemma (Vapnik-Chervonenkis; Sauer-Shelah).** For $\mathcal{F}$ with finite VC dimension $h$ and $n\geq h$:
 
-$$S_\mathcal{F}(n) \leq \sum_{i=0}^h\binom{n}{i} \leq \left(\frac{en}{h}\right)^h$$
+$$S_{\mathcal{F}}(n) \leq \sum_{i=0}^h\binom{n}{i} \leq \left(\frac{en}{h}\right)^h$$
 
 The growth function is at most polynomial in $n$ (once $n$ exceeds the VC dimension). This is the key insight: even though $\mathcal{F}$ is infinite, it can only "see" $O(n^h)$ distinct labellings on $n$ points.
 

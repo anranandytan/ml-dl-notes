@@ -1,4 +1,4 @@
-# DL 13 — Generative Adversarial Networks (GAN)
+# 22 — Generative Adversarial Networks
 
 > **Keywords:** implicit density, generator, discriminator, minimax game, optimal discriminator, Jensen-Shannon divergence, mode collapse, Wasserstein GAN, gradient penalty
 

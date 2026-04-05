@@ -1,4 +1,4 @@
-# Conditional Random Field (CRF)
+# 18 — Conditional Random Field
 
 > **Keywords:** structured prediction, graphical model, MRF, label bias, forward-backward algorithm, Viterbi, feature functions, log-linear model
 

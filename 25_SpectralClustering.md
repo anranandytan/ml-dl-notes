@@ -1,4 +1,4 @@
-# Spectral Clustering
+# 25 — Spectral Clustering
 
 > **Keywords:** graph Laplacian, normalised cut, affinity matrix, Rayleigh quotient, eigenvectors, k-means, connectivity-based clustering
 

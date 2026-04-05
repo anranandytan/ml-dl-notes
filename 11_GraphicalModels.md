@@ -1,4 +1,4 @@
-# DL 03 — Gaussian Graphical Models
+# 11 — Gaussian Graphical Models
 
 > **Keywords:** precision matrix, conditional independence, partial correlation, Gaussian Bayesian network, Gaussian Markov network, structural equation model, graphical lasso, moralisation
 
@@ -151,7 +151,7 @@ $$= \exp\!\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
 
 Decomposing by pairs of variables:
 
-$$= \exp\!\left(\sum_i\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right) + \sum_{i<j}\left(-\lambda_{ij}x_ix_j\right)\right)$$
+$$= \exp\!\left(\sum_i\Bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\Bigr) + \sum_{i<j}\Bigl(-\lambda_{ij}x_ix_j\Bigr)\right)$$
 
 This gives us:
 - **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\!\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$
