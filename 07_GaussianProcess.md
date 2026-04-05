@@ -6,7 +6,7 @@
 
 ## 1. What Is a Gaussian Process?
 
-In Bayesian linear regression (`DL_01`), we put a Gaussian prior over a finite-dimensional weight vector $w$. A **Gaussian Process (GP)** takes this one step further: we put a prior directly over **functions**.
+In Bayesian linear regression (**04**), we put a Gaussian prior over a finite-dimensional weight vector $w$. A **Gaussian Process (GP)** takes this one step further: we put a prior directly over **functions**.
 
 Think of it this way. A function $f:\mathbb{R}^p\to\mathbb{R}$ is an infinite-dimensional object — it has a value at every point in $\mathbb{R}^p$. A GP is a probability distribution over all such functions. If you sample from a GP, you get a function. If you observe data, the posterior is another GP — the updated distribution over functions consistent with the data.
 
@@ -39,7 +39,7 @@ The GP is completely specified by $m$ and $k$. The kernel $k$ encodes our prior 
 
 ### 3.1 Weight-Space View
 
-In `DL_01` we showed: place a Gaussian prior $w\sim\mathcal{N}(0,\Sigma_p)$ on the weights of a linear model $f(x)=\phi(x)^\top w$. Then for any finite set of inputs, the function values $(f(x_1),\ldots,f(x_n))$ are jointly Gaussian:
+In **04** we showed: place a Gaussian prior $w\sim\mathcal{N}(0,\Sigma_p)$ on the weights of a linear model $f(x)=\phi(x)^\top w$. Then for any finite set of inputs, the function values $(f(x_1),\ldots,f(x_n))$ are jointly Gaussian:
 
 $$\mathbb{E}[f(x)] = \phi(x)^\top\mathbb{E}[w] = 0$$
 
@@ -77,12 +77,12 @@ Equivalently, the Gram matrix $K$ with $K_{ij}=k(x_i,x_j)$ must be PSD.
 
 | Kernel | Formula | Differentiability | Lengthscale |
 |--------|---------|-------------------|-------------|
-| **Squared Exponential (RBF)** | $\sigma_f^2\exp\!\left(-\frac{\|x-x'\|^2}{2\ell^2}\right)$ | Infinitely differentiable | $\ell$ |
-| **Matérn $\nu=1/2$** | $\sigma_f^2\exp\!\left(-\frac{\|x-x'\|}{\ell}\right)$ | Continuous, not differentiable | $\ell$ |
-| **Matérn $\nu=3/2$** | $\sigma_f^2\!\left(1+\frac{\sqrt{3}\|x-x'\|}{\ell}\right)\exp\!\left(-\frac{\sqrt{3}\|x-x'\|}{\ell}\right)$ | Once differentiable | $\ell$ |
-| **Matérn $\nu=5/2$** | $\sigma_f^2\!\left(1+\frac{\sqrt{5}r}{\ell}+\frac{5r^2}{3\ell^2}\right)e^{-\sqrt{5}r/\ell}$ | Twice differentiable | $\ell$ |
+| **Squared Exponential (RBF)** | $\sigma_f^2\exp\left(-\frac{\|x-x'\|^2}{2\ell^2}\right)$ | Infinitely differentiable | $\ell$ |
+| **Matérn $\nu=1/2$** | $\sigma_f^2\exp\left(-\frac{\|x-x'\|}{\ell}\right)$ | Continuous, not differentiable | $\ell$ |
+| **Matérn $\nu=3/2$** | $\sigma_f^2\left(1+\frac{\sqrt{3}\|x-x'\|}{\ell}\right)\exp\left(-\frac{\sqrt{3}\|x-x'\|}{\ell}\right)$ | Once differentiable | $\ell$ |
+| **Matérn $\nu=5/2$** | $\sigma_f^2\left(1+\frac{\sqrt{5}r}{\ell}+\frac{5r^2}{3\ell^2}\right)e^{-\sqrt{5}r/\ell}$ | Twice differentiable | $\ell$ |
 | **Linear** | $\sigma_f^2\,x^\top x'$ | — | — |
-| **Periodic** | $\sigma_f^2\exp\!\left(-\frac{2\sin^2(\pi\|x-x'\|/p)}{\ell^2}\right)$ | Infinitely differentiable | $\ell$, period $p$ |
+| **Periodic** | $\sigma_f^2\exp\left(-\frac{2\sin^2(\pi\|x-x'\|/p)}{\ell^2}\right)$ | Infinitely differentiable | $\ell$, period $p$ |
 
 **Choosing a kernel:**
 - **RBF:** default choice; models very smooth functions. Oversmooths data that is rough.
@@ -134,7 +134,7 @@ The $\sigma^2 I$ term adds noise variance to the diagonal of the kernel matrix.
 
 For test inputs $X^{*}=(x_1^*,\ldots,x_M^*)^\top$, the **joint prior** over $(Y, f(X^{*}))$ is Gaussian. By the GP prior:
 
-$$\begin{pmatrix}Y \\ f(X^{*})\end{pmatrix} \sim \mathcal{N}\!\left(\mathbf{0},\; \begin{pmatrix}K(X,X)+\sigma^2 I & K(X,X^{*}) \\ K(X^{*},X) & K(X^{*},X^{*})\end{pmatrix}\right)$$
+$$\begin{pmatrix}Y \\ f(X^{*})\end{pmatrix} \sim \mathcal{N}\left(\mathbf{0},\; \begin{pmatrix}K(X,X)+\sigma^2 I & K(X,X^{*}) \\ K(X^{*},X) & K(X^{*},X^{*})\end{pmatrix}\right)$$
 
 where:
 - $K(X,X^{*})\in\mathbb{R}^{N\times M}$: training-test cross-covariance; $[K(X,X^{*})]_{ij}=k(x_i,x_{j}^{*})$.
@@ -145,7 +145,7 @@ where:
 
 We use the standard formula for conditioning a joint Gaussian. If
 
-$$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\!\left(\begin{pmatrix}\mu_a\\\mu_b\end{pmatrix}, \begin{pmatrix}\Sigma_{aa}&\Sigma_{ab}\\\Sigma_{ba}&\Sigma_{bb}\end{pmatrix}\right)$$
+$$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\left(\begin{pmatrix}\mu_a\\\mu_b\end{pmatrix}, \begin{pmatrix}\Sigma_{aa}&\Sigma_{ab}\\\Sigma_{ba}&\Sigma_{bb}\end{pmatrix}\right)$$
 
 then $b\mid a\sim\mathcal{N}(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(a-\mu_a),\; \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab})$.
 
@@ -165,7 +165,7 @@ $$\Sigma^* = K(X^{*},X^{*}) - K(X^{*},X)\big(K(X,X)+\sigma^2 I\big)^{-1}K(X,X^{*
 
 For a noisy test observation $y^*=f(x^*)+\varepsilon^*$, add $\sigma^2$ to the predictive variance:
 
-$$P(y^*\mid Y, X, x^*) = \mathcal{N}\!\Big(\mu^*,\;\; \Sigma^* + \sigma^2 I\Big)$$
+$$P(y^*\mid Y, X, x^*) = \mathcal{N}\Big(\mu^*,\;\; \Sigma^* + \sigma^2 I\Big)$$
 
 ---
 

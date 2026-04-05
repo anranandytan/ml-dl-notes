@@ -195,7 +195,7 @@ Add a **prototype layer** to a black-box model, forcing the network to do case-b
 
 $$\min_G\max_D V(D,G) = \mathbb{E}_{x\sim p_{\text{data}}}[\log D(x)] + \mathbb{E}_{z\sim p_z}[\log(1-D(G(z)))]$$
 
-For a detailed derivation of the GAN objective, optimal discriminator, and Jensen-Shannon divergence connection, see **DL_13_GAN.md**.
+For a detailed derivation of the GAN objective, optimal discriminator, and Jensen-Shannon divergence connection, see **22_GAN.md**.
 
 ---
 

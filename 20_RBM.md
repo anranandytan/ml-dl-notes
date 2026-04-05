@@ -59,17 +59,17 @@ $$p(h \mid v) = \prod_{j=1}^K p(h_j \mid v)$$
 
 **Derivation.** Factoring from the joint:
 
-$$p(h \mid v) = \frac{p(v,h)}{\sum_{h'} p(v,h')} \propto \exp\!\left(\sum_j c_j h_j + \sum_{i,j} W_{ij}v_i h_j\right) = \prod_j \exp\!\left(h_j\bigl(c_j + \sum_i W_{ij}v_i\bigr)\right)$$
+$$p(h \mid v) = \frac{p(v,h)}{\sum_{h'} p(v,h')} \propto \exp\left(\sum_j c_j h_j + \sum_{i,j} W_{ij}v_i h_j\right) = \prod_j \exp\left(h_j\bigl(c_j + \sum_i W_{ij}v_i\bigr)\right)$$
 
 This factorises over $j$, confirming conditional independence. Each factor gives a Bernoulli:
 
-$$p(h_j = 1 \mid v) = \sigma\!\left(c_j + \sum_i W_{ij} v_i\right) = \sigma(c_j + W_{\cdot j}^\top v)$$
+$$p(h_j = 1 \mid v) = \sigma\left(c_j + \sum_i W_{ij} v_i\right) = \sigma(c_j + W_{\cdot j}^\top v)$$
 
 where $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function.
 
 By the same argument, given $h$, all visible units are conditionally independent:
 
-$$p(v_i = 1 \mid h) = \sigma\!\left(b_i + \sum_j W_{ij} h_j\right) = \sigma(b_i + W_{i\cdot} h)$$
+$$p(v_i = 1 \mid h) = \sigma\left(b_i + \sum_j W_{ij} h_j\right) = \sigma(b_i + W_{i\cdot} h)$$
 
 These conditional independence properties make **block Gibbs sampling** tractable: alternate between sampling all of $h$ given $v$, and all of $v$ given $h$.
 
@@ -81,7 +81,7 @@ These conditional independence properties make **block Gibbs sampling** tractabl
 
 Marginalising out $h$ (summing over $2^K$ binary configurations of $h$):
 
-$$p(v; \theta) = \frac{1}{Z}\sum_h \exp(-E(v,h)) = \frac{1}{Z}\exp(-b^\top v)\prod_{j=1}^K \sum_{h_j \in \{0,1\}} \exp\!\left(h_j(c_j + W_{\cdot j}^\top v)\right)$$
+$$p(v; \theta) = \frac{1}{Z}\sum_h \exp(-E(v,h)) = \frac{1}{Z}\exp(-b^\top v)\prod_{j=1}^K \sum_{h_j \in \{0,1\}} \exp\left(h_j(c_j + W_{\cdot j}^\top v)\right)$$
 
 Each factor in the product is $1 + \exp(c_j + W_{\cdot j}^\top v)$. Therefore:
 
@@ -91,7 +91,7 @@ $$p(v; \theta) = \frac{1}{Z}\exp(-b^\top v)\prod_{j=1}^K \bigl[1 + \exp(c_j + W_
 
 Define the **free energy** $F(v)$ via $p(v) = e^{-F(v)}/Z$:
 
-$$F(v) = -b^\top v - \sum_{j=1}^K \log\!\bigl[1 + \exp(c_j + W_{\cdot j}^\top v)\bigr]$$
+$$F(v) = -b^\top v - \sum_{j=1}^K \log\bigl[1 + \exp(c_j + W_{\cdot j}^\top v)\bigr]$$
 
 This is a useful quantity because we can compute it exactly (without sampling), and the gradient of $\log p(v)$ can be expressed in terms of gradients of $F$.
 

@@ -48,7 +48,7 @@ where $\mathcal{C}$ is the set of maximal cliques, $x_c$ denotes the variables i
 
 Each potential $\psi_c \geq 0$ can always be written in log-linear form by defining $\psi_c(x_c) = \exp[-E_c(x_c)]$, where $E_c$ is an "energy" (lower energy = higher probability). Equivalently, defining $F_c := -E_c$:
 
-$$p(x) = \frac{1}{Z} \prod_{c} \exp[F_c(x_c)] = \frac{1}{Z} \exp\!\left[\sum_{c} F_c(x_c)\right]$$
+$$p(x) = \frac{1}{Z} \prod_{c} \exp[F_c(x_c)] = \frac{1}{Z} \exp\left[\sum_{c} F_c(x_c)\right]$$
 
 This exponential (Gibbs) form is convenient because the log-probability is a **sum** of local energies, making gradient computations tractable.
 
@@ -94,7 +94,7 @@ $$\psi_t(y_{t-1}, y_t, X) = \exp[F_t(y_{t-1}, y_t, X)]$$
 
 so that:
 
-$$p(Y \mid X) = \frac{1}{Z(X)} \exp\!\left[\sum_{t=1}^{T} F_t(y_{t-1}, y_t, X)\right]$$
+$$p(Y \mid X) = \frac{1}{Z(X)} \exp\left[\sum_{t=1}^{T} F_t(y_{t-1}, y_t, X)\right]$$
 
 ### 5.2 Feature Functions and Parameterisation
 
@@ -110,11 +110,11 @@ $$F_t(y_{t-1}, y_t, X) = \sum_{k=1}^{K} \lambda_k f_k(y_{t-1}, y_t, X) + \sum_{l
 
 Substituting into $p(Y \mid X)$:
 
-$$p(Y \mid X) = \frac{1}{Z(X,\lambda,\eta)} \exp\!\left[\sum_{t=1}^{T}\!\left(\sum_{k=1}^{K} \lambda_k f_k(y_{t-1}, y_t, X) + \sum_{l=1}^{L} \eta_l g_l(y_t, X)\right)\right]$$
+$$p(Y \mid X) = \frac{1}{Z(X,\lambda,\eta)} \exp\left[\sum_{t=1}^{T}\left(\sum_{k=1}^{K} \lambda_k f_k(y_{t-1}, y_t, X) + \sum_{l=1}^{L} \eta_l g_l(y_t, X)\right)\right]$$
 
 Since the double sum can be rearranged (weights are independent of $t$):
 
-$$= \frac{1}{Z(X,\lambda,\eta)} \exp\!\left[\lambda^\top \underbrace{\sum_{t=1}^{T} f(y_{t-1}, y_t, X)}_{\text{total transition feature count}} + \eta^\top \underbrace{\sum_{t=1}^{T} g(y_t, X)}_{\text{total state feature count}}\right]$$
+$$= \frac{1}{Z(X,\lambda,\eta)} \exp\left[\lambda^\top \underbrace{\sum_{t=1}^{T} f(y_{t-1}, y_t, X)}_{\text{total transition feature count}} + \eta^\top \underbrace{\sum_{t=1}^{T} g(y_t, X)}_{\text{total state feature count}}\right]$$
 
 ### 5.3 Compact Notation
 
@@ -124,7 +124,7 @@ $$\theta = \begin{pmatrix} \lambda \\ \eta \end{pmatrix} \in \mathbb{R}^{K+L}, \
 
 Then the CRF distribution takes the elegant form of an **exponential family**:
 
-$$\boxed{p(Y = y \mid X = x) = \frac{1}{Z(x,\theta)} \exp\!\left[\theta^\top H(y, x)\right]}$$
+$$\boxed{p(Y = y \mid X = x) = \frac{1}{Z(x,\theta)} \exp\left[\theta^\top H(y, x)\right]}$$
 
 where $Z(x, \theta) = \sum_{y'} \exp[\theta^\top H(y', x)]$.
 
@@ -158,7 +158,7 @@ $$\nabla_\lambda \mathcal{L} = \sum_{i=1}^{N} \left[\sum_{t=1}^{T} f(y_{t-1}^{(i
 
 $$\nabla_\lambda \log Z = \frac{\nabla_\lambda Z}{Z} = \frac{\sum_y \exp[\theta^\top H(y,x)] \cdot \sum_t f(y_{t-1},y_t,x)}{\sum_y \exp[\theta^\top H(y,x)]}$$
 
-$$= \sum_y p(y \mid x) \sum_{t=1}^{T} f(y_{t-1}, y_t, x) = \mathbb{E}_{p(y \mid x)}\!\left[\sum_{t=1}^{T} f(y_{t-1}, y_t, x)\right]$$
+$$= \sum_y p(y \mid x) \sum_{t=1}^{T} f(y_{t-1}, y_t, x) = \mathbb{E}_{p(y \mid x)}\left[\sum_{t=1}^{T} f(y_{t-1}, y_t, x)\right]$$
 
 **Exchanging sum and expectation** (both are finite):
 

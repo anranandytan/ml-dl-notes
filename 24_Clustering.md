@@ -109,7 +109,7 @@ The choice of $d(A,B)$ — how to measure the distance between two clusters — 
 |---|---|---|
 | **Single** | $\min_{a\in A,b\in B}\|a-b\|$ | Long chain-like clusters |
 | **Complete** | $\max_{a\in A,b\in B}\|a-b\|$ | Compact, roughly equal-size clusters |
-| **Average** | $\frac{1}{|A||B|}\sum_{a,b}\|a-b\|$ | Balanced clusters |
+| **Average** | $\frac{1}{\lvert A\rvert \lvert B\rvert}\sum_{a,b}\|a-b\|$ | Balanced clusters |
 | **Ward** | Increase in total within-cluster variance when merged | Compact clusters; similar to K-means |
 
 ### 3.3 When to Use Hierarchical vs. K-Means
@@ -142,9 +142,9 @@ K-means is the **hard-assignment limit** of the Gaussian Mixture Model (GMM):
 - GMM assigns each point a **soft** (fractional) membership in each cluster.
 - As the component variances shrink to zero, GMM collapses to K-means.
 
-For a full treatment of GMM and the EM algorithm, see **DL_04_EM.md**.
+For a full treatment of GMM and the EM algorithm, see **12_EM.md**.
 
-For connectivity-based clustering via the graph Laplacian, see **DL_16_SpectralClustering.md**.
+For connectivity-based clustering via the graph Laplacian, see **25_SpectralClustering.md**.
 
 ---
 

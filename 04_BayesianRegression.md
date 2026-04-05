@@ -111,7 +111,7 @@ $$(Y - Xw)^\top(Y - Xw) = Y^\top Y - 2\,w^\top X^\top Y + w^\top X^\top X w$$
 
 Dropping the constant $Y^\top Y$ and grouping:
 
-$$\log p(w \mid \mathcal{D}) \propto \frac{1}{\sigma^2}\,w^\top X^\top Y - \frac{1}{2}\,w^\top\underbrace{\!\left(\frac{1}{\sigma^2}X^\top X + \Sigma_p^{-1}\right)\!}_{:=\,A}\!w$$
+$$\log p(w \mid \mathcal{D}) \propto \frac{1}{\sigma^2}\,w^\top X^\top Y - \frac{1}{2}\,w^\top\underbrace{\left(\frac{1}{\sigma^2}X^\top X + \Sigma_p^{-1}\right)}_{:=\,A}w$$
 
 ### 5.3 Completing the Square
 
@@ -140,13 +140,13 @@ $$A = \frac{1}{\sigma^2}X^\top X + \Sigma_p^{-1}, \qquad \Sigma_w = A^{-1}, \qqu
 
 For a new input $x^* \in \mathbb{R}^p$, the latent function value $f(x^*) = w^\top x^*$ is a linear function of $w$. Using the standard result for linear transformations of Gaussians ($c^\top w \sim \mathcal{N}(c^\top \mu_w, c^\top \Sigma_w c)$ when $w \sim \mathcal{N}(\mu_w, \Sigma_w)$):
 
-$$f(x^*) \sim \mathcal{N}\!\bigl((x^{*})^{\top} \mu_w,\; (x^{*})^{\top} \Sigma_w\, x^*\bigr)$$
+$$f(x^*) \sim \mathcal{N}\bigl((x^{*})^{\top} \mu_w,\; (x^{*})^{\top} \Sigma_w\, x^*\bigr)$$
 
 ### 6.2 Observed Output
 
 The observed $y^* = f(x^*) + \varepsilon^*$ adds independent noise $\varepsilon^* \sim \mathcal{N}(0, \sigma^2)$. The variance of the sum of two independent random variables is the sum of their variances:
 
-$$\boxed{p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\!\Bigl((x^{*})^{\top} \mu_w,\;\; \underbrace{(x^{*})^{\top} \Sigma_w\, x^*}_{\text{epistemic}} + \underbrace{\sigma^2}_{\text{aleatoric}}\Bigr)}$$
+$$\boxed{p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\Bigl((x^{*})^{\top} \mu_w,\;\; \underbrace{(x^{*})^{\top} \Sigma_w\, x^*}_{\text{epistemic}} + \underbrace{\sigma^2}_{\text{aleatoric}}\Bigr)}$$
 
 ### 6.3 Two Types of Uncertainty
 
@@ -194,7 +194,7 @@ $$k(x, x') := \phi(x)^\top \Sigma_p\, \phi(x')$$
 
 This is the **kernel function**. Define the $N \times N$ Gram matrix $K$ with $K_{ij} = k(x_i, x_j)$ and the $N$-vector $k^*$ with $k^*_i = k(x_i, x^*)$. The predictive distribution becomes:
 
-$$p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\!\Bigl((k^{*})^{\top}(K + \sigma^2 I)^{-1}Y,\;\; k(x^*, x^*) - (k^{*})^{\top}(K + \sigma^2 I)^{-1}k^* + \sigma^2\Bigr)$$
+$$p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\Bigl((k^{*})^{\top}(K + \sigma^2 I)^{-1}Y,\;\; k(x^*, x^*) - (k^{*})^{\top}(K + \sigma^2 I)^{-1}k^* + \sigma^2\Bigr)$$
 
 This is the **Gaussian Process Regression** formula. The weight-space and function-space views are mathematically equivalent (connected via the Woodbury identity); the GP view avoids working in the infinite-dimensional feature space.
 

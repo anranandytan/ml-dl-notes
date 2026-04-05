@@ -49,7 +49,7 @@ Represent $N$ data points $\{x_i\}_{i=1}^N$ as a weighted undirected graph $G = 
 
 A common choice is the **Gaussian (RBF) kernel**:
 
-$$w_{ij} = \begin{cases} \exp\!\left(-\dfrac{\|x_i - x_j\|^2}{2\sigma^2}\right) & \text{if } (i,j) \in E \\ 0 & \text{otherwise} \end{cases}$$
+$$w_{ij} = \begin{cases} \exp\left(-\dfrac{\|x_i - x_j\|^2}{2\sigma^2}\right) & \text{if } (i,j) \in E \\ 0 & \text{otherwise} \end{cases}$$
 
 The bandwidth $\sigma$ controls the neighbourhood scale. The graph structure (which edges exist) is typically chosen by $\epsilon$-neighbourhood or $k$-nearest-neighbours.
 
@@ -133,17 +133,17 @@ For $k=l$: $\sum_{i\in A_k, j\in A_k}w_{ij} = w(A_k, A_k)$. So $Y^\top WY = \tex
 
 **Therefore:**
 
-$$Y^\top(D-W)Y = Y^\top DY - Y^\top WY = \text{diag}\!\big(\text{vol}(A_k) - w(A_k,A_k)\big) = \text{diag}\!\big(w(A_k,\bar{A}_k)\big)$$
+$$Y^\top(D-W)Y = Y^\top DY - Y^\top WY = \text{diag}\big(\text{vol}(A_k) - w(A_k,A_k)\big) = \text{diag}\big(w(A_k,\bar{A}_k)\big)$$
 
 ### 6.2 Ncut as a Trace
 
-$$\text{Ncut}(V) = \sum_{k=1}^K\frac{w(A_k,\bar{A}_k)}{\text{vol}(A_k)} = \text{tr}\!\left(\text{diag}\!\big(w(A_k,\bar{A}_k)\big)\cdot\text{diag}\!\big(\text{vol}(A_k)\big)^{-1}\right)$$
+$$\text{Ncut}(V) = \sum_{k=1}^K\frac{w(A_k,\bar{A}_k)}{\text{vol}(A_k)} = \text{tr}\left(\text{diag}\big(w(A_k,\bar{A}_k)\big)\cdot\text{diag}\big(\text{vol}(A_k)\big)^{-1}\right)$$
 
-$$= \text{tr}\!\Big(Y^\top(D-W)Y\cdot(Y^\top DY)^{-1}\Big) = \text{tr}\!\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
+$$= \text{tr}\Big(Y^\top(D-W)Y\cdot(Y^\top DY)^{-1}\Big) = \text{tr}\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
 
 The optimisation problem becomes:
 
-$$\hat{Y} = \arg\min_{Y\in\{0,1\}^{N\times K}}\;\text{tr}\!\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
+$$\hat{Y} = \arg\min_{Y\in\{0,1\}^{N\times K}}\;\text{tr}\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
 
 ### 6.3 Relaxation to a Continuous Problem
 
@@ -151,7 +151,7 @@ The integer constraint $Y\in\{0,1\}^{N\times K}$ makes this NP-hard. Relax to re
 
 **Change of variables:** Let $F = D^{1/2}Y$. Then $Y^\top DY = F^\top F$ and $Y^\top LY = F^\top D^{-1/2}LD^{-1/2}F$. The problem becomes:
 
-$$\hat{F} = \arg\min_{F^\top F=I}\;\text{tr}\!\big(F^\top L_{\text{norm}}F\big)$$
+$$\hat{F} = \arg\min_{F^\top F=I}\;\text{tr}\big(F^\top L_{\text{norm}}F\big)$$
 
 where $L_{\text{norm}} = D^{-1/2}LD^{-1/2}$ is the **symmetric normalised Laplacian**.
 

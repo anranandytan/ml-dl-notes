@@ -171,7 +171,7 @@ $$[\text{MCR}_-, \text{MCR}_+] = \left[\min_{f\in\text{Rset}}\text{MR}(f,j),\;\m
 - $h_t$: weak classifier chosen at round $t$.
 - $\alpha_t$: coefficient for $h_t$ in the ensemble.
 - $\mathbf{M}\in\mathbb{R}^{n\times p}$: margin matrix, $M_{ij} = y_i h_j(x_i)\in\{-1,+1\}$.
-- Final classifier: $H(x) = \text{sign}\!\left(\sum_{t=1}^T \alpha_t h_t(x)\right)$.
+- Final classifier: $H(x) = \text{sign}\left(\sum_{t=1}^T \alpha_t h_t(x)\right)$.
 
 **Exponential loss** (upper bounds misclassification error):
 
@@ -185,7 +185,7 @@ $$\text{Error}_t = \sum_{i: h_t(x_i)\neq y_i} d_{t,i}$$
 
 Compute the coefficient:
 
-$$\alpha_t = \frac{1}{2}\ln\!\left(\frac{1-\text{Error}_t}{\text{Error}_t}\right)$$
+$$\alpha_t = \frac{1}{2}\ln\left(\frac{1-\text{Error}_t}{\text{Error}_t}\right)$$
 
 Update weights (unnormalised):
 

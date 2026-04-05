@@ -41,7 +41,7 @@ Bayesian inference requires computing the posterior $p(z \mid x)$. For all but t
 
 **ELBO decomposition:**
 
-$$\log p(x) = \underbrace{\mathbb{E}_{q(z)}\!\left[\log\frac{p(x, z)}{q(z)}\right]}_{\mathcal{L}(q)\;=\;\text{ELBO}} + D_{\mathrm{KL}}(q(z) \| p(z \mid x))$$
+$$\log p(x) = \underbrace{\mathbb{E}_{q(z)}\left[\log\frac{p(x, z)}{q(z)}\right]}_{\mathcal{L}(q)\;=\;\text{ELBO}} + D_{\mathrm{KL}}(q(z) \| p(z \mid x))$$
 
 Since $D_{\mathrm{KL}} \geq 0$, the ELBO is a lower bound: $\mathcal{L}(q) \leq \log p(x)$. Maximising $\mathcal{L}(q)$ over $q \in \mathcal{Q}$ is equivalent to minimising $D_{\mathrm{KL}}(q \| p(z\mid x))$.
 
@@ -96,7 +96,7 @@ SGVI uses stochastic gradient ascent on the ELBO with a parametric family $q_\ph
 
 Using the log-derivative trick $\nabla_\phi q_\phi = q_\phi \nabla_\phi \log q_\phi$:
 
-$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{q_\phi(z)}\!\left[\nabla_\phi \log q_\phi(z) \cdot \bigl(\log p(x, z) - \log q_\phi(z)\bigr)\right]$$
+$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{q_\phi(z)}\left[\nabla_\phi \log q_\phi(z) \cdot \bigl(\log p(x, z) - \log q_\phi(z)\bigr)\right]$$
 
 **Derivation.** Since $\int q_\phi\,dz = 1$, $\int \nabla_\phi q_\phi\,dz = 0$, which makes the entropy gradient term vanish. The remaining term uses $\nabla_\phi q_\phi = q_\phi \nabla_\phi \log q_\phi$.
 
@@ -106,7 +106,7 @@ This estimator is **unbiased** but has **high variance** in practice. The term $
 
 A key technique to reduce variance: subtract a **baseline** $b$ (any constant w.r.t. $z$) from the reward. Since $\mathbb{E}_q[\nabla_\phi \log q_\phi] = 0$, this does not change the expectation:
 
-$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\!\left[\nabla_\phi \log q_\phi(z) \cdot \bigl(\log p(x,z) - \log q_\phi(z) - b\bigr)\right]$$
+$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\nabla_\phi \log q_\phi(z) \cdot \bigl(\log p(x,z) - \log q_\phi(z) - b\bigr)\right]$$
 
 The optimal baseline minimising variance is $b^* = \mathbb{E}[\nabla_\phi\log q_\phi \cdot r] / \mathbb{E}[(\nabla_\phi\log q_\phi)^2]$ where $r$ is the reward. In practice, the **running mean of the reward** is a common approximation.
 
@@ -120,7 +120,7 @@ $$\varepsilon \sim p(\varepsilon), \qquad z = g_\phi(\varepsilon, x)$$
 
 then the gradient moves inside the expectation via the chain rule:
 
-$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{p(\varepsilon)}\!\left[\nabla_\phi \bigl(\log p(x, z) - \log q_\phi(z \mid x)\bigr)\right]_{z = g_\phi(\varepsilon, x)}$$
+$$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{p(\varepsilon)}\left[\nabla_\phi \bigl(\log p(x, z) - \log q_\phi(z \mid x)\bigr)\right]_{z = g_\phi(\varepsilon, x)}$$
 
 **Gaussian example.** For $q_\phi(z \mid x) = \mathcal{N}(\mu_\phi(x), \sigma_\phi^2(x)I)$:
 
@@ -164,7 +164,7 @@ For each minibatch {x^(1), ..., x^(N)}:
 
 For $q_\phi(z\mid x)=\mathcal{N}(\mu_\phi, \mathrm{diag}(\sigma_\phi^2))$ and $p(z)=\mathcal{N}(0,I)$:
 
-$$D_{\mathrm{KL}}(q_\phi \| p) = \frac{1}{2}\sum_{d=1}^D\!\left(\mu_{\phi,d}^2 + \sigma_{\phi,d}^2 - \log\sigma_{\phi,d}^2 - 1\right)$$
+$$D_{\mathrm{KL}}(q_\phi \| p) = \frac{1}{2}\sum_{d=1}^D\left(\mu_{\phi,d}^2 + \sigma_{\phi,d}^2 - \log\sigma_{\phi,d}^2 - 1\right)$$
 
 This has a closed-form gradient, requiring no sampling.
 

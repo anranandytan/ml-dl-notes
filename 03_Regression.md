@@ -66,7 +66,7 @@ Ridge regression is the MAP estimator under:
 
 The posterior is:
 
-$$P(\beta|Y,X) \propto P(Y|X,\beta)\,P(\beta) \propto \exp\!\left(-\frac{1}{2\sigma^2}\|Y-X\beta\|_2^2 - \frac{1}{2\tau^2}\|\beta\|_2^2\right)$$
+$$P(\beta|Y,X) \propto P(Y|X,\beta)\,P(\beta) \propto \exp\left(-\frac{1}{2\sigma^2}\|Y-X\beta\|_2^2 - \frac{1}{2\tau^2}\|\beta\|_2^2\right)$$
 
 Taking $-\log$:
 
@@ -127,10 +127,10 @@ Lasso:  no closed form; sparse solution via iterative methods
 Bayesian view:
   Ridge ↔ Gaussian prior on λ (MAP)
   Lasso ↔ Laplace prior on λ  (MAP)
-  (See DL_01_BayesianRegression.md for the full derivation)
+  (See 04_BayesianRegression.md for the full derivation)
 
 Kernel ridge regression: replace XᵀX with Gram matrix K
-  (See ML_06_Kernels.md)
+  (See 06_Kernels.md)
 ```
 
 ---

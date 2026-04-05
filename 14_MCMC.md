@@ -93,7 +93,7 @@ At each iteration $t$:
 1. Sample a candidate $\theta^* \sim q(\theta^* \mid \theta^{(t)})$.
 2. Compute the **acceptance ratio**:
 
-$$\alpha = \min\!\left(1,\;\frac{\tilde{\pi}(\theta^*)\, q(\theta^{(t)} \mid \theta^*)}{\tilde{\pi}(\theta^{(t)})\, q(\theta^* \mid \theta^{(t)})}\right)$$
+$$\alpha = \min\left(1,\;\frac{\tilde{\pi}(\theta^*)\, q(\theta^{(t)} \mid \theta^*)}{\tilde{\pi}(\theta^{(t)})\, q(\theta^* \mid \theta^{(t)})}\right)$$
 
 3. Accept: set $\theta^{(t+1)} = \theta^*$ with probability $\alpha$; otherwise set $\theta^{(t+1)} = \theta^{(t)}$.
 
@@ -107,7 +107,7 @@ where $r(\theta) = 1 - \int q(\theta' \mid \theta)\alpha(\theta,\theta')\,d\thet
 
 For the continuous part ($\theta' \neq \theta$), verify detailed balance:
 
-$$\pi(\theta)\, q(\theta' \mid \theta)\,\alpha(\theta, \theta') = \pi(\theta)\, q(\theta' \mid \theta)\min\!\left(1,\frac{\pi(\theta')\, q(\theta \mid \theta')}{\pi(\theta)\, q(\theta' \mid \theta)}\right)$$
+$$\pi(\theta)\, q(\theta' \mid \theta)\,\alpha(\theta, \theta') = \pi(\theta)\, q(\theta' \mid \theta)\min\left(1,\frac{\pi(\theta')\, q(\theta \mid \theta')}{\pi(\theta)\, q(\theta' \mid \theta)}\right)$$
 
 **Case 1:** $\pi(\theta')q(\theta\mid\theta') \geq \pi(\theta)q(\theta'\mid\theta)$. Then $\alpha(\theta,\theta')=1$ and:
 
@@ -127,7 +127,7 @@ $$\pi(\theta)\,q(\theta'\mid\theta)\cdot 1 = \pi(\theta')\,q(\theta\mid\theta')\
 
 $q(\theta' \mid \theta) = q(\theta')$ (proposal does not depend on current state). Then:
 
-$$\alpha = \min\!\left(1,\; \frac{\pi(\theta^*)q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^*)}\right) = \min\!\left(1,\; \frac{w(\theta^*)}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
+$$\alpha = \min\left(1,\; \frac{\pi(\theta^*)q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^*)}\right) = \min\left(1,\; \frac{w(\theta^*)}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
 
 This is the importance weight ratio. Works well when $q$ is a good approximation to $\pi$; breaks down when $\pi/q$ has heavy tails.
 
@@ -139,7 +139,7 @@ This is the importance weight ratio. Works well when $q$ is a good approximation
 
 When the target is a joint distribution $\pi(\theta_1, \ldots, \theta_p)$, Gibbs sampling cycles through variables, sampling each from its **full conditional** while holding all others fixed:
 
-$$\theta_{j}^{(t+1)} \sim p\!\left(\theta_j \mid \theta_1^{(t+1)}, \ldots, \theta_{j-1}^{(t+1)}, \theta_{j+1}^{(t)}, \ldots, \theta_p^{(t)}\right)$$
+$$\theta_{j}^{(t+1)} \sim p\left(\theta_j \mid \theta_1^{(t+1)}, \ldots, \theta_{j-1}^{(t+1)}, \theta_{j+1}^{(t)}, \ldots, \theta_p^{(t)}\right)$$
 
 No proposal distribution is needed, and every sample is accepted — provided the full conditionals can be sampled from.
 

@@ -81,7 +81,7 @@ A **Gaussian Bayesian Network** is a DAG where each variable $x_i$ has a Gaussia
 
 $$p(x) = \prod_{i=1}^p p(x_i\mid x_{\text{pa}(i)})$$
 
-$$p(x_i\mid x_{\text{pa}(i)}) = \mathcal{N}\!\left(\mu_i + \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j),\;\sigma_i^2\right)$$
+$$p(x_i\mid x_{\text{pa}(i)}) = \mathcal{N}\left(\mu_i + \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j),\;\sigma_i^2\right)$$
 
 The conditional mean is an affine function of the parents (each centred at its own marginal mean $\mu_j$).
 
@@ -137,25 +137,25 @@ $$p(x) = \frac{1}{Z}\prod_{c\in\mathcal{C}}\psi_c(x_c)$$
 
 For a Gaussian, write each potential in log-linear form $\psi_c = \exp(-E_c)$:
 
-$$p(x) = \frac{1}{Z}\exp\!\left(-\sum_c E_c(x_c)\right) = \frac{1}{Z}\exp(-E(x))$$
+$$p(x) = \frac{1}{Z}\exp\left(-\sum_c E_c(x_c)\right) = \frac{1}{Z}\exp(-E(x))$$
 
 ### 5.2 Reading the Potentials from the Gaussian
 
 The Gaussian density:
 
-$$p(x)\propto\exp\!\left(-\frac{1}{2}(x-\mu)^\top\Lambda(x-\mu)\right)$$
+$$p(x)\propto\exp\left(-\frac{1}{2}(x-\mu)^\top\Lambda(x-\mu)\right)$$
 
 Expanding (and defining $h=\Lambda\mu$):
 
-$$= \exp\!\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
+$$= \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
 
 Decomposing by pairs of variables:
 
-$$= \exp\!\left(\sum_i\Bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\Bigr) + \sum_{i<j}\Bigl(-\lambda_{ij}x_ix_j\Bigr)\right)$$
+$$= \exp\left(\sum_i\Bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\Bigr) + \sum_{i<j}\Bigl(-\lambda_{ij}x_ix_j\Bigr)\right)$$
 
 This gives us:
-- **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\!\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$
-- **Edge potential** for $(x_i,x_j)$: $\psi_{ij}(x_i,x_j)\propto\exp\!\left(-\lambda_{ij}x_ix_j\right)$
+- **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$
+- **Edge potential** for $(x_i,x_j)$: $\psi_{ij}(x_i,x_j)\propto\exp\left(-\lambda_{ij}x_ix_j\right)$
 
 **Graph structure from $\Lambda$:** Edge $(i,j)$ exists in the GMN if and only if $\lambda_{ij}\neq 0$.
 
@@ -163,17 +163,17 @@ This gives us:
 
 The full conditional of $x_i$ given all others $x_{-i}$ is found by collecting all terms in $\log p(x)$ that involve $x_i$:
 
-$$\log p(x_i\mid x_{-i}) = -\frac{1}{2}\lambda_{ii}x_i^2 + x_i\!\left(h_i-\sum_{j\neq i}\lambda_{ij}x_j\right) + \text{const}$$
+$$\log p(x_i\mid x_{-i}) = -\frac{1}{2}\lambda_{ii}x_i^2 + x_i\left(h_i-\sum_{j\neq i}\lambda_{ij}x_j\right) + \text{const}$$
 
 Completing the square in $x_i$:
 
-$$\boxed{x_i\mid x_{-i}\sim\mathcal{N}\!\left(\frac{h_i-\sum_{j\neq i}\lambda_{ij}x_j}{\lambda_{ii}},\;\;\frac{1}{\lambda_{ii}}\right)}$$
+$$\boxed{x_i\mid x_{-i}\sim\mathcal{N}\left(\frac{h_i-\sum_{j\neq i}\lambda_{ij}x_j}{\lambda_{ii}},\;\;\frac{1}{\lambda_{ii}}\right)}$$
 
 where $h_i=(\Lambda\mu)_i$.
 
 **For zero-mean $\mu=0$** (so $h=0$):
 
-$$x_i\mid x_{-i}\sim\mathcal{N}\!\left(-\sum_{j\neq i}\frac{\lambda_{ij}}{\lambda_{ii}}x_j,\;\;\frac{1}{\lambda_{ii}}\right)$$
+$$x_i\mid x_{-i}\sim\mathcal{N}\left(-\sum_{j\neq i}\frac{\lambda_{ij}}{\lambda_{ii}}x_j,\;\;\frac{1}{\lambda_{ii}}\right)$$
 
 **Key observations:**
 1. The conditional mean of $x_i$ depends only on its **neighbours** in the graph (nodes $j$ with $\lambda_{ij}\neq 0$). All non-neighbours drop out — this is the Markov property.

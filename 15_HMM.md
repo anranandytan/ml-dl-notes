@@ -73,9 +73,9 @@ $$P(O,I|\lambda) = \pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}
 
 | Problem | Task | Algorithm | Complexity |
 |---------|------|-----------|-----------|
-| **Evaluation** | Given $\lambda$, compute $P(O|\lambda)$ | Forward (or Backward) | $O(N^2 T)$ |
-| **Learning** | Given $O$, find $\lambda^* = \arg\max P(O|\lambda)$ | Baum-Welch (EM) | $O(N^2 T)$ per iteration |
-| **Decoding** | Given $O$ and $\lambda$, find $\hat{I} = \arg\max_I P(I|O,\lambda)$ | Viterbi | $O(N^2 T)$ |
+| **Evaluation** | Given $\lambda$, compute $P(O\mid\lambda)$ | Forward (or Backward) | $O(N^2 T)$ |
+| **Learning** | Given $O$, find $\lambda^* = \arg\max P(O\mid\lambda)$ | Baum-Welch (EM) | $O(N^2 T)$ per iteration |
+| **Decoding** | Given $O$ and $\lambda$, find $\hat{I} = \arg\max_I P(I\mid O,\lambda)$ | Viterbi | $O(N^2 T)$ |
 
 ---
 
@@ -85,7 +85,7 @@ $$P(O,I|\lambda) = \pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}
 
 The marginal likelihood is:
 
-$$P(O|\lambda) = \sum_I P(O,I|\lambda) = \sum_{z_1}\sum_{z_2}\cdots\sum_{z_T}\;\pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}(x_t)$$
+$$P(O\mid\lambda) = \sum_I P(O,I|\lambda) = \sum_{z_1}\sum_{z_2}\cdots\sum_{z_T}\;\pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}(x_t)$$
 
 Direct summation over all $N^T$ state sequences is exponential in $T$. Dynamic programming (memoising shared sub-computations) reduces this to $O(N^2 T)$.
 
@@ -124,7 +124,7 @@ $$\boxed{\alpha_{t+1}(j) = b_j(x_{t+1})\sum_{i=1}^{N} a_{ij}\,\alpha_t(i)}$$
 
 **Termination:**
 
-$$P(O|\lambda) = \sum_{i=1}^{N}\alpha_T(i)$$
+$$P(O\mid\lambda) = \sum_{i=1}^{N}\alpha_T(i)$$
 
 This sums the forward variable at the final time step over all possible terminal states.
 
@@ -157,19 +157,19 @@ $$\boxed{\beta_t(i) = \sum_{j=1}^{N} a_{ij}\,b_j(x_{t+1})\,\beta_{t+1}(j)}$$
 
 **Termination** via backward variables:
 
-$$P(O|\lambda) = \sum_{i=1}^{N} \pi_i\, b_i(x_1)\,\beta_1(i)$$
+$$P(O\mid\lambda) = \sum_{i=1}^{N} \pi_i\, b_i(x_1)\,\beta_1(i)$$
 
-This follows because $P(O|\lambda) = \sum_i P(x_1,\ldots,x_T, z_1=q_i) = \sum_i P(x_1|z_1=q_i)\,P(x_2,\ldots,x_T|z_1=q_i)\,\pi_i = \sum_i b_i(x_1)\,\beta_1(i)\,\pi_i$.
+This follows because $P(O\mid\lambda) = \sum_i P(x_1,\ldots,x_T, z_1=q_i) = \sum_i P(x_1|z_1=q_i)\,P(x_2,\ldots,x_T|z_1=q_i)\,\pi_i = \sum_i b_i(x_1)\,\beta_1(i)\,\pi_i$.
 
 ### 5.4 Marginals via Forward-Backward
 
 The forward and backward variables combine to give marginal and pairwise posteriors:
 
 **State marginal** at time $t$:
-$$P(z_t=q_i \mid O,\lambda) =: \gamma_t(i) = \frac{\alpha_t(i)\,\beta_t(i)}{P(O|\lambda)} = \frac{\alpha_t(i)\,\beta_t(i)}{\sum_{j=1}^N \alpha_t(j)\,\beta_t(j)}$$
+$$P(z_t=q_i \mid O,\lambda) =: \gamma_t(i) = \frac{\alpha_t(i)\,\beta_t(i)}{P(O\mid\lambda)} = \frac{\alpha_t(i)\,\beta_t(i)}{\sum_{j=1}^N \alpha_t(j)\,\beta_t(j)}$$
 
 **Pairwise marginal** (needed for Baum-Welch):
-$$P(z_t=q_i, z_{t+1}=q_j \mid O,\lambda) =: \xi_t(i,j) = \frac{\alpha_t(i)\,a_{ij}\,b_j(x_{t+1})\,\beta_{t+1}(j)}{P(O|\lambda)}$$
+$$P(z_t=q_i, z_{t+1}=q_j \mid O,\lambda) =: \xi_t(i,j) = \frac{\alpha_t(i)\,a_{ij}\,b_j(x_{t+1})\,\beta_{t+1}(j)}{P(O\mid\lambda)}$$
 
 ---
 
@@ -177,13 +177,13 @@ $$P(z_t=q_i, z_{t+1}=q_j \mid O,\lambda) =: \xi_t(i,j) = \frac{\alpha_t(i)\,a_{i
 
 ### 6.1 EM Setup
 
-We want $\hat{\lambda} = \arg\max_\lambda P(O|\lambda)$. Treating the state sequence $I$ as the latent variable, the EM Q-function is:
+We want $\hat{\lambda} = \arg\max_\lambda P(O\mid\lambda)$. Treating the state sequence $I$ as the latent variable, the EM Q-function is:
 
 $$Q(\lambda, \lambda^{(t)}) = \sum_I \log P(O,I|\lambda)\cdot P(I \mid O,\;\lambda^{(t)})$$
 
 Expanding $\log P(O,I|\lambda) = \log\pi_{z_1} + \sum_{t=2}^{T}\log a_{z_{t-1},z_t} + \sum_{t=1}^{T}\log b_{z_t}(x_t)$:
 
-$$Q(\lambda,\lambda^{(t)}) = \sum_I\!\left[\log\pi_{z_1} + \sum_{t=2}^{T}\log a_{z_{t-1},z_t} + \sum_{t=1}^{T}\log b_{z_t}(x_t)\right] P(I\mid O,\lambda^{(t)})$$
+$$Q(\lambda,\lambda^{(t)}) = \sum_I\left[\log\pi_{z_1} + \sum_{t=2}^{T}\log a_{z_{t-1},z_t} + \sum_{t=1}^{T}\log b_{z_t}(x_t)\right] P(I\mid O,\lambda^{(t)})$$
 
 Because each term involves different parameters ($\pi$, $A$, $B$), the M-step separates into three independent maximisations.
 

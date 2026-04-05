@@ -74,11 +74,11 @@ This is a maximum since $d^2f/dD^2 = -a/D^2 - b/(1-D)^2 < 0$.
 
 Substitute $D^*_G$ into $V(D^*_G, G)$:
 
-$$V(D^*_G, G) = \mathbb{E}_{p_{\mathrm{data}}}\!\left[\log\frac{p_{\mathrm{data}}}{p_{\mathrm{data}}+p_g}\right] + \mathbb{E}_{p_g}\!\left[\log\frac{p_g}{p_{\mathrm{data}}+p_g}\right]$$
+$$V(D^*_G, G) = \mathbb{E}_{p_{\mathrm{data}}}\left[\log\frac{p_{\mathrm{data}}}{p_{\mathrm{data}}+p_g}\right] + \mathbb{E}_{p_g}\left[\log\frac{p_g}{p_{\mathrm{data}}+p_g}\right]$$
 
 Add and subtract $\log 2$ in each term:
 
-$$= -\log 4 + D_{\mathrm{KL}}\!\left(p_{\mathrm{data}}\,\Big\|\,\frac{p_{\mathrm{data}}+p_g}{2}\right) + D_{\mathrm{KL}}\!\left(p_g\,\Big\|\,\frac{p_{\mathrm{data}}+p_g}{2}\right)$$
+$$= -\log 4 + D_{\mathrm{KL}}\left(p_{\mathrm{data}}\,\Big\|\,\frac{p_{\mathrm{data}}+p_g}{2}\right) + D_{\mathrm{KL}}\left(p_g\,\Big\|\,\frac{p_{\mathrm{data}}+p_g}{2}\right)$$
 
 The **Jensen-Shannon divergence** is $\mathrm{JSD}(p\|q) = \frac{1}{2}D_{\mathrm{KL}}(p\|\frac{p+q}{2}) + \frac{1}{2}D_{\mathrm{KL}}(q\|\frac{p+q}{2}) \geq 0$, with equality iff $p=q$. Therefore:
 
@@ -128,7 +128,7 @@ where the supremum is over 1-Lipschitz functions. Unlike JSD, $W$ is continuous 
 
 The discriminator is replaced by a **critic** $f_w$ (not constrained to $[0,1]$), trained to approximate the Wasserstein distance. The Lipschitz constraint is enforced via **gradient penalty** (WGAN-GP):
 
-$$\mathcal{L}_D = \mathbb{E}_{p_g}[f_w] - \mathbb{E}_{p_{\mathrm{data}}}[f_w] + \lambda\mathbb{E}_{\hat{x}}\!\left[(\|\nabla_{\hat{x}}f_w(\hat{x})\|_2 - 1)^2\right]$$
+$$\mathcal{L}_D = \mathbb{E}_{p_g}[f_w] - \mathbb{E}_{p_{\mathrm{data}}}[f_w] + \lambda\mathbb{E}_{\hat{x}}\left[(\|\nabla_{\hat{x}}f_w(\hat{x})\|_2 - 1)^2\right]$$
 
 where $\hat{x}$ is sampled uniformly along straight lines between real and generated samples.
 

@@ -26,7 +26,7 @@ Each token (word or subword) is mapped to a dense vector in $\mathbb{R}^{d_{\tex
 
 Attention has no inherent notion of order — the same attention weights apply regardless of position. **Positional encodings** inject position information:
 
-$$PE_{(pos,2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \qquad PE_{(pos,2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$
+$$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \qquad PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$
 
 where $pos$ is the position in the sequence and $i$ is the dimension index.
 
@@ -52,7 +52,7 @@ Self-attention allows each token to aggregate information from all other tokens,
 
 **Scaled dot-product attention:**
 
-$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}}\right)V\in\mathbb{R}^{n\times d_{\text{small}}}$$
+$$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}}\right)V\in\mathbb{R}^{n\times d_{\text{small}}}$$
 
 The scaling by $\sqrt{d_{\text{small}}}$ prevents the dot products from becoming too large in magnitude (which would push the softmax into a saturated regime with near-zero gradients).
 
@@ -72,7 +72,7 @@ Different heads can learn to attend to different types of relationships (syntact
 
 For autoregressive generation, each token should attend only to **previous** tokens (not future ones). Add a mask $M$ before the softmax:
 
-$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}} + M\right)V$$
+$$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}} + M\right)V$$
 
 where $M_{ij}=-\infty$ if $j>i$ (future tokens are masked out) and $0$ otherwise.
 
@@ -111,7 +111,7 @@ Most modern LLMs (GPT-4, Claude, LLaMA) are **decoder-only**:
 | **Absolute** (sinusoidal) | Fixed formula: $\sin/\cos$ of position | Simple; models memorise trained positions; poor extrapolation |
 | **Relative** | Learn attention bias based on relative distance $i-j$ | Better local context; computationally expensive (more parameters) |
 | **Rotary (RoPE)** | Rotate query and key vectors by position angle | Both absolute and relative info; better extrapolation; no learned parameters; used by most LLMs |
-| **Linear Bias (ALiBi)** | Subtract a linear penalty $|i-j|$ from attention scores | Easy extrapolation; no learned parameters; trades performance for context length |
+| **Linear Bias (ALiBi)** | Subtract a linear penalty $\lvert i-j\rvert$ from attention scores | Easy extrapolation; no learned parameters; trades performance for context length |
 | **NoPE** | No positional encoding | Decoder-only transformers can implicitly learn position from masked attention patterns |
 
 ---

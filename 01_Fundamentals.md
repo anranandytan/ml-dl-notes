@@ -84,7 +84,7 @@ where $C > 0$ controls the trade-off between fit and simplicity. Larger $C$ = st
 | Norm | Formula | Effect |
 |------|---------|--------|
 | $\ell_2$ (ridge) | $\|\lambda\|_2^2 = \sum_j \lambda_j^2$ | Shrinks all coefficients |
-| $\ell_1$ (Lasso) | $\|\lambda\|_1 = \sum_j |\lambda_j|$ | Sets some coefficients to zero (sparsity) |
+| $\ell_1$ (Lasso) | $\|\lambda\|_1 = \sum_j \lvert\lambda_j\rvert$ | Sets some coefficients to zero (sparsity) |
 | $\ell_0$ | $\|\lambda\|_0 = \sum_j \mathbf{1}[\lambda_j \neq 0]$ | Counts non-zero terms |
 
 **Full objectives:**
@@ -122,7 +122,7 @@ $$\text{TNR (Specificity)} = \frac{TN}{N_-} = \frac{\sum_i \mathbf{1}[y_i=\hat{y
 
 $$\text{FPR} = \frac{FP}{N_-} = 1 - \text{TNR}$$
 
-$$\text{Precision} = \frac{TP}{N_{\hat{+}}}$$
+$$\text{Precision} = \frac{TP}{TP + FP}$$
 
 $$F_1 = 2\cdot\frac{\text{Precision}\times\text{Recall}}{\text{Precision}+\text{Recall}}$$
 
@@ -148,7 +148,7 @@ When positives are rare:
 3. Examine the confusion matrix separately for FP and FN.
 4. Weigh losses for positives and negatives differently:
 
-$$\frac{1}{n}\!\left(C_{\text{imb}}\sum_{i:y_i=1}\ell(y_i,f(x_i)) + \sum_{k:y_k=-1}\ell(y_k,f(x_k))\right) + \text{Reg}(f)$$
+$$\frac{1}{n}\left(C_{\text{imb}}\sum_{i:y_i=1}\ell(y_i,f(x_i)) + \sum_{k:y_k=-1}\ell(y_k,f(x_k))\right) + \text{Reg}(f)$$
 
 ---
 

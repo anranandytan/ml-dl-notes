@@ -32,7 +32,7 @@ For degree $d$: $k(x,z)=(x^\top z+c)^d$ implicitly maps to a feature space conta
 
 ## 3. Gaussian (RBF) Kernel
 
-$$k(x,z) = \exp\!\left(-\frac{\lVert x-z\rVert^2}{\sigma^2}\right)$$
+$$k(x,z) = \exp\left(-\frac{\lVert x-z\rVert^2}{\sigma^2}\right)$$
 
 This corresponds to an **infinite-dimensional** feature space. It is translation-invariant ($k$ depends only on $x-z$).
 

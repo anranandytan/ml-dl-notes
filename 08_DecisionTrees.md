@@ -61,7 +61,7 @@ Entropy is 0 when the distribution is pure (one class dominates) and maximal whe
 
 **Information Gain** of splitting on feature $A$, which partitions the data into $J$ branches:
 
-$$\text{Gain}(S, A) = H\!\left(\frac{n_+}{n_+ + n_-}, \frac{n_-}{n_+ + n_-}\right) - \sum_{j=1}^J \frac{n^{+}_j + n^{-}_j}{n_+ + n_-}\,H\!\left(\frac{n^{+}_j}{n^{+}_j+n^{-}_j}, \frac{n^{-}_j}{n^{+}_j+n^{-}_j}\right)$$
+$$\text{Gain}(S, A) = H\left(\frac{n_+}{n_+ + n_-}, \frac{n_-}{n_+ + n_-}\right) - \sum_{j=1}^J \frac{n^{+}_j + n^{-}_j}{n_+ + n_-}\,H\left(\frac{n^{+}_j}{n^{+}_j+n^{-}_j}, \frac{n^{-}_j}{n^{+}_j+n^{-}_j}\right)$$
 
 This is the reduction in entropy achieved by the split. A gain of 0 means the feature carries no information about the label.
 

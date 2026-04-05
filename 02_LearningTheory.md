@@ -45,7 +45,7 @@ This is the **bias-variance trade-off** expressed in risk terms.
 
 **Theorem (Hoeffding's Inequality).** Let $Z_1,\ldots,Z_n$ be i.i.d. random variables with $h(Z)\in[a,b]$. Then for all $\epsilon>0$:
 
-$$\mathbb{P}\!\left(\left|\frac{1}{n}\sum_{i=1}^nh(Z_i)-\mathbb{E}[h(Z)]\right|>\epsilon\right) \leq 2\exp\!\left(-\frac{2n\epsilon^2}{(b-a)^2}\right)$$
+$$\mathbb{P}\left(\left|\frac{1}{n}\sum_{i=1}^nh(Z_i)-\mathbb{E}[h(Z)]\right|>\epsilon\right) \leq 2\exp\left(-\frac{2n\epsilon^2}{(b-a)^2}\right)$$
 
 **Inverted (confidence interval form):** Setting the right-hand side to $\delta$:
 
@@ -77,7 +77,7 @@ Define "bad events" $C_j = \{\text{training set } \mathbf{Z} \text{ where } R^{\
 
 By Hoeffding (one-sided) applied to each $g_j$:
 
-$$\mathbb{P}\!\left[\exists f\in\mathcal{F}: R^{\text{true}}(f)-R^{\text{emp}}(f)\geq\epsilon\right] \leq \sum_{j=1}^M\exp(-2n\epsilon^2) = M\exp(-2n\epsilon^2)$$
+$$\mathbb{P}\left[\exists f\in\mathcal{F}: R^{\text{true}}(f)-R^{\text{emp}}(f)\geq\epsilon\right] \leq \sum_{j=1}^M\exp(-2n\epsilon^2) = M\exp(-2n\epsilon^2)$$
 
 Setting this to $\delta$: $\epsilon=\sqrt{\frac{\log M+\log(1/\delta)}{2n}}$.
 
@@ -160,7 +160,7 @@ Combining the Growth Function Bound with the Sauer-Shelah Lemma:
 $$\boxed{R^{\text{true}}(f) \leq R^{\text{emp}}(f) + 2\sqrt{\frac{h(\ln(2n)+1)+\log(4/\delta)}{n}} \quad\forall f\in\mathcal{F}}$$
 
 **Interpretation:**
-- The gap between true and empirical risk is $O\!\left(\sqrt{h\log n/n}\right)$.
+- The gap between true and empirical risk is $O\left(\sqrt{h\log n/n}\right)$.
 - For the gap to be small, we need $n\gg h$ (many times the VC dimension of the class).
 - For $n=h$: the bound is vacuous — we can shatter the training data and learn nothing about the true risk.
 - Richer classes (larger $h$) require more data to generalise.

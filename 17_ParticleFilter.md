@@ -89,7 +89,7 @@ $$\mathbb{E}[f(z_t)] = \int f(z_t)\,p(z_t|x_{1:t})\,dz_t$$
 
 Introduce a tractable **proposal** distribution $q(z_t|x_{1:t})$ and rewrite:
 
-$$= \int f(z_t)\,\frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}\,q(z_t|x_{1:t})\,dz_t = \mathbb{E}_q\!\left[f(z_t)\,w_t\right], \quad w_t = \frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}$$
+$$= \int f(z_t)\,\frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}\,q(z_t|x_{1:t})\,dz_t = \mathbb{E}_q\left[f(z_t)\,w_t\right], \quad w_t = \frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}$$
 
 Drawing $N$ samples $z_t^{(i)} \sim q$ gives the Monte Carlo estimator with **unnormalised weights** $w_t^{(i)}$:
 
@@ -229,10 +229,10 @@ Bootstrap Filter:
 
 | Algorithm | Proposal | Weight | Resampling | Complexity |
 |-----------|----------|--------|-----------|-----------|
-| **SIS** | Any $q(z_t|z_{t-1},x_{1:t})$ | $w_t \propto w_{t-1}\cdot\frac{P(x_t|z_t)P(z_t|z_{t-1})}{q(z_t|z_{t-1},x_{1:t})}$ | No | Degenerates |
-| **Bootstrap (SIR)** | $P(z_t|z_{t-1})$ | $w_t \propto P(x_t|z_t)$ | Yes | $O(N)$ per step |
-| **Auxiliary PF** | $P(z_t|z_{t-1},x_t)$ approx. | Adjusted | Yes | $O(N)$ per step, better ESS |
-| **Optimal proposal** | $P(z_t|z_{t-1},x_t)$ exact | $w_t \propto P(x_t|z_{t-1})$ | Yes | Minimises variance; often intractable |
+| **SIS** | Any $q(z_t\mid z_{t-1},x_{1:t})$ | $w_t \propto w_{t-1}\cdot\frac{P(x_t\mid z_t)P(z_t\mid z_{t-1})}{q(z_t\mid z_{t-1},x_{1:t})}$ | No | Degenerates |
+| **Bootstrap (SIR)** | $P(z_t\mid z_{t-1})$ | $w_t \propto P(x_t\mid z_t)$ | Yes | $O(N)$ per step |
+| **Auxiliary PF** | $P(z_t\mid z_{t-1},x_t)$ approx. | Adjusted | Yes | $O(N)$ per step, better ESS |
+| **Optimal proposal** | $P(z_t\mid z_{t-1},x_t)$ exact | $w_t \propto P(x_t\mid z_{t-1})$ | Yes | Minimises variance; often intractable |
 
 ---
 

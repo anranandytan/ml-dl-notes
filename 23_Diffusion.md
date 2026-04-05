@@ -43,7 +43,7 @@ The key insight connecting all diffusion models is the **score function** $\nabl
 
 A $d$-dimensional Gaussian $x \sim \mathcal{N}(\mu, \Sigma)$ has density:
 
-$$p(x) = \frac{1}{(2\pi)^{d/2}\det(\Sigma)^{1/2}} \exp\!\left(-\frac{1}{2}(x-\mu)^\top \Sigma^{-1}(x-\mu)\right)$$
+$$p(x) = \frac{1}{(2\pi)^{d/2}\det(\Sigma)^{1/2}} \exp\left(-\frac{1}{2}(x-\mu)^\top \Sigma^{-1}(x-\mu)\right)$$
 
 **Key property (convolution):** If $x \sim p_0$ and $\varepsilon \sim \mathcal{N}(0, tI)$ independently, then $x + \varepsilon \sim p_0 * \mathcal{N}(0, tI)$, i.e., the density of $x+\varepsilon$ is the convolution of $p_0$ with a Gaussian kernel.
 
@@ -87,7 +87,7 @@ $$\frac{d}{dt}\mathbb{E}[F(x_t)] = \lim_{\delta \to 0}\frac{\mathbb{E}[F(x_{t+\d
 The first-order term vanishes: $\mathbb{E}[\langle \nabla F(x_t), \sqrt{\delta}\,\xi\rangle] = \sqrt{\delta}\langle \nabla F(x_t), \mathbb{E}[\xi]\rangle = 0$.
 
 The second-order term survives:
-$$\frac{1}{2\delta}\mathbb{E}\!\left[\delta\,\xi^\top \nabla^2 F(x_t)\,\xi\right] = \frac{1}{2}\mathbb{E}\!\left[\text{tr}(\nabla^2 F(x_t)\,\mathbb{E}[\xi\xi^\top])\right] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 F(x_t))]$$
+$$\frac{1}{2\delta}\mathbb{E}\left[\delta\,\xi^\top \nabla^2 F(x_t)\,\xi\right] = \frac{1}{2}\mathbb{E}\left[\text{tr}(\nabla^2 F(x_t)\,\mathbb{E}[\xi\xi^\top])\right] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 F(x_t))]$$
 
 Therefore, **Itô's lemma** for $dx_t = dB_t$:
 
@@ -119,7 +119,7 @@ The variance grows without bound. Simple but the scale of $x_t$ drifts far from 
 
 Using Itô's lemma with $F(x) = \|x\|^2$, $\nabla F = 2x$, $\nabla^2 F = 2I$:
 
-$$\frac{d}{dt}\mathbb{E}[\|\bar{x}_t\|^2] = \mathbb{E}\!\left[\left\langle 2\bar{x}_t, -\tfrac{1}{2}\bar{x}_t\right\rangle\right] + \frac{1}{2}\mathbb{E}[2d] = -\mathbb{E}[\|\bar{x}_t\|^2] + d$$
+$$\frac{d}{dt}\mathbb{E}[\|\bar{x}_t\|^2] = \mathbb{E}\left[\left\langle 2\bar{x}_t, -\tfrac{1}{2}\bar{x}_t\right\rangle\right] + \frac{1}{2}\mathbb{E}[2d] = -\mathbb{E}[\|\bar{x}_t\|^2] + d$$
 
 This ODE (in $m(t) = \mathbb{E}[\|\bar{x}_t\|^2]$) has solution:
 $$m(t) = e^{-t}(m(0) - d) + d$$
@@ -200,7 +200,7 @@ Differentiating $\log p_t(x)$ with respect to $x$:
 $$\nabla \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)} = \frac{\int p_0(x_0)\,\nabla_x q_t(x \mid x_0)\,dx_0}{p_t(x)}$$
 
 Computing $\nabla_x q_t(x \mid x_0) = q_t(x \mid x_0) \cdot \frac{x_0 - x}{t}$, so:
-$$\nabla \log p_t(x) = \frac{\int p_0(x_0)\,q_t(x \mid x_0)\,\frac{x_0-x}{t}\,dx_0}{p_t(x)} = \mathbb{E}\!\left[\frac{x_0 - x_t}{t}\,\bigg|\,x_t = x\right]$$
+$$\nabla \log p_t(x) = \frac{\int p_0(x_0)\,q_t(x \mid x_0)\,\frac{x_0-x}{t}\,dx_0}{p_t(x)} = \mathbb{E}\left[\frac{x_0 - x_t}{t}\,\bigg|\,x_t = x\right]$$
 
 $$\boxed{\nabla \log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{t}}$$
 
@@ -216,18 +216,18 @@ $$\nabla \log p_t(x) = \frac{\mathbb{E}[-\sqrt{t}\,\varepsilon \mid x_t = x]}{t}
 ### 5.3 Denoising Score Matching Loss
 
 We want to train a network $s_\theta(x_t, t)$ to approximate $\nabla\log p_t(x_t)$. The naive objective:
-$$\min_\theta\;\mathbb{E}\!\left[\|s_\theta(x_t, t) - \nabla\log p_t(x_t)\|^2\right]$$
+$$\min_\theta\;\mathbb{E}\left[\|s_\theta(x_t, t) - \nabla\log p_t(x_t)\|^2\right]$$
 is intractable because $\nabla\log p_t(x_t)$ requires integrating over all $x_0$.
 
 **Denoising score matching** (Vincent, 2011) replaces this with a tractable surrogate. Define $h_{x_0}(v) = \|v - \frac{x_0-x_t}{t}\|^2$. Then:
-$$L(v) = \mathbb{E}_{x_0 \mid x_t}\!\left[\left\|v - \nabla\log p_t(x_t)\right\|^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
+$$L(v) = \mathbb{E}_{x_0 \mid x_t}\left[\left\|v - \nabla\log p_t(x_t)\right\|^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
 
 Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^*) = 0$:
-$$\mathbb{E}_{x_0 \mid x_t}\!\left[2(v^* - \tfrac{x_0-x_t}{t})\right] = 0 \;\Rightarrow\; v^* = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
+$$\mathbb{E}_{x_0 \mid x_t}\left[2(v^* - \tfrac{x_0-x_t}{t})\right] = 0 \;\Rightarrow\; v^* = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
 
 Therefore, minimising over $(x_0, x_t)$ jointly:
 
-$$\boxed{\min_\theta\;\mathbb{E}_{x_0,\, \varepsilon \sim \mathcal{N}(0, tI),\, x_t = x_0+\varepsilon}\!\left[\left\|s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\|^2\right]}$$
+$$\boxed{\min_\theta\;\mathbb{E}_{x_0,\, \varepsilon \sim \mathcal{N}(0, tI),\, x_t = x_0+\varepsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\|^2\right]}$$
 
 Under infinite capacity, the minimiser equals $\nabla\log p_t(x_t)$. This expectation is tractable: sample $x_0$ from data, sample $\varepsilon$, form $x_t = x_0 + \varepsilon$, then evaluate the squared error.
 
@@ -258,7 +258,7 @@ The score generalises to:
 $$\nabla\log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{\sigma_t^2}$$
 
 and the score matching loss is:
-$$\min_\theta\;\mathbb{E}_{x_0,\,\epsilon\sim\mathcal{N}(0,I),\,x_t = x_0+\sigma_t\epsilon}\!\left[\left\|s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\|^2\right]$$
+$$\min_\theta\;\mathbb{E}_{x_0,\,\epsilon\sim\mathcal{N}(0,I),\,x_t = x_0+\sigma_t\epsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\|^2\right]$$
 
 ### 6.2 Probability Flow ODE
 
@@ -306,7 +306,7 @@ $$dx_t = \frac{1}{2}\nabla\log\pi(x_t)\,dt + dB_t$$
 **Claim:** $\pi$ is the stationary distribution of this SDE.
 
 **Proof via Fokker-Planck.** Assume $q_t = \pi$. Then:
-$$\frac{\partial}{\partial t}q_t(x) = -\text{div}\!\left(q_t(x)\,\frac{1}{2}\nabla\log\pi(x)\right) + \frac{1}{2}\text{div}(\nabla q_t(x))$$
+$$\frac{\partial}{\partial t}q_t(x) = -\text{div}\left(q_t(x)\,\frac{1}{2}\nabla\log\pi(x)\right) + \frac{1}{2}\text{div}(\nabla q_t(x))$$
 
 $$= -\frac{1}{2}\text{div}(\pi(x)\nabla\log\pi(x)) + \frac{1}{2}\text{div}(\nabla\pi(x))$$
 
@@ -412,7 +412,7 @@ For any smooth test function $f$:
 $$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\int p_0(x_0)p_1(x_1)\,\langle\nabla f(x_0 + t(x_1-x_0)),\, x_1-x_0\rangle\,dx_0\,dx_1$$
 
 (differentiating through the definition $x_t = (1-t)x_0 + tx_1$). After a change of variables $x_1 \to x_t = (1-t)x_0 + tx_1$ (Jacobian $t^{-d}$), the density of $x_t$ is:
-$$p_t(x) = \int p_0(x_0)\,p_1\!\left(\frac{x-(1-t)x_0}{t}\right)t^{-d}\,dx_0$$
+$$p_t(x) = \int p_0(x_0)\,p_1\left(\frac{x-(1-t)x_0}{t}\right)t^{-d}\,dx_0$$
 
 Substituting and simplifying the expectation:
 $$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\nabla f(x_t)\cdot p_t(x_t)\,\frac{x_t - \mathbb{E}[x_0 \mid x_t]}{t}\,dx_t$$
@@ -427,7 +427,7 @@ $$\boxed{v_t(x) = \frac{x - \mathbb{E}[x_0 \mid x_t = x]}{t}}$$
 
 The conditional velocity given $(x_0, x_1)$ is simply $\dot{x}_t = x_1 - x_0$ (constant along each trajectory). The **flow matching loss** regresses the network $u_t(x;\theta)$ toward this conditional target:
 
-$$L(\theta) = \mathbb{E}_{x_0,\,x_1,\,t}\!\left[\left\|u_t(x_t;\,\theta) - (x_1 - x_0)\right\|_2^2\right], \quad x_t = (1-t)x_0 + tx_1$$
+$$L(\theta) = \mathbb{E}_{x_0,\,x_1,\,t}\left[\left\|u_t(x_t;\,\theta) - (x_1 - x_0)\right\|_2^2\right], \quad x_t = (1-t)x_0 + tx_1$$
 
 This is **simulation-free**: no ODE integration is required during training — just sample $t, x_0, x_1$, form $x_t$, and evaluate the squared error.
 

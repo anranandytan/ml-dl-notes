@@ -50,7 +50,7 @@ Generative models sit at the heart of modern machine learning: language models (
 | **Energy-based** | Boltzmann Machine, RBM | $p(x) \propto e^{-E(x)}$; unnormalised density |
 | **VAE** | VAE, $\beta$-VAE, IWAE | Amortised variational inference; learned encoder/decoder |
 | **GAN** | GAN, DCGAN, StyleGAN, WGAN | Adversarial game; implicit density |
-| **Autoregressive** | PixelCNN, GPT, WaveNet | $p(x) = \prod_t p(x_t | x_{<t})$; exact likelihood |
+| **Autoregressive** | PixelCNN, GPT, WaveNet | $p(x) = \prod_t p(x_t \mid x_{<t})$; exact likelihood |
 | **Flow-based** | RealNVP, Glow, FFJORD | Invertible map; exact likelihood via change-of-variables |
 | **Diffusion / Score** | DDPM, DDIM, Flow Matching | Iterative denoising; score matching |
 
@@ -85,7 +85,7 @@ These progressions share a common theme: start with a hard-assignment or determi
 
 | Type | Definition | Examples |
 |------|-----------|----------|
-| **Directed (Bayesian network)** | $p(x) = \prod_i p(x_i | \text{parents}(x_i))$; clear ancestral sampling | HMM, VAE, diffusion |
+| **Directed (Bayesian network)** | $p(x) = \prod_i p(x_i \mid \text{parents}(x_i))$; clear ancestral sampling | HMM, VAE, diffusion |
 | **Undirected (MRF)** | $p(x) = \frac{1}{Z}\prod_c \psi_c(x_c)$; no ordering, partition function $Z$ intractable | RBM, Boltzmann Machine, MRF/CRF |
 
 ### 4.3 Latent Variable vs. Fully-Observed
@@ -101,7 +101,7 @@ Latent variable models are more compact and interpretable but require integratin
 
 | Type | Definition | Examples |
 |------|-----------|----------|
-| **Tractable** | Posterior $p(z|x)$ or likelihood $p(x)$ has closed form | Linear-Gaussian models (Kalman filter), P-PCA |
+| **Tractable** | Posterior $p(z\mid x)$ or likelihood $p(x)$ has closed form | Linear-Gaussian models (Kalman filter), P-PCA |
 | **Intractable** | Must approximate via variational inference (ELBO) or MCMC | Deep VAEs, LDA, Boltzmann machines |
 
 ### 4.5 Shallow vs. Deep
@@ -161,7 +161,7 @@ Separating the two parameters:
 
 $$\frac{\partial Y}{\partial \mu} = 1, \qquad \frac{\partial Y}{\partial \sigma} = Z$$
 
-$$\boxed{\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \mu}}_{1} \cdot \nabla_\theta \mu \;+\; \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \sigma}}_{Z} \cdot \nabla_\theta \sigma}$$
+$$\boxed{\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \mu}}_{1} \cdot \nabla_\theta \mu + \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \sigma}}_{Z} \cdot \nabla_\theta \sigma}$$
 
 This is a standard backpropagation chain rule — no special treatment of stochastic nodes needed. Modern autodiff frameworks (PyTorch, JAX) implement this automatically.
 
@@ -173,7 +173,7 @@ $$Z \sim \mathcal{N}(0, 1), \qquad Y = \mu_\theta(X) + \sigma_\theta(X)\cdot Z$$
 
 The gradient w.r.t. $\theta$ is:
 
-$$\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \mu_\theta}\cdot\nabla_\theta \mu_\theta(X) \;+\; \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \sigma_\theta}\cdot\nabla_\theta \sigma_\theta(X)$$
+$$\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \mu_\theta}\cdot\nabla_\theta \mu_\theta(X) + \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \sigma_\theta}\cdot\nabla_\theta \sigma_\theta(X)$$
 
 with $\frac{\partial Y}{\partial \mu_\theta} = 1$ and $\frac{\partial Y}{\partial \sigma_\theta} = Z$.
 

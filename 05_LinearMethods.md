@@ -26,7 +26,7 @@ This saturates at 0 and 1, making it a natural model for probabilities.
 
 **Log-odds (logit):**
 
-$$\ln\!\left(\frac{P(Y=1|x,\theta)}{P(Y=-1|x,\theta)}\right) = \theta^\top x$$
+$$\ln\left(\frac{P(Y=1|x,\theta)}{P(Y=-1|x,\theta)}\right) = \theta^\top x$$
 
 **Probability:**
 

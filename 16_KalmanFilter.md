@@ -93,7 +93,7 @@ The predicted covariance grows: the process noise $Q$ adds uncertainty that will
 
 The state $z_t$ and observation $x_t$ are jointly Gaussian given $x_{1:t-1}$:
 
-$$\begin{pmatrix}z_t \\ x_t\end{pmatrix} \Bigg\vert x_{1:t-1} \sim \mathcal{N}\!\left(\begin{pmatrix}\mu_{t}^{*} \\ C\mu_{t}^{*}+D\end{pmatrix},\;\begin{pmatrix}\Sigma_{t}^{*} & \Sigma_{t}^{*}C^\top \\ C\Sigma_{t}^{*} & C\Sigma_{t}^{*}C^\top+R\end{pmatrix}\right)$$
+$$\begin{pmatrix}z_t \\ x_t\end{pmatrix} \Bigg\vert x_{1:t-1} \sim \mathcal{N}\left(\begin{pmatrix}\mu_{t}^{*} \\ C\mu_{t}^{*}+D\end{pmatrix},\;\begin{pmatrix}\Sigma_{t}^{*} & \Sigma_{t}^{*}C^\top \\ C\Sigma_{t}^{*} & C\Sigma_{t}^{*}C^\top+R\end{pmatrix}\right)$$
 
 The cross-covariance $\text{Cov}(z_t, x_t) = \Sigma_{t}^{*} C^\top$ follows from $x_t = Cz_t + D + \delta_t$ with $\delta_t$ independent of $z_t$.
 
@@ -191,7 +191,7 @@ $$\Sigma_t^{\text{sm}} = \Sigma_t + G_t(\Sigma_{t+1}^{\text{sm}} - \Sigma_{t+1}^
 |-------|---------|--------|
 | **EKF** | Mild nonlinearity | Linearise $f$, $h$ via first-order Taylor |
 | **UKF** | Moderate nonlinearity | Sigma-point propagation |
-| **Particle Filter** | Arbitrary nonlinearity and noise | Sequential Monte Carlo (DL_09) |
+| **Particle Filter** | Arbitrary nonlinearity and noise | Sequential Monte Carlo (17_ParticleFilter) |
 | **Kalman EM** | Unknown $A, C, Q, R$ | EM with Kalman smoother as E-step |
 | **Ensemble KF** | Very high-dimensional $z$ | Monte Carlo covariance approximation |
 
