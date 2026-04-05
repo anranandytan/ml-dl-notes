@@ -12,7 +12,7 @@ Think of it this way. A function $f:\mathbb{R}^p\to\mathbb{R}$ is an infinite-di
 
 **Formal definition.** A collection of random variables $\{f(x)\}_{x\in\mathcal{X}}$ is a **Gaussian Process** if every finite subcollection $(f(x_1),\ldots,f(x_n))^\top$ follows a joint Gaussian distribution. We write:
 
-$$f \sim \mathcal{GP}(m(x),\; k(x,x'))$$
+$$f \sim \mathcal{GP}(m(x),  k(x,x'))$$
 
 where:
 - $m(x) = \mathbb{E}[f(x)]$: the **mean function** (often set to 0).
@@ -118,7 +118,7 @@ This allows building structured kernels: e.g., $k = k_{\text{linear}} + k_{\text
 
 For training inputs $X=(x_1,\ldots,x_N)^\top$, the GP prior over function values $f(X)=(f(x_1),\ldots,f(x_N))^\top$ is:
 
-$$f(X) \sim \mathcal{N}(\mathbf{0},\; K(X,X))$$
+$$f(X) \sim \mathcal{N}(\mathbf{0},  K(X,X))$$
 
 where $K(X,X)\in\mathbb{R}^{N\times N}$ is the **Gram matrix** with $[K(X,X)]_{ij}=k(x_i,x_j)$. (We use zero mean function for simplicity; all results generalise trivially to non-zero $m$.)
 
@@ -126,46 +126,55 @@ where $K(X,X)\in\mathbb{R}^{N\times N}$ is the **Gram matrix** with $[K(X,X)]_{i
 
 We observe noisy outputs $y_i = f(x_i) + \varepsilon_i$, $\varepsilon_i\overset{\text{iid}}{\sim}\mathcal{N}(0,\sigma^2)$. In matrix form:
 
-$$Y \mid f(X) \sim \mathcal{N}(f(X),\; \sigma^2 I) \quad\Rightarrow\quad Y \sim \mathcal{N}(\mathbf{0},\; K(X,X)+\sigma^2 I)$$
+$$Y \mid f(X) \sim \mathcal{N}(f(X),  \sigma^2 I) \quad\Rightarrow\quad Y \sim \mathcal{N}(\mathbf{0},  K(X,X)+\sigma^2 I)$$
 
 The $\sigma^2 I$ term adds noise variance to the diagonal of the kernel matrix.
 
 ### 5.3 Joint Distribution of Training and Test Points
 
-For test inputs $X^{*}=(x_1^*,\ldots,x_M^*)^\top$, the **joint prior** over $(Y, f(X^{*}))$ is Gaussian. By the GP prior:
+For test inputs $X^{\ast}=(x_1^{\ast},\ldots,x_M^{\ast})^\top$, the **joint prior** over $(Y, f(X^{\ast}))$ is Gaussian. By the GP prior:
 
-$$\begin{pmatrix}Y \\ f(X^{*})\end{pmatrix} \sim \mathcal{N}\left(\mathbf{0},\; \begin{pmatrix}K(X,X)+\sigma^2 I & K(X,X^{*}) \\ K(X^{*},X) & K(X^{*},X^{*})\end{pmatrix}\right)$$
+$$\begin{pmatrix}Y \\ f(X^{\ast})\end{pmatrix} \sim \mathcal{N}\!\left(\mathbf{0}, 
+\begin{pmatrix}
+K(X,X)+\sigma^2 I & K(X,X^{\ast}) \\
+K(X^{\ast},X)        & K(X^{\ast},X^{\ast})
+\end{pmatrix}\right)$$
 
 where:
-- $K(X,X^{*})\in\mathbb{R}^{N\times M}$: training-test cross-covariance; $[K(X,X^{*})]_{ij}=k(x_i,x_{j}^{*})$.
-- $K(X^{*},X)=K(X,X^{*})^\top\in\mathbb{R}^{M\times N}$: test-training cross-covariance.
-- $K(X^{*},X^{*})\in\mathbb{R}^{M\times M}$: test-test prior covariance.
+- $K(X,X^{\ast})\in\mathbb{R}^{N\times M}$: training-test cross-covariance; $[K(X,X^{\ast})]_{ij}=k(x_i,x_{j}^{\ast})$.
+- $K(X^{\ast},X)=K(X,X^{\ast})^\top\in\mathbb{R}^{M\times N}$: test-training cross-covariance.
+- $K(X^{\ast},X^{\ast})\in\mathbb{R}^{M\times M}$: test-test prior covariance.
 
 ### 5.4 Posterior by Gaussian Conditioning
 
 We use the standard formula for conditioning a joint Gaussian. If
 
-$$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\left(\begin{pmatrix}\mu_a\\\mu_b\end{pmatrix}, \begin{pmatrix}\Sigma_{aa}&\Sigma_{ab}\\\Sigma_{ba}&\Sigma_{bb}\end{pmatrix}\right)$$
+$$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\!\left(
+\begin{pmatrix}\mu_a\\\mu_b\end{pmatrix}, 
+\begin{pmatrix}
+\Sigma_{aa} & \Sigma_{ab}\\
+\Sigma_{ba} & \Sigma_{bb}
+\end{pmatrix}\right)$$
 
-then $b\mid a\sim\mathcal{N}(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(a-\mu_a),\; \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab})$.
+then $b\mid a\sim\mathcal{N}(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(a-\mu_a),  \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab})$.
 
-Applying with $a=Y$, $b=f(X^{*})$, $\mu_a=\mu_b=0$:
+Applying with $a=Y$, $b=f(X^{\ast})$, $\mu_a=\mu_b=0$:
 
-$$\boxed{P(f(X^{*})\mid Y, X, X^{*}) = \mathcal{N}(\mu^*,\; \Sigma^*)}$$
+$$\boxed{P(f(X^{\ast})\mid Y, X, X^{\ast}) = \mathcal{N}(\mu^{\ast},  \Sigma^{\ast})}$$
 
-$$\mu^* = K(X^{*},X)\big(K(X,X)+\sigma^2 I\big)^{-1}Y$$
+$$\mu^{\ast} = K(X^{\ast},X)\big(K(X,X)+\sigma^2 I\big)^{-1}Y$$
 
-$$\Sigma^* = K(X^{*},X^{*}) - K(X^{*},X)\big(K(X,X)+\sigma^2 I\big)^{-1}K(X,X^{*})$$
+$$\Sigma^{\ast} = K(X^{\ast},X^{\ast}) - K(X^{\ast},X)\big(K(X,X)+\sigma^2 I\big)^{-1}K(X,X^{\ast})$$
 
-**Reading the posterior mean:** $\mu_{j}^{*} = \sum_{i=1}^N \alpha_i k(x_i,x_{j}^{*})$ where $\alpha = (K+\sigma^2I)^{-1}Y$. Each training point contributes to the prediction at $x_{j}^{*}$ in proportion to its kernel similarity $k(x_i,x_{j}^{*})$ and its weight $\alpha_i$.
+**Reading the posterior mean:** $\mu_{j}^{\ast} = \sum_{i=1}^N \alpha_i k(x_i,x_{j}^{\ast})$ where $\alpha = (K+\sigma^2I)^{-1}Y$. Each training point contributes to the prediction at $x_{j}^{\ast}$ in proportion to its kernel similarity $k(x_i,x_{j}^{\ast})$ and its weight $\alpha_i$.
 
-**Reading the posterior variance:** $\Sigma^*$ starts from the prior covariance $K(X^{*},X^{*})$ and subtracts $K(X^{*},X)(K+\sigma^2I)^{-1}K(X,X^{*})$ — the reduction due to observing $Y$. Uncertainty decreases monotonically as more data are added.
+**Reading the posterior variance:** $\Sigma^{\ast}$ starts from the prior covariance $K(X^{\ast},X^{\ast})$ and subtracts $K(X^{\ast},X)(K+\sigma^2I)^{-1}K(X,X^{\ast})$ — the reduction due to observing $Y$. Uncertainty decreases monotonically as more data are added.
 
 ### 5.5 Predictive Distribution for Noisy Observations
 
-For a noisy test observation $y^*=f(x^*)+\varepsilon^*$, add $\sigma^2$ to the predictive variance:
+For a noisy test observation $y^{\ast}=f(x^{\ast})+\varepsilon^{\ast}$, add $\sigma^2$ to the predictive variance:
 
-$$P(y^*\mid Y, X, x^*) = \mathcal{N}\Big(\mu^*,\;\; \Sigma^* + \sigma^2 I\Big)$$
+$$P(y^{\ast}\mid Y, X, x^{\ast}) = \mathcal{N}\Big(\mu^{\ast},   \Sigma^{\ast} + \sigma^2 I\Big)$$
 
 ---
 
@@ -173,7 +182,7 @@ $$P(y^*\mid Y, X, x^*) = \mathcal{N}\Big(\mu^*,\;\; \Sigma^* + \sigma^2 I\Big)$$
 
 The kernel hyperparameters $\psi=(\ell, \sigma_f^2, \sigma^2)$ are not known in advance. The Bayesian approach is to select them by **maximising the marginal likelihood** (evidence):
 
-$$p(Y\mid X,\psi) = \int p(Y\mid f(X),\sigma^2)\,p(f(X)\mid X,\psi)\,df(X) = \mathcal{N}(Y\mid \mathbf{0},\; K_\psi+\sigma^2 I)$$
+$$p(Y\mid X,\psi) = \int p(Y\mid f(X),\sigma^2)\,p(f(X)\mid X,\psi)\,df(X) = \mathcal{N}(Y\mid \mathbf{0},  K_\psi+\sigma^2 I)$$
 
 Taking the log:
 
@@ -185,7 +194,7 @@ $$\log p(Y\mid X,\psi) = \underbrace{-\frac{1}{2}Y^\top(K+\sigma^2 I)^{-1}Y}_{\t
 
 The marginal likelihood automatically balances these — this is the **Bayesian Occam's Razor**. Optimise by gradient ascent:
 
-$$\hat{\psi} = \arg\max_\psi\;\log p(Y\mid X,\psi)$$
+$$\hat{\psi} = \arg\max_\psi \log p(Y\mid X,\psi)$$
 
 The gradients $\partial\log p/\partial\psi_i$ involve $\text{tr}[(K+\sigma^2I)^{-1}\partial K/\partial\psi_i]$ and can be computed analytically for standard kernels.
 

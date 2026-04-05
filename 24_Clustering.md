@@ -25,7 +25,7 @@ The right choice depends on the cluster shape: K-means excels for spherical clus
 
 **Objective:**
 
-$$\min_{c_1,\ldots,c_K,\,\text{cluster}_1,\ldots,\text{cluster}_K}\;\text{cost} = \sum_{k=1}^K\sum_{x_i\in\text{cluster}_k}\|x_i - c_k\|_2^2$$
+$$\min_{c_1,\ldots,c_K,\,\text{cluster}_1,\ldots,\text{cluster}_K} \text{cost} = \sum_{k=1}^K\sum_{x_i\in\text{cluster}_k}\|x_i - c_k\|_2^2$$
 
 This is minimised jointly over the cluster assignment and cluster centres.
 

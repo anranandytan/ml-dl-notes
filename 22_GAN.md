@@ -38,15 +38,15 @@ Training uses an adversarial signal from a **discriminator** $D$ that classifies
 
 **Discriminator objective** (maximise ability to classify):
 
-$$\max_D\;V(D,G) = \mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)] + \mathbb{E}_{z\sim p_Z}[\log(1-D(G(z)))]$$
+$$\max_D V(D,G) = \mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)] + \mathbb{E}_{z\sim p_Z}[\log(1-D(G(z)))]$$
 
 **Generator objective** (minimise discriminator's success):
 
-$$\min_G\;\mathbb{E}_{z\sim p_Z}[\log(1-D(G(z)))]$$
+$$\min_G \mathbb{E}_{z\sim p_Z}[\log(1-D(G(z)))]$$
 
 **Combined minimax:**
 
-$$\min_G\max_D\;V(D,G) = \mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)] + \mathbb{E}_{x\sim p_g}[\log(1-D(x))]$$
+$$\min_G\max_D V(D,G) = \mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)] + \mathbb{E}_{x\sim p_g}[\log(1-D(x))]$$
 
 **Non-saturating generator loss.** In practice, early in training $D(G(z))\approx 0$, so $\log(1-D(G(z)))\approx 0$ with near-zero gradient. The standard fix is to maximise $\mathbb{E}[\log D(G(z))]$ instead, which has large gradient when $D(G(z))$ is small. This has the same Nash equilibrium but better gradient flow.
 
@@ -56,7 +56,7 @@ $$\min_G\max_D\;V(D,G) = \mathbb{E}_{x\sim p_{\mathrm{data}}}[\log D(x)] + \math
 
 **Claim.** For fixed $G$:
 
-$$D^*_G(x) = \frac{p_{\mathrm{data}}(x)}{p_{\mathrm{data}}(x) + p_g(x)}$$
+$$D^{\ast}_{G}(x) = \frac{p_{\mathrm{data}}(x)}{p_{\mathrm{data}}(x) + p_g(x)}$$
 
 **Derivation.** The value function decomposes pointwise:
 
@@ -64,7 +64,7 @@ $$V(D,G) = \int [p_{\mathrm{data}}(x)\log D(x) + p_g(x)\log(1-D(x))]\,dx$$
 
 For each $x$, maximise $f(D) = a\log D + b\log(1-D)$ where $a=p_{\mathrm{data}}(x)\geq 0$, $b=p_g(x)\geq 0$, $a+b>0$:
 
-$$\frac{df}{dD} = \frac{a}{D} - \frac{b}{1-D} = 0 \quad\Rightarrow\quad D^*_G(x) = \frac{a}{a+b} = \frac{p_{\mathrm{data}}(x)}{p_{\mathrm{data}}(x)+p_g(x)}$$
+$$\frac{df}{dD} = \frac{a}{D} - \frac{b}{1-D} = 0 \quad\Rightarrow\quad D^{\ast}_{G}(x) = \frac{a}{a+b} = \frac{p_{\mathrm{data}}(x)}{p_{\mathrm{data}}(x)+p_g(x)}$$
 
 This is a maximum since $d^2f/dD^2 = -a/D^2 - b/(1-D)^2 < 0$.
 
@@ -72,9 +72,9 @@ This is a maximum since $d^2f/dD^2 = -a/D^2 - b/(1-D)^2 < 0$.
 
 ## 5. Global Optimum and Jensen-Shannon Divergence
 
-Substitute $D^*_G$ into $V(D^*_G, G)$:
+Substitute $D^{\ast}_G$ into $V(D^{\ast}_G, G)$:
 
-$$V(D^*_G, G) = \mathbb{E}_{p_{\mathrm{data}}}\left[\log\frac{p_{\mathrm{data}}}{p_{\mathrm{data}}+p_g}\right] + \mathbb{E}_{p_g}\left[\log\frac{p_g}{p_{\mathrm{data}}+p_g}\right]$$
+$$V(D^{\ast}_G, G) = \mathbb{E}_{p_{\mathrm{data}}}\left[\log\frac{p_{\mathrm{data}}}{p_{\mathrm{data}}+p_g}\right] + \mathbb{E}_{p_g}\left[\log\frac{p_g}{p_{\mathrm{data}}+p_g}\right]$$
 
 Add and subtract $\log 2$ in each term:
 
@@ -82,9 +82,9 @@ $$= -\log 4 + D_{\mathrm{KL}}\left(p_{\mathrm{data}}\,\Big\|\,\frac{p_{\mathrm{d
 
 The **Jensen-Shannon divergence** is $\mathrm{JSD}(p\|q) = \frac{1}{2}D_{\mathrm{KL}}(p\|\frac{p+q}{2}) + \frac{1}{2}D_{\mathrm{KL}}(q\|\frac{p+q}{2}) \geq 0$, with equality iff $p=q$. Therefore:
 
-$$\min_G V(D^*_G, G) = -\log 4 + 2\,\mathrm{JSD}(p_{\mathrm{data}} \| p_g) \geq -\log 4$$
+$$\min_G V(D^{\ast}_G, G) = -\log 4 + 2\,\mathrm{JSD}(p_{\mathrm{data}} \| p_g) \geq -\log 4$$
 
-The minimum is $-\log 4$ iff $\mathrm{JSD}=0$ iff $p_g = p_{\mathrm{data}}$. At the global optimum, $D^*_{G^*}(x) = 1/2$ everywhere.
+The minimum is $-\log 4$ iff $\mathrm{JSD}=0$ iff $p_g = p_{\mathrm{data}}$. At the global optimum, $D^{\ast}_{G^{\ast}}(x) = 1/2$ everywhere.
 
 ---
 
@@ -122,7 +122,7 @@ When $p_g$ and $p_{\mathrm{data}}$ have disjoint support (common early in traini
 
 **Wasserstein-1 distance:**
 
-$$W(p_{\mathrm{data}}, p_g) = \sup_{\|f\|_L\leq 1}\;\mathbb{E}_{x\sim p_{\mathrm{data}}}[f(x)] - \mathbb{E}_{x\sim p_g}[f(x)]$$
+$$W(p_{\mathrm{data}}, p_g) = \sup_{\|f\|_L\leq 1} \mathbb{E}_{x\sim p_{\mathrm{data}}}[f(x)] - \mathbb{E}_{x\sim p_g}[f(x)]$$
 
 where the supremum is over 1-Lipschitz functions. Unlike JSD, $W$ is continuous and provides non-zero gradients even when distributions have disjoint support.
 

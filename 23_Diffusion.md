@@ -216,18 +216,18 @@ $$\nabla \log p_t(x) = \frac{\mathbb{E}[-\sqrt{t}\,\varepsilon \mid x_t = x]}{t}
 ### 5.3 Denoising Score Matching Loss
 
 We want to train a network $s_\theta(x_t, t)$ to approximate $\nabla\log p_t(x_t)$. The naive objective:
-$$\min_\theta\;\mathbb{E}\left[\|s_\theta(x_t, t) - \nabla\log p_t(x_t)\|^2\right]$$
+$$\min_\theta \mathbb{E}\left[\|s_\theta(x_t, t) - \nabla\log p_t(x_t)\|^2\right]$$
 is intractable because $\nabla\log p_t(x_t)$ requires integrating over all $x_0$.
 
 **Denoising score matching** (Vincent, 2011) replaces this with a tractable surrogate. Define $h_{x_0}(v) = \|v - \frac{x_0-x_t}{t}\|^2$. Then:
 $$L(v) = \mathbb{E}_{x_0 \mid x_t}\left[\left\|v - \nabla\log p_t(x_t)\right\|^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
 
-Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^*) = 0$:
-$$\mathbb{E}_{x_0 \mid x_t}\left[2(v^* - \tfrac{x_0-x_t}{t})\right] = 0 \;\Rightarrow\; v^* = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
+Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^{\ast}) = 0$:
+$$\mathbb{E}_{x_0 \mid x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
 
 Therefore, minimising over $(x_0, x_t)$ jointly:
 
-$$\boxed{\min_\theta\;\mathbb{E}_{x_0,\, \varepsilon \sim \mathcal{N}(0, tI),\, x_t = x_0+\varepsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\|^2\right]}$$
+$$\boxed{\min_\theta \mathbb{E}_{x_0,\, \varepsilon \sim \mathcal{N}(0, tI),\, x_t = x_0+\varepsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\|^2\right]}$$
 
 Under infinite capacity, the minimiser equals $\nabla\log p_t(x_t)$. This expectation is tractable: sample $x_0$ from data, sample $\varepsilon$, form $x_t = x_0 + \varepsilon$, then evaluate the squared error.
 
@@ -258,7 +258,7 @@ The score generalises to:
 $$\nabla\log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{\sigma_t^2}$$
 
 and the score matching loss is:
-$$\min_\theta\;\mathbb{E}_{x_0,\,\epsilon\sim\mathcal{N}(0,I),\,x_t = x_0+\sigma_t\epsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\|^2\right]$$
+$$\min_\theta \mathbb{E}_{x_0,\,\epsilon\sim\mathcal{N}(0,I),\,x_t = x_0+\sigma_t\epsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\|^2\right]$$
 
 ### 6.2 Probability Flow ODE
 
@@ -324,7 +324,7 @@ $$dx_t = \frac{c(t)^2}{2}\nabla\log\pi(x_t)\,dt + c(t)\,dB_t$$
 The stationary distribution is still $\pi$ (by the same verification), but the speed of convergence is scaled by $c(t)^2$.
 
 Euler–Maruyama discretisation:
-$$x_{t+\delta} \approx x_t + \nabla\log\pi(x_t)\int_t^{t+\delta}\frac{c(s)^2}{2}\,ds + \sqrt{\int_t^{t+\delta}c(s)^2\,ds}\;\epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
+$$x_{t+\delta} \approx x_t + \nabla\log\pi(x_t)\int_t^{t+\delta}\frac{c(s)^2}{2}\,ds + \sqrt{\int_t^{t+\delta}c(s)^2\,ds} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
 
 ### 7.2 Convergence Rate (Log-Sobolev Inequality)
 
@@ -431,14 +431,14 @@ $$L(\theta) = \mathbb{E}_{x_0,\,x_1,\,t}\left[\left\|u_t(x_t;\,\theta) - (x_1 - 
 
 This is **simulation-free**: no ODE integration is required during training — just sample $t, x_0, x_1$, form $x_t$, and evaluate the squared error.
 
-At optimality: $u_t^*(x) = \mathbb{E}[x_1 - x_0 \mid x_t = x] = v_t(x)$.
+At optimality: $u_t^{\ast}(x) = \mathbb{E}[x_1 - x_0 \mid x_t = x] = v_t(x)$.
 
 ### 9.5 Connection to Score Matching
 
 Under the specific choice $x_1 = \epsilon \sim \mathcal{N}(0,I)$ (flow from data to noise), the marginal $p_t = p_0 * \mathcal{N}(0, t^2 I)$. Applying **Tweedie's formula** for the linear interpolation path $x_t = (1-t)x_0 + t\epsilon$:
 
 Since $q_t(x \mid x_0) = \mathcal{N}((1-t)x_0, t^2 I)$, the marginal score is:
-$$\nabla\log p_t(x) = \frac{(1-t)\mathbb{E}[x_0 \mid x_t=x] - x}{t^2} \;\Rightarrow\; \mathbb{E}[x_0 \mid x_t=x] = \frac{x + t^2\nabla\log p_t(x)}{1-t}$$
+$$\nabla\log p_t(x) = \frac{(1-t)\mathbb{E}[x_0 \mid x_t=x] - x}{t^2}  \Rightarrow  \mathbb{E}[x_0 \mid x_t=x] = \frac{x + t^2\nabla\log p_t(x)}{1-t}$$
 
 Substituting into $v_t(x) = \frac{x-\mathbb{E}[x_0|x_t=x]}{t}$:
 $$v_t(x) = \frac{x}{t} - \frac{1}{t}\cdot\frac{x+t^2\nabla\log p_t(x)}{1-t} = \frac{x(1-t)-x-t^2\nabla\log p_t(x)}{t(1-t)} = -\frac{x}{1-t} - \frac{t}{1-t}\nabla\log p_t(x)$$

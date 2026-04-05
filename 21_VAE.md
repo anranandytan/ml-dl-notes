@@ -104,7 +104,7 @@ This is the EM Q-function.
 
 **M-step:** Fix $q$; maximise ELBO over $\theta$:
 
-$$\theta^* = \arg\max_\theta\;\mathbb{E}_{p_\theta(z|x)}\left[\log p_\theta(x,z)\right]$$
+$$\theta^{\ast} = \arg\max_\theta \mathbb{E}_{p_\theta(z|x)}\left[\log p_\theta(x,z)\right]$$
 
 **VAE vs. EM:**
 
@@ -123,7 +123,7 @@ The VAE replaces the exact E-step with **amortised inference**: train $q_\phi$ o
 
 The full VAE objective jointly optimises $\theta$ (decoder) and $\phi$ (encoder):
 
-$$\langle\hat{\theta}, \hat{\phi}\rangle = \arg\max_{\theta, \phi}\;\mathcal{L}(\theta, \phi; x) = \arg\max_{\theta,\phi}\;\mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x|z)\right] - D_{\text{KL}}\big(q_\phi(z|x)\,\|\,p(z)\big)$$
+$$\langle\hat{\theta}, \hat{\phi}\rangle = \arg\max_{\theta, \phi} \mathcal{L}(\theta, \phi; x) = \arg\max_{\theta,\phi} \mathbb{E}_{q_\phi(z|x)}\left[\log p_\theta(x|z)\right] - D_{\text{KL}}\big(q_\phi(z|x)\,\|\,p(z)\big)$$
 
 ### 6.1 Encoder (Inference Network)
 

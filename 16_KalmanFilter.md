@@ -50,7 +50,7 @@ $$x_t = Cz_t + D + \delta_t, \qquad \delta_t \sim \mathcal{N}(0, R)$$
 
 Conditional distributions:
 
-$$P(z_t \mid z_{t-1}) = \mathcal{N}(Az_{t-1}+B,\; Q), \qquad P(x_t \mid z_t) = \mathcal{N}(Cz_t+D,\; R)$$
+$$P(z_t \mid z_{t-1}) = \mathcal{N}(Az_{t-1}+B,  Q), \qquad P(x_t \mid z_t) = \mathcal{N}(Cz_t+D,  R)$$
 
 The noise terms are mutually independent and independent of the initial state. This is a **linear Gaussian** analogue of the HMM.
 
@@ -79,11 +79,11 @@ Assume $P(z_{t-1} \mid x_{1:t-1}) = \mathcal{N}(\mu_{t-1}, \Sigma_{t-1})$.
 
 Since $z_t = Az_{t-1} + B + \varepsilon_t$ is an affine function of $z_{t-1}$ plus independent Gaussian noise:
 
-$$\mu_{t}^{*} = A\mu_{t-1} + B$$
+$$\mu_{t}^{\ast} = A\mu_{t-1} + B$$
 
-$$\Sigma_{t}^{*} = A\Sigma_{t-1}A^\top + Q$$
+$$\Sigma_{t}^{\ast} = A\Sigma_{t-1}A^\top + Q$$
 
-$$P(z_t \mid x_{1:t-1}) = \mathcal{N}(\mu_{t}^{*}, \Sigma_{t}^{*})$$
+$$P(z_t \mid x_{1:t-1}) = \mathcal{N}(\mu_{t}^{\ast}, \Sigma_{t}^{\ast})$$
 
 The predicted covariance grows: the process noise $Q$ adds uncertainty that will be reduced in the update step.
 
@@ -93,35 +93,44 @@ The predicted covariance grows: the process noise $Q$ adds uncertainty that will
 
 The state $z_t$ and observation $x_t$ are jointly Gaussian given $x_{1:t-1}$:
 
-$$\begin{pmatrix}z_t \\ x_t\end{pmatrix} \Bigg\vert x_{1:t-1} \sim \mathcal{N}\left(\begin{pmatrix}\mu_{t}^{*} \\ C\mu_{t}^{*}+D\end{pmatrix},\;\begin{pmatrix}\Sigma_{t}^{*} & \Sigma_{t}^{*}C^\top \\ C\Sigma_{t}^{*} & C\Sigma_{t}^{*}C^\top+R\end{pmatrix}\right)$$
+$$\begin{pmatrix}z_t \\ x_t\end{pmatrix}
+\mid x_{1:t-1}
+\sim
+\mathcal{N}\!\left(
+\begin{pmatrix}\mu_{t}^{\ast} \\ C\mu_{t}^{\ast}+D\end{pmatrix},\quad
+\begin{pmatrix}
+\Sigma_{t}^{\ast} & \Sigma_{t}^{\ast}C^{\top} \\
+C\Sigma_{t}^{\ast} & C\Sigma_{t}^{\ast}C^{\top}+R
+\end{pmatrix}
+\right)$$
 
-The cross-covariance $\text{Cov}(z_t, x_t) = \Sigma_{t}^{*} C^\top$ follows from $x_t = Cz_t + D + \delta_t$ with $\delta_t$ independent of $z_t$.
+The cross-covariance $\text{Cov}(z_t, x_t) = \Sigma_{t}^{\ast} C^\top$ follows from $x_t = Cz_t + D + \delta_t$ with $\delta_t$ independent of $z_t$.
 
 Applying the **Gaussian conditional formula** ($a \mid b \sim \mathcal{N}(\mu_a + \Sigma_{ab}\Sigma_{bb}^{-1}(b - \mu_b), \Sigma_{aa} - \Sigma_{ab}\Sigma_{bb}^{-1}\Sigma_{ba})$):
 
 **Innovation:**
 
-$$\nu_t = x_t - (C\mu_{t}^{*} + D)$$
+$$\nu_t = x_t - (C\mu_{t}^{\ast} + D)$$
 
 **Innovation covariance:**
 
-$$S_t = C\Sigma_{t}^{*}C^\top + R$$
+$$S_t = C\Sigma_{t}^{\ast}C^\top + R$$
 
 **Kalman gain:**
 
-$$\boxed{K_t = \Sigma_{t}^{*} C^\top S_t^{-1} = \Sigma_{t}^{*}C^\top(C\Sigma_{t}^{*}C^\top + R)^{-1}}$$
+$$\boxed{K_t = \Sigma_{t}^{\ast} C^\top S_t^{-1} = \Sigma_{t}^{\ast}C^\top(C\Sigma_{t}^{\ast}C^\top + R)^{-1}}$$
 
 **Updated mean and covariance:**
 
-$$\boxed{\mu_t = \mu_{t}^{*} + K_t\nu_t}$$
+$$\boxed{\mu_t = \mu_{t}^{\ast} + K_t\nu_t}$$
 
-$$\boxed{\Sigma_t = (I - K_tC)\Sigma_{t}^{*}}$$
+$$\boxed{\Sigma_t = (I - K_tC)\Sigma_{t}^{\ast}}$$
 
-**Why $(I - K_tC)\Sigma_{t}^{*}$?** From the conditional Gaussian formula: $\Sigma_t = \Sigma_{t}^{*} - \Sigma_{t}^{*}C^\top S_t^{-1}C\Sigma_{t}^{*} = \Sigma_{t}^{*} - K_tC\Sigma_{t}^{*} = (I-K_tC)\Sigma_{t}^{*}$.
+**Why $(I - K_tC)\Sigma_{t}^{\ast}$?** From the conditional Gaussian formula: $\Sigma_t = \Sigma_{t}^{\ast} - \Sigma_{t}^{\ast}C^\top S_t^{-1}C\Sigma_{t}^{\ast} = \Sigma_{t}^{\ast} - K_tC\Sigma_{t}^{\ast} = (I-K_tC)\Sigma_{t}^{\ast}$.
 
 **Interpreting $K_t$:**
 - If $R \to 0$ (exact measurements): $K_t \to C^{-1}$ — trust the observation completely.
-- If $\Sigma_{t}^{*} \to 0$ (certain prediction): $K_t \to 0$ — trust the prediction completely.
+- If $\Sigma_{t}^{\ast} \to 0$ (certain prediction): $K_t \to 0$ — trust the prediction completely.
 - In general: $K_t$ trades off prediction uncertainty vs. measurement uncertainty.
 
 ---
@@ -165,13 +174,13 @@ The Kalman filter computes **filtered** posteriors $P(z_t \mid x_{1:t})$ using o
 
 **Smoother gain:**
 
-$$G_t = \Sigma_t A^\top (\Sigma_{t+1}^*)^{-1}$$
+$$G_t = \Sigma_t A^\top (\Sigma_{t+1}^{\ast})^{-1}$$
 
 **Backward pass** (from $t=T-1$ down to $1$; initialise at $\mu_T^{\text{sm}}=\mu_T$, $\Sigma_T^{\text{sm}}=\Sigma_T$):
 
-$$\mu_t^{\text{sm}} = \mu_t + G_t(\mu_{t+1}^{\text{sm}} - \mu_{t+1}^*)$$
+$$\mu_t^{\text{sm}} = \mu_t + G_t(\mu_{t+1}^{\text{sm}} - \mu_{t+1}^{\ast})$$
 
-$$\Sigma_t^{\text{sm}} = \Sigma_t + G_t(\Sigma_{t+1}^{\text{sm}} - \Sigma_{t+1}^*)G_t^\top$$
+$$\Sigma_t^{\text{sm}} = \Sigma_t + G_t(\Sigma_{t+1}^{\text{sm}} - \Sigma_{t+1}^{\ast})G_t^\top$$
 
 ---
 

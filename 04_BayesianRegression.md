@@ -43,7 +43,7 @@ $$p(w \mid \mathcal{D}) \propto p(Y \mid X, w)\, p(w)$$
 
 MAP maximises this; taking $\log$ (monotone, so argmax unchanged):
 
-$$w_{\text{MAP}} = \arg\max_w\;\bigl[\log p(Y \mid X, w) + \log p(w)\bigr]$$
+$$w_{\text{MAP}} = \arg\max_w \bigl[\log p(Y \mid X, w) + \log p(w)\bigr]$$
 
 ### 3.1 Gaussian Prior → Ridge Regression
 
@@ -53,7 +53,7 @@ $$\log p(Y \mid X, w) = -\frac{1}{2\sigma^2}\|Y - Xw\|^2 + \text{const}, \qquad 
 
 The MAP objective becomes:
 
-$$w_{\text{MAP}} = \arg\min_w\;\left[\|Y - Xw\|^2 + \underbrace{\frac{\sigma^2}{\tau^2}}_{=:\lambda}\|w\|_2^2\right]$$
+$$w_{\text{MAP}} = \arg\min_w \left[\|Y - Xw\|^2 + \underbrace{\frac{\sigma^2}{\tau^2}}_{=:\lambda}\|w\|_2^2\right]$$
 
 This is exactly **Ridge regression**. A tighter prior (small $\tau^2$) means stronger regularisation (large $\lambda$).
 
@@ -61,7 +61,7 @@ This is exactly **Ridge regression**. A tighter prior (small $\tau^2$) means str
 
 With independent Laplace priors $p(w_j) \propto \exp(-|w_j|/b)$:
 
-$$w_{\text{MAP}} = \arg\min_w\;\left[\|Y - Xw\|^2 + \frac{2\sigma^2}{b}\|w\|_1\right]$$
+$$w_{\text{MAP}} = \arg\min_w \left[\|Y - Xw\|^2 + \frac{2\sigma^2}{b}\|w\|_1\right]$$
 
 This is **Lasso**. The Laplace distribution peaks sharply at zero; the level sets of $\|\cdot\|_1$ are diamond-shaped with corners on the coordinate axes, so the optimal solution tends to have some coordinates exactly zero (sparsity).
 
@@ -138,24 +138,24 @@ $$A = \frac{1}{\sigma^2}X^\top X + \Sigma_p^{-1}, \qquad \Sigma_w = A^{-1}, \qqu
 
 ### 6.1 Latent Function Value
 
-For a new input $x^* \in \mathbb{R}^p$, the latent function value $f(x^*) = w^\top x^*$ is a linear function of $w$. Using the standard result for linear transformations of Gaussians ($c^\top w \sim \mathcal{N}(c^\top \mu_w, c^\top \Sigma_w c)$ when $w \sim \mathcal{N}(\mu_w, \Sigma_w)$):
+For a new input $x^{\ast} \in \mathbb{R}^p$, the latent function value $f(x^{\ast}) = w^\top x^{\ast}$ is a linear function of $w$. Using the standard result for linear transformations of Gaussians ($c^\top w \sim \mathcal{N}(c^\top \mu_w, c^\top \Sigma_w c)$ when $w \sim \mathcal{N}(\mu_w, \Sigma_w)$):
 
-$$f(x^*) \sim \mathcal{N}\bigl((x^{*})^{\top} \mu_w,\; (x^{*})^{\top} \Sigma_w\, x^*\bigr)$$
+$$f(x^{\ast}) \sim \mathcal{N}\bigl((x^{\ast})^{\top} \mu_w,  (x^{\ast})^{\top} \Sigma_w\, x^{\ast}\bigr)$$
 
 ### 6.2 Observed Output
 
-The observed $y^* = f(x^*) + \varepsilon^*$ adds independent noise $\varepsilon^* \sim \mathcal{N}(0, \sigma^2)$. The variance of the sum of two independent random variables is the sum of their variances:
+The observed $y^{\ast} = f(x^{\ast}) + \varepsilon^{\ast}$ adds independent noise $\varepsilon^{\ast} \sim \mathcal{N}(0, \sigma^2)$. The variance of the sum of two independent random variables is the sum of their variances:
 
-$$\boxed{p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\Bigl((x^{*})^{\top} \mu_w,\;\; \underbrace{(x^{*})^{\top} \Sigma_w\, x^*}_{\text{epistemic}} + \underbrace{\sigma^2}_{\text{aleatoric}}\Bigr)}$$
+$$\boxed{p(y^{\ast} \mid \mathcal{D}, x^{\ast}) = \mathcal{N}\Bigl((x^{\ast})^{\top} \mu_w,   \underbrace{(x^{\ast})^{\top} \Sigma_w\, x^{\ast}}_{\text{epistemic}} + \underbrace{\sigma^2}_{\text{aleatoric}}\Bigr)}$$
 
 ### 6.3 Two Types of Uncertainty
 
 | Type | Source | Reducible with more data? |
 |------|--------|--------------------------|
-| **Epistemic** $(x^{*})^{\top} \Sigma_w x^*$ | Uncertainty about the weights | Yes — $\Sigma_w \to 0$ as $N \to \infty$ |
+| **Epistemic** $(x^{\ast})^{\top} \Sigma_w x^{\ast}$ | Uncertainty about the weights | Yes — $\Sigma_w \to 0$ as $N \to \infty$ |
 | **Aleatoric** $\sigma^2$ | Irreducible observation noise | No |
 
-Epistemic uncertainty depends on $x^*$: it is large where training data is sparse and small near training points.
+Epistemic uncertainty depends on $x^{\ast}$: it is large where training data is sparse and small near training points.
 
 ---
 
@@ -167,7 +167,7 @@ $$p(Y \mid X, \theta) = \int p(Y \mid X, w, \sigma^2)\, p(w \mid \Sigma_p)\, dw$
 
 Both factors are Gaussian in $w$, so the integral is analytic (via completing the square in $w$). The result is:
 
-$$p(Y \mid X, \theta) = \mathcal{N}(Y \mid 0,\; \sigma^2 I + X \Sigma_p X^\top)$$
+$$p(Y \mid X, \theta) = \mathcal{N}(Y \mid 0,  \sigma^2 I + X \Sigma_p X^\top)$$
 
 The **log marginal likelihood** decomposes as:
 
@@ -192,9 +192,9 @@ The posterior mean and predictive formulas depend on features only through pairw
 
 $$k(x, x') := \phi(x)^\top \Sigma_p\, \phi(x')$$
 
-This is the **kernel function**. Define the $N \times N$ Gram matrix $K$ with $K_{ij} = k(x_i, x_j)$ and the $N$-vector $k^*$ with $k^*_i = k(x_i, x^*)$. The predictive distribution becomes:
+This is the **kernel function**. Define the $N \times N$ Gram matrix $K$ with $K_{ij} = k(x_i, x_j)$ and the $N$-vector $k^{\ast}$ with $k^{\ast}_i = k(x_i, x^{\ast})$. The predictive distribution becomes:
 
-$$p(y^* \mid \mathcal{D}, x^*) = \mathcal{N}\Bigl((k^{*})^{\top}(K + \sigma^2 I)^{-1}Y,\;\; k(x^*, x^*) - (k^{*})^{\top}(K + \sigma^2 I)^{-1}k^* + \sigma^2\Bigr)$$
+$$p(y^{\ast} \mid \mathcal{D}, x^{\ast}) = \mathcal{N}\Bigl((k^{\ast})^{\top}(K + \sigma^2 I)^{-1}Y,   k(x^{\ast}, x^{\ast}) - (k^{\ast})^{\top}(K + \sigma^2 I)^{-1}k^{\ast} + \sigma^2\Bigr)$$
 
 This is the **Gaussian Process Regression** formula. The weight-space and function-space views are mathematically equivalent (connected via the Woodbury identity); the GP view avoids working in the infinite-dimensional feature space.
 

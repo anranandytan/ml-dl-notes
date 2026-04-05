@@ -38,9 +38,9 @@ This corresponds to an **infinite-dimensional** feature space. It is translation
 
 **SVM with Gaussian kernel:** The decision function is:
 
-$$f(x) = \sum_i\alpha_i^*y_i k(x_i,x) + \lambda_0^*$$
+$$f(x) = \sum_i\alpha_{i}^{\ast}y_i k(x_i,x) + \lambda_0^{\ast}$$
 
-where $\lambda_0^* = 1 - \sum_i\alpha_i^*y_ik(x_i, x_{sv})$ for any support vector $x_{sv}$.
+where $\lambda_0^{\ast} = 1 - \sum_i\alpha_{i}^{\ast}y_ik(x_i, x_{sv})$ for any support vector $x_{sv}$.
 
 ---
 
@@ -67,7 +67,7 @@ An **inner product space** (pre-Hilbert space) is a vector space with an inner p
 
 A **Reproducing Kernel Hilbert Space (RKHS)** $H_k$ is a Hilbert space of functions $f:\mathcal{X}\to\mathbb{R}$ equipped with a kernel $k:\mathcal{X}\times\mathcal{X}\to\mathbb{R}$ such that the **reproducing property** holds:
 
-$$f(x) = \langle k(x,\cdot),\, f(\cdot)\rangle_{H_k} \quad\forall f\in H_k,\;\forall x\in\mathcal{X}$$
+$$f(x) = \langle k(x,\cdot),\, f(\cdot)\rangle_{H_k} \quad\forall f\in H_k, \forall x\in\mathcal{X}$$
 
 Setting $f=k(\cdot,z)$: $k(x,z) = \langle k(x,\cdot),k(\cdot,z)\rangle_{H_k}$.
 
@@ -77,7 +77,7 @@ So $\Phi(x) := k(x,\cdot)\in H_k$ and $k(x,z)=\langle\Phi(x),\Phi(z)\rangle_{H_k
 
 Define the feature map $\Phi(x) = k(\cdot,x)$. The RKHS is:
 
-$$H_k = \Bigl\{f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i) : \alpha_i\in\mathbb{R},\;m<\infty\Bigr\}$$
+$$H_k = \left\{ f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i) : \alpha_i\in\mathbb{R},\ m<\infty\right\}$$
 
 (with completion for infinite sums). The inner product for $f=\sum_i\alpha_ik(\cdot,x_i)$ and $g=\sum_j\beta_jk(\cdot,x_j')$:
 
@@ -109,7 +109,7 @@ $$k(x,z) = \sum_{j=1}^\infty\lambda_j\psi_j(x)\psi_j(z)$$
 
 The corresponding feature map is:
 
-$$\Phi(x) = [\sqrt{\lambda_1}\psi_1(x),\;\sqrt{\lambda_2}\psi_2(x),\;\ldots]$$
+$$\Phi(x) = [\sqrt{\lambda_1}\psi_1(x), \sqrt{\lambda_2}\psi_2(x), \ldots]$$
 
 **Consequence:** any PSD kernel has a valid feature map — possibly infinite-dimensional. The Gaussian kernel corresponds to an infinite-dimensional $\Phi$.
 
@@ -121,11 +121,11 @@ $$\Phi(x) = [\sqrt{\lambda_1}\psi_1(x),\;\sqrt{\lambda_2}\psi_2(x),\;\ldots]$$
 
 **Theorem.** Let $H_k$ be an RKHS with kernel $k$. For any loss $\ell:\mathbb{R}^2\to\mathbb{R}$ and any nondecreasing $\Omega:\mathbb{R}\to\mathbb{R}$, the solutions of:
 
-$$f^*\in\arg\min_{f\in H_k}\sum_{i=1}^n\ell(f(x_i),y_i)+\Omega(\|f\|_{H_k}^2)$$
+$$f^{\ast}\in\arg\min_{f\in H_k}\sum_{i=1}^n\ell(f(x_i),y_i)+\Omega(\|f\|_{H_k}^2)$$
 
 can all be expressed as:
 
-$$f^*(\cdot) = \sum_{i=1}^n\alpha_i k(x_i,\cdot)$$
+$$f^{\ast}(\cdot) = \sum_{i=1}^n\alpha_i k(x_i,\cdot)$$
 
 **Implication:** even though $H_k$ may be infinite-dimensional, the optimal solution lies in the **finite $n$-dimensional subspace** spanned by $\{k(x_i,\cdot)\}_{i=1}^n$. This makes the optimisation over an infinite-dimensional function class tractable.
 
@@ -137,7 +137,7 @@ Given valid kernels $k_1$ and $k_2$, the following are also valid:
 
 | Rule | New kernel |
 |---|---|
-| Non-negative linear combination | $k = \alpha k_1 + \beta k_2,\;\alpha,\beta\geq 0$ |
+| Non-negative linear combination | $k = \alpha k_1 + \beta k_2, \alpha,\beta\geq 0$ |
 | Product | $k = k_1 k_2$ |
 | Composition | $k(x,z) = k_1(h(x),h(z))$ for any $h$ |
 | Outer product | $k(x,z) = g(x)g(z)$ for any $g:\mathcal{X}\to\mathbb{R}$ |
@@ -150,9 +150,9 @@ Given valid kernels $k_1$ and $k_2$, the following are also valid:
 
 ### 9.1 Motivation
 
-Standard ridge regression: $\min_\lambda\|Y-X\lambda\|_2^2+C\|\lambda\|_2^2$. Solution: $\lambda^*=(X^\top X+CI)^{-1}X^\top Y$.
+Standard ridge regression: $\min_\lambda\|Y-X\lambda\|_2^2+C\|\lambda\|_2^2$. Solution: $\lambda^{\ast}=(X^\top X+CI)^{-1}X^\top Y$.
 
-By the representer theorem, the optimal $\lambda^*$ lies in the column space of $X^\top$: $\lambda^*=X^\top r$ for some $r\in\mathbb{R}^n$. Substituting this ansatz:
+By the representer theorem, the optimal $\lambda^{\ast}$ lies in the column space of $X^\top$: $\lambda^{\ast}=X^\top r$ for some $r\in\mathbb{R}^n$. Substituting this ansatz:
 
 ### 9.2 Derivation
 
@@ -168,17 +168,17 @@ $$\nabla_r F = -2K(Y-Kr)+2CKr = 0$$
 
 Simplifying (multiply through by $K^{-1}$ or note $K(Y-Kr)-CKr=0$):
 
-$$(K+CI)r^* = Y \implies \boxed{r^* = (K+CI)^{-1}Y}$$
+$$(K+CI)r^{\ast} = Y \implies \boxed{r^{\ast} = (K+CI)^{-1}Y}$$
 
 **Prediction at a new point $\tilde{x}$:**
 
-$$f(\tilde{x}) = \tilde{x}^\top\lambda^* = \tilde{x}^\top X^\top r^* = \sum_i\tilde{x}^\top x_i\,r_i^* = K_{\tilde{x}}^\top r^* = K_{\tilde{x}}^\top(K+CI)^{-1}Y$$
+$$f(\tilde{x}) = \tilde{x}^\top\lambda^{\ast} = \tilde{x}^\top X^\top r^{\ast} = \sum_i\tilde{x}^\top x_i\,r_i^{\ast} = K_{\tilde{x}}^\top r^{\ast} = K_{\tilde{x}}^\top(K+CI)^{-1}Y$$
 
 where $K_{\tilde{x},i} = k(\tilde{x},x_i)$.
 
 **With arbitrary kernel:** replace all inner products $x_i^\top x_l$ with $k(x_i,x_l)$:
 
-$$r^*=(K+CI)^{-1}Y, \qquad f(\tilde{x}) = K_{\tilde{x}}^\top(K+CI)^{-1}Y$$
+$$r^{\ast}=(K+CI)^{-1}Y, \qquad f(\tilde{x}) = K_{\tilde{x}}^\top(K+CI)^{-1}Y$$
 
 ### 9.3 Equivalence with Standard Ridge
 
@@ -186,7 +186,7 @@ Using the Woodbury / push-through identity with $P=I$, $B=X$, $R=CI$:
 
 $$X(XX^\top+CI)^{-1} = (X^\top X+CI)^{-1}X^\top$$
 
-So $Xr^* = X(XX^\top+CI)^{-1}Y = (X^\top X+CI)^{-1}X^\top Y = \lambda^*$. The kernel ridge and standard ridge solutions are equivalent for the linear kernel.
+So $Xr^{\ast} = X(XX^\top+CI)^{-1}Y = (X^\top X+CI)^{-1}X^\top Y = \lambda^{\ast}$. The kernel ridge and standard ridge solutions are equivalent for the linear kernel.
 
 ### 9.4 Complexity Comparison
 
@@ -210,7 +210,7 @@ where $K_h(\cdot)$ is a kernel **density** function with bandwidth $h$ (not to b
 **Differences from kernel ridge regression:**
 - No optimisation step — just a weighted average of training labels.
 - Weights are determined by proximity only, not globally optimised.
-- Kernel ridge regression generally outperforms kernel regression because the "heights of the bumps" (the $r^*$ coefficients) are globally optimised to fit the data.
+- Kernel ridge regression generally outperforms kernel regression because the "heights of the bumps" (the $r^{\ast}$ coefficients) are globally optimised to fit the data.
 
 ---
 

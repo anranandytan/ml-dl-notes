@@ -45,7 +45,7 @@ All standard algorithms grow a tree greedily:
 
 **Training probability at leaf $j$:**
 
-$$\left[\frac{n^{+}_j}{n^{+}_j + n^{-}_j},\;\frac{n^{-}_j}{n^{+}_j + n^{-}_j}\right]$$
+$$\left[\frac{n^{+}_j}{n^{+}_j + n^{-}_j}, \frac{n^{-}_j}{n^{+}_j + n^{-}_j}\right]$$
 
 ---
 
@@ -130,9 +130,9 @@ $$\text{cost} = \sum_{\text{leaves }j}\sum_{x_i\in S_j}(y_i-\bar{y}_{S_j})^2 + C
 
 ### 6.3 Analytical Bound on Tree Size
 
-**Basic Size Bound.** Given any reference objective value $R^c$, any optimal tree $\text{tree}^*$ satisfies:
+**Basic Size Bound.** Given any reference objective value $R^c$, any optimal tree $\text{tree}^{\ast}$ satisfies:
 
-$$|\text{leaves}(\text{tree}^*)| \leq \left\lfloor \frac{R^c}{C}\right\rfloor$$
+$$|\text{leaves}(\text{tree}^{\ast})| \leq \left\lfloor \frac{R^c}{C}\right\rfloor$$
 
 This is because each additional leaf must reduce the unregularised objective by at least $C$.
 

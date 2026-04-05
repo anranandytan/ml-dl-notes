@@ -131,7 +131,7 @@ Latent variable models are more compact and interpretable but require integratin
 
 ### 5.1 The Problem: Gradients Through Random Nodes
 
-Suppose we want to minimise a loss $J_\theta = \mathbb{E}_{Y \sim p_\theta(Y)}[L(Y)]$ by gradient descent on $\theta$. Naively computing $\nabla_\theta \mathbb{E}_{Y\sim p_\theta}[L(Y)]$ requires differentiating through the sampling operation, which is not directly possible.
+Suppose we want to minimise a loss $J_\theta = \mathbb{E}_{p_\theta}[L(Y)]$ by gradient descent on $\theta$. Naively computing $\nabla_\theta \mathbb{E}_{p_\theta}[L(Y)]$ requires differentiating through the sampling operation, which is not directly possible.
 
 A log-derivative trick exists (REINFORCE) but has high variance. The **reparameterisation trick** gives a lower-variance, computationally efficient alternative when the distribution $p_\theta$ is reparametrisable.
 

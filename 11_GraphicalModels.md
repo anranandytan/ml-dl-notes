@@ -37,7 +37,12 @@ Real systems are **sparse**: most variables are conditionally independent given 
 
 Let $x=(x_1,\ldots,x_p)^\top\sim\mathcal{N}(\mu,\Sigma)$ with:
 
-$$\Sigma = \begin{pmatrix}\sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\\sigma_{21} & \sigma_{22} & \cdots & \sigma_{2p}\\\vdots & \vdots & \ddots & \vdots\\\sigma_{p1} & \sigma_{p2} & \cdots & \sigma_{pp}\end{pmatrix}, \qquad \sigma_{ij} = \text{Cov}(x_i,x_j)$$
+$$\Sigma = \begin{pmatrix}
+\sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\
+\sigma_{21} & \sigma_{22} & \cdots & \sigma_{2p}\\
+\vdots      & \vdots      & \ddots & \vdots     \\
+\sigma_{p1} & \sigma_{p2} & \cdots & \sigma_{pp}
+\end{pmatrix}, \qquad \sigma_{ij} = \text{Cov}(x_i,x_j)$$
 
 The **precision matrix** (also: concentration matrix, information matrix) is:
 
@@ -81,7 +86,7 @@ A **Gaussian Bayesian Network** is a DAG where each variable $x_i$ has a Gaussia
 
 $$p(x) = \prod_{i=1}^p p(x_i\mid x_{\text{pa}(i)})$$
 
-$$p(x_i\mid x_{\text{pa}(i)}) = \mathcal{N}\left(\mu_i + \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j),\;\sigma_i^2\right)$$
+$$p(x_i\mid x_{\text{pa}(i)}) = \mathcal{N}\left(\mu_i + \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j), \sigma_i^2\right)$$
 
 The conditional mean is an affine function of the parents (each centred at its own marginal mean $\mu_j$).
 
@@ -151,7 +156,7 @@ $$= \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
 
 Decomposing by pairs of variables:
 
-$$= \exp\left(\sum_i\Bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\Bigr) + \sum_{i<j}\Bigl(-\lambda_{ij}x_ix_j\Bigr)\right)$$
+$$= \exp\Bigl( \sum_i \bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\bigr) + \sum_{i<j} \bigl(-\lambda_{ij}x_ix_j\bigr) \Bigr)$$
 
 This gives us:
 - **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$
@@ -167,13 +172,13 @@ $$\log p(x_i\mid x_{-i}) = -\frac{1}{2}\lambda_{ii}x_i^2 + x_i\left(h_i-\sum_{j\
 
 Completing the square in $x_i$:
 
-$$\boxed{x_i\mid x_{-i}\sim\mathcal{N}\left(\frac{h_i-\sum_{j\neq i}\lambda_{ij}x_j}{\lambda_{ii}},\;\;\frac{1}{\lambda_{ii}}\right)}$$
+$$\boxed{x_i\mid x_{-i}\sim\mathcal{N}\left(\frac{h_i-\sum_{j\neq i}\lambda_{ij}x_j}{\lambda_{ii}},  \frac{1}{\lambda_{ii}}\right)}$$
 
 where $h_i=(\Lambda\mu)_i$.
 
 **For zero-mean $\mu=0$** (so $h=0$):
 
-$$x_i\mid x_{-i}\sim\mathcal{N}\left(-\sum_{j\neq i}\frac{\lambda_{ij}}{\lambda_{ii}}x_j,\;\;\frac{1}{\lambda_{ii}}\right)$$
+$$x_i\mid x_{-i}\sim\mathcal{N}\left(-\sum_{j\neq i}\frac{\lambda_{ij}}{\lambda_{ii}}x_j,  \frac{1}{\lambda_{ii}}\right)$$
 
 **Key observations:**
 1. The conditional mean of $x_i$ depends only on its **neighbours** in the graph (nodes $j$ with $\lambda_{ij}\neq 0$). All non-neighbours drop out — this is the Markov property.
@@ -216,7 +221,7 @@ The MLE for $\Lambda$ is $\hat{\Sigma}^{-1}$ (inverse sample covariance), which 
 
 **Friedman, Hastie & Tibshirani (2008)** propose the $\ell_1$-penalised log-likelihood:
 
-$$\hat{\Lambda} = \arg\max_{\Lambda\succ 0}\;\left[\log\det\Lambda - \text{tr}(\hat{\Sigma}\Lambda) - \rho\|\Lambda\|_1\right]$$
+$$\hat{\Lambda} = \arg\max_{\Lambda\succ 0} \left[\log\det\Lambda - \text{tr}(\hat{\Sigma}\Lambda) - \rho\|\Lambda\|_1\right]$$
 
 where:
 - $\hat{\Sigma}=\frac{1}{N}\sum_i(x_i-\bar{x})(x_i-\bar{x})^\top$ is the sample covariance.

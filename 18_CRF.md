@@ -206,19 +206,19 @@ $$p(y_t = i \mid x) = \sum_{y : y_t = i} p(y \mid x) = \frac{1}{Z} \sum_{y : y_t
 
 The key observation is that this sum **decomposes** into a product of a "left part" and a "right part":
 
-$$p(y_t = i \mid x) = \frac{1}{Z}\; \underbrace{\left(\sum_{y_{1:t-1}} \prod_{t'=1}^{t} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\alpha_t(i)} \cdot \underbrace{\left(\sum_{y_{t+1:T}} \prod_{t'=t+1}^{T} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\beta_t(i)}$$
+$$p(y_t = i \mid x) = \frac{1}{Z}  \underbrace{\left(\sum_{y_{1:t-1}} \prod_{t'=1}^{t} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\alpha_t(i)} \cdot \underbrace{\left(\sum_{y_{t+1:T}} \prod_{t'=t+1}^{T} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\beta_t(i)}$$
 
 **Forward variable** $\alpha_t(i)$: the (unnormalised) probability of all sequences $y_{1:t}$ ending in $y_t = i$:
 
 $$\alpha_1(i) = \psi_1(y_0, i,\, x) \qquad \text{(}y_0 \text{ is a special START token)}$$
 
-$$\alpha_t(i) = \sum_{j \in \mathcal{S}} \psi_t(j,\, i,\, x)\; \alpha_{t-1}(j), \quad t = 2, \ldots, T$$
+$$\alpha_t(i) = \sum_{j \in \mathcal{S}} \psi_t(j,\, i,\, x)  \alpha_{t-1}(j), \quad t = 2, \ldots, T$$
 
 **Backward variable** $\beta_t(i)$: the (unnormalised) probability of all sequences $y_{t+1:T}$ given $y_t = i$:
 
 $$\beta_T(i) = 1 \qquad \forall\, i \in \mathcal{S}$$
 
-$$\beta_t(i) = \sum_{j \in \mathcal{S}} \psi_{t+1}(i,\, j,\, x)\; \beta_{t+1}(j), \quad t = T-1, \ldots, 1$$
+$$\beta_t(i) = \sum_{j \in \mathcal{S}} \psi_{t+1}(i,\, j,\, x)  \beta_{t+1}(j), \quad t = T-1, \ldots, 1$$
 
 **Partition function** (from forward variables at the last step):
 
@@ -228,7 +228,7 @@ $$Z = \sum_{i \in \mathcal{S}} \alpha_T(i)$$
 
 $$p(y_t = i \mid x) = \frac{\alpha_t(i)\,\beta_t(i)}{Z}$$
 
-$$p(y_{t-1} = j,\; y_t = i \mid x) = \frac{\alpha_{t-1}(j)\;\psi_t(j, i, x)\;\beta_t(i)}{Z}$$
+$$p(y_{t-1} = j,  y_t = i \mid x) = \frac{\alpha_{t-1}(j) \psi_t(j, i, x) \beta_t(i)}{Z}$$
 
 **Time complexity:** $O(T \cdot |\mathcal{S}|^2)$ — linear in sequence length, quadratic in the number of labels.
 

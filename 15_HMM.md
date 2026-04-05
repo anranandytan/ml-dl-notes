@@ -74,7 +74,7 @@ $$P(O,I|\lambda) = \pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}
 | Problem | Task | Algorithm | Complexity |
 |---------|------|-----------|-----------|
 | **Evaluation** | Given $\lambda$, compute $P(O\mid\lambda)$ | Forward (or Backward) | $O(N^2 T)$ |
-| **Learning** | Given $O$, find $\lambda^* = \arg\max P(O\mid\lambda)$ | Baum-Welch (EM) | $O(N^2 T)$ per iteration |
+| **Learning** | Given $O$, find $\lambda^{\ast} = \arg\max P(O\mid\lambda)$ | Baum-Welch (EM) | $O(N^2 T)$ per iteration |
 | **Decoding** | Given $O$ and $\lambda$, find $\hat{I} = \arg\max_I P(I\mid O,\lambda)$ | Viterbi | $O(N^2 T)$ |
 
 ---
@@ -85,7 +85,7 @@ $$P(O,I|\lambda) = \pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}
 
 The marginal likelihood is:
 
-$$P(O\mid\lambda) = \sum_I P(O,I|\lambda) = \sum_{z_1}\sum_{z_2}\cdots\sum_{z_T}\;\pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}(x_t)$$
+$$P(O\mid\lambda) = \sum_I P(O,I|\lambda) = \sum_{z_1}\sum_{z_2}\cdots\sum_{z_T} \pi_{z_1}\prod_{t=2}^{T}a_{z_{t-1},z_t}\prod_{t=1}^{T}b_{z_t}(x_t)$$
 
 Direct summation over all $N^T$ state sequences is exponential in $T$. Dynamic programming (memoising shared sub-computations) reduces this to $O(N^2 T)$.
 
@@ -93,30 +93,30 @@ Direct summation over all $N^T$ state sequences is exponential in $T$. Dynamic p
 
 **Definition.** The forward variable $\alpha_t(i)$ is the joint probability of the observations up to time $t$ and being in state $q_i$ at time $t$:
 
-$$\alpha_t(i) = P(x_1, x_2, \ldots, x_t,\; z_t = q_i \mid \lambda)$$
+$$\alpha_t(i) = P(x_1, x_2, \ldots, x_t,  z_t = q_i \mid \lambda)$$
 
 **Initialisation** ($t=1$):
 $$\alpha_1(i) = \pi_i\, b_i(x_1), \qquad i = 1,\ldots,N$$
 
 **Recursion** (from $t$ to $t+1$): We derive the recursion step by step.
 
-$$\alpha_{t+1}(j) = P(x_1,\ldots,x_t, x_{t+1},\; z_{t+1}=q_j \mid \lambda)$$
+$$\alpha_{t+1}(j) = P(x_1,\ldots,x_t, x_{t+1},  z_{t+1}=q_j \mid \lambda)$$
 
 Marginalise over the state at time $t$:
 
-$$= \sum_{i=1}^{N} P(x_1,\ldots,x_t,x_{t+1},\; z_{t+1}=q_j,\; z_t=q_i \mid \lambda)$$
+$$= \sum_{i=1}^{N} P(x_1,\ldots,x_t,x_{t+1},  z_{t+1}=q_j,  z_t=q_i \mid \lambda)$$
 
 Factor out $x_{t+1}$ using the chain rule:
 
-$$= \sum_{i=1}^{N} P(x_{t+1} \mid x_1,\ldots,x_t,\; z_{t+1}=q_j,\; z_t=q_i,\;\lambda)\cdot P(x_1,\ldots,x_t,\; z_{t+1}=q_j,\; z_t=q_i \mid \lambda)$$
+$$= \sum_{i=1}^{N} P(x_{t+1} \mid x_1,\ldots,x_t,  z_{t+1}=q_j,  z_t=q_i, \lambda)\cdot P(x_1,\ldots,x_t,  z_{t+1}=q_j,  z_t=q_i \mid \lambda)$$
 
 Apply **output independence** — given $z_{t+1}=q_j$, $x_{t+1}$ is independent of all past observations and states:
 
-$$P(x_{t+1} \mid x_1,\ldots,x_t,\; z_{t+1}=q_j,\; z_t=q_i,\;\lambda) = b_j(x_{t+1})$$
+$$P(x_{t+1} \mid x_1,\ldots,x_t,  z_{t+1}=q_j,  z_t=q_i, \lambda) = b_j(x_{t+1})$$
 
 Factor the remaining joint using the **Markov assumption**:
 
-$$P(x_1,\ldots,x_t,\; z_{t+1}=q_j,\; z_t=q_i \mid \lambda) = P(z_{t+1}=q_j \mid z_t=q_i,\;\lambda)\cdot P(x_1,\ldots,x_t,\; z_t=q_i \mid \lambda) = a_{ij}\,\alpha_t(i)$$
+$$P(x_1,\ldots,x_t,  z_{t+1}=q_j,  z_t=q_i \mid \lambda) = P(z_{t+1}=q_j \mid z_t=q_i, \lambda)\cdot P(x_1,\ldots,x_t,  z_t=q_i \mid \lambda) = a_{ij}\,\alpha_t(i)$$
 
 Combining:
 
@@ -132,7 +132,7 @@ This sums the forward variable at the final time step over all possible terminal
 
 **Definition.** The backward variable $\beta_t(i)$ is the conditional probability of the future observations given the current state:
 
-$$\beta_t(i) = P(x_{t+1}, x_{t+2}, \ldots, x_T \mid z_t = q_i,\; \lambda)$$
+$$\beta_t(i) = P(x_{t+1}, x_{t+2}, \ldots, x_T \mid z_t = q_i,  \lambda)$$
 
 **Initialisation** ($t=T$):
 $$\beta_T(i) = 1, \qquad i = 1,\ldots,N$$
@@ -141,13 +141,13 @@ $$\beta_T(i) = 1, \qquad i = 1,\ldots,N$$
 
 **Recursion** (from $t+1$ back to $t$):
 
-$$\beta_t(i) = P(x_{t+1},\ldots,x_T \mid z_t=q_i,\;\lambda)$$
+$$\beta_t(i) = P(x_{t+1},\ldots,x_T \mid z_t=q_i, \lambda)$$
 
 Marginalise over the next state $z_{t+1}$:
 
-$$= \sum_{j=1}^{N} P(x_{t+1},\ldots,x_T,\; z_{t+1}=q_j \mid z_t=q_i,\;\lambda)$$
+$$= \sum_{j=1}^{N} P(x_{t+1},\ldots,x_T,  z_{t+1}=q_j \mid z_t=q_i, \lambda)$$
 
-$$= \sum_{j=1}^{N} P(x_{t+1},\ldots,x_T \mid z_{t+1}=q_j,\; z_t=q_i,\;\lambda)\cdot P(z_{t+1}=q_j \mid z_t=q_i,\;\lambda)$$
+$$= \sum_{j=1}^{N} P(x_{t+1},\ldots,x_T \mid z_{t+1}=q_j,  z_t=q_i, \lambda)\cdot P(z_{t+1}=q_j \mid z_t=q_i, \lambda)$$
 
 By the Markov property, future observations are independent of $z_t$ given $z_{t+1}$. Factor $x_{t+1}$ out by output independence:
 
@@ -179,7 +179,7 @@ $$P(z_t=q_i, z_{t+1}=q_j \mid O,\lambda) =: \xi_t(i,j) = \frac{\alpha_t(i)\,a_{i
 
 We want $\hat{\lambda} = \arg\max_\lambda P(O\mid\lambda)$. Treating the state sequence $I$ as the latent variable, the EM Q-function is:
 
-$$Q(\lambda, \lambda^{(t)}) = \sum_I \log P(O,I|\lambda)\cdot P(I \mid O,\;\lambda^{(t)})$$
+$$Q(\lambda, \lambda^{(t)}) = \sum_I \log P(O,I|\lambda)\cdot P(I \mid O, \lambda^{(t)})$$
 
 Expanding $\log P(O,I|\lambda) = \log\pi_{z_1} + \sum_{t=2}^{T}\log a_{z_{t-1},z_t} + \sum_{t=1}^{T}\log b_{z_t}(x_t)$:
 
@@ -209,7 +209,7 @@ This is simply the posterior probability of starting in state $q_i$, given the o
 
 Collect terms involving $a_{ij}$:
 
-$$\max_A \sum_{i=1}^{N}\sum_{j=1}^{N}\left(\sum_{t=1}^{T-1}\xi_t(i,j)\right)\log a_{ij} \quad\text{subject to}\quad \sum_j a_{ij}=1\;\forall i$$
+$$\max_A \sum_{i=1}^{N}\sum_{j=1}^{N}\left(\sum_{t=1}^{T-1}\xi_t(i,j)\right)\log a_{ij} \quad\text{subject to}\quad \sum_j a_{ij}=1 \forall i$$
 
 By identical Lagrange multiplier argument:
 
@@ -237,26 +237,26 @@ $$\hat{I} = \arg\max_{I} P(I \mid O, \lambda) = \arg\max_I P(O, I \mid \lambda)$
 
 Define $\delta_t(i)$ as the probability of the most likely partial path ending in state $q_i$ at time $t$:
 
-$$\delta_t(i) = \max_{z_1,\ldots,z_{t-1}} P(x_1,\ldots,x_t,\; z_1,\ldots,z_{t-1},\; z_t=q_i \mid \lambda)$$
+$$\delta_t(i) = \max_{z_1,\ldots,z_{t-1}} P(x_1,\ldots,x_t,  z_1,\ldots,z_{t-1},  z_t=q_i \mid \lambda)$$
 
 **Initialisation:**
 $$\delta_1(i) = \pi_i\, b_i(x_1), \qquad \psi_1(i) = 0$$
 
 **Recursion:**
 
-$$\delta_{t+1}(j) = \max_{1\leq i\leq N}\;\left[\delta_t(i)\,a_{ij}\right]\cdot b_j(x_{t+1})$$
+$$\delta_{t+1}(j) = \max_{1\leq i\leq N} \left[\delta_t(i)\,a_{ij}\right]\cdot b_j(x_{t+1})$$
 
 Store the back-pointer for path recovery:
 
-$$\psi_{t+1}(j) = \arg\max_{1\leq i\leq N}\;\delta_t(i)\,a_{ij}$$
+$$\psi_{t+1}(j) = \arg\max_{1\leq i\leq N} \delta_t(i)\,a_{ij}$$
 
 **Termination:**
 
-$$P^* = \max_{1\leq i\leq N}\delta_T(i), \qquad \hat{z}_T = \arg\max_{1\leq i\leq N}\delta_T(i)$$
+$$P^{\ast} = \max_{1\leq i\leq N}\delta_T(i), \qquad \hat{z}_T = \arg\max_{1\leq i\leq N}\delta_T(i)$$
 
 **Back-tracking:** Recover the optimal path by following back-pointers:
 
-$$\hat{z}_t = \psi_{t+1}(\hat{z}_{t+1}), \qquad t = T-1,\; T-2,\;\ldots,\; 1$$
+$$\hat{z}_t = \psi_{t+1}(\hat{z}_{t+1}), \qquad t = T-1,  T-2, \ldots,  1$$
 
 ---
 

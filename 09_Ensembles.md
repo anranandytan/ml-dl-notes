@@ -128,7 +128,7 @@ $$\text{Rset}(\mathcal{F},\epsilon,f_{\text{ref}}) = \{f\in\mathcal{F}: \text{Lo
 
 **MCR** gives the *range* of model reliance values across all models in the Rashomon set:
 
-$$[\text{MCR}_-, \text{MCR}_+] = \left[\min_{f\in\text{Rset}}\text{MR}(f,j),\;\max_{f\in\text{Rset}}\text{MR}(f,j)\right]$$
+$$[\text{MCR}_-, \text{MCR}_+] = \left[\min_{f\in\text{Rset}}\text{MR}(f,j), \max_{f\in\text{Rset}}\text{MR}(f,j)\right]$$
 
 **Interpretation:**
 - $[1, 1.001]$: no good model needs feature $j$ — safe to remove.
@@ -253,7 +253,7 @@ where $\|\boldsymbol{\lambda}\|_0$ counts non-zero coefficients.
 
 Include stump $j$ only if doing so reduces $R^0_{\text{train}}$ by at least $C_0$, i.e.:
 
-$$d_- \notin \left[\frac{1}{2} - \frac{\sqrt{C_0(2R_{\text{train}}-C_0)}}{2R_{\text{train}}},\; \frac{1}{2}\right]$$
+$$d_- \notin \left[\frac{1}{2} - \frac{\sqrt{C_0(2R_{\text{train}}-C_0)}}{2R_{\text{train}}},  \frac{1}{2}\right]$$
 
 If $d_- \leq$ the lower bound, set $\lambda_{t+1,j} = \frac{1}{2}\ln\frac{1-d_-}{d_-}$; otherwise keep $\lambda_{t+1,j}=0$.
 

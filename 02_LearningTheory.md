@@ -26,16 +26,16 @@ $$R^{\text{emp}}(f) = \frac{1}{n}\sum_{i=1}^n\mathbf{1}[f(x_i)\neq y_i]$$
 
 $$\eta(x) = \mathbb{E}[Y|X=x], \qquad t(x) = \text{sign}(\eta(x))$$
 
-**Bayes risk:** $R^* = R^{\text{true}}(t) = \inf_f R^{\text{true}}(f)$ — the irreducible minimum error.
+**Bayes risk:** $R^{\ast} = R^{\text{true}}(t) = \inf_f R^{\text{true}}(f)$ — the irreducible minimum error.
 
 **Approximation-Estimation Decomposition:**
 
-For $f_n = \arg\min_{f\in\mathcal{F}}R^{\text{emp}}(f)$ and $f^*=\arg\min_{f\in\mathcal{F}}R^{\text{true}}(f)$:
+For $f_n = \arg\min_{f\in\mathcal{F}}R^{\text{emp}}(f)$ and $f^{\ast}=\arg\min_{f\in\mathcal{F}}R^{\text{true}}(f)$:
 
-$$R^{\text{true}}(f_n) - R^* = \underbrace{(R^{\text{true}}(f^*) - R^*)}_{\text{Approximation Error}} + \underbrace{(R^{\text{true}}(f_n) - R^{\text{true}}(f^*))}_{\text{Estimation Error}}$$
+$$R^{\text{true}}(f_n) - R^{\ast} = \underbrace{(R^{\text{true}}(f^{\ast}) - R^{\ast})}_{\text{Approximation Error}} + \underbrace{(R^{\text{true}}(f_n) - R^{\text{true}}(f^{\ast}))}_{\text{Estimation Error}}$$
 
 - **Approximation error:** how well the best function in $\mathcal{F}$ approximates the Bayes classifier. Decreases as $\mathcal{F}$ grows richer. Fixed once $\mathcal{F}$ is chosen.
-- **Estimation error:** how far $f_n$ (chosen from data) deviates from $f^*$. Increases as $\mathcal{F}$ grows (more complex models overfit). Decreases as $n$ grows.
+- **Estimation error:** how far $f_n$ (chosen from data) deviates from $f^{\ast}$. Increases as $\mathcal{F}$ grows (more complex models overfit). Decreases as $n$ grows.
 
 This is the **bias-variance trade-off** expressed in risk terms.
 
@@ -89,19 +89,19 @@ $$\left|R^{\text{emp}}(f) - R^{\text{true}}(f)\right| \leq \sqrt{\frac{\log M + 
 
 ### 3.3 Bounding the True Risk of the Learner
 
-Since $f_n=\arg\min_{f\in\mathcal{F}}R^{\text{emp}}(f)$, we know $R^{\text{emp}}(f^*)-R^{\text{emp}}(f_n)\geq 0$. Therefore:
+Since $f_n=\arg\min_{f\in\mathcal{F}}R^{\text{emp}}(f)$, we know $R^{\text{emp}}(f^{\ast})-R^{\text{emp}}(f_n)\geq 0$. Therefore:
 
-$$R^{\text{true}}(f_n) = R^{\text{true}}(f_n) - R^{\text{true}}(f^*) + R^{\text{true}}(f^*)$$
+$$R^{\text{true}}(f_n) = R^{\text{true}}(f_n) - R^{\text{true}}(f^{\ast}) + R^{\text{true}}(f^{\ast})$$
 
-$$\leq [R^{\text{emp}}(f^*)-R^{\text{emp}}(f_n)] + R^{\text{true}}(f_n)-R^{\text{true}}(f^*) + R^{\text{true}}(f^*)$$
+$$\leq [R^{\text{emp}}(f^{\ast})-R^{\text{emp}}(f_n)] + R^{\text{true}}(f_n)-R^{\text{true}}(f^{\ast}) + R^{\text{true}}(f^{\ast})$$
 
 Rearranging and using the triangle inequality:
 
-$$R^{\text{true}}(f_n) \leq 2\sup_{f\in\mathcal{F}}\left|R^{\text{true}}(f)-R^{\text{emp}}(f)\right| + R^{\text{true}}(f^*)$$
+$$R^{\text{true}}(f_n) \leq 2\sup_{f\in\mathcal{F}}\left|R^{\text{true}}(f)-R^{\text{emp}}(f)\right| + R^{\text{true}}(f^{\ast})$$
 
 Applying the Ockham's Razor bound, with probability at least $1-\delta$:
 
-$$\boxed{R^{\text{true}}(f_n) \leq 2\sqrt{\frac{\log M+\log(2/\delta)}{2n}} + R^{\text{true}}(f^*)}$$
+$$\boxed{R^{\text{true}}(f_n) \leq 2\sqrt{\frac{\log M+\log(2/\delta)}{2n}} + R^{\text{true}}(f^{\ast})}$$
 
 **Interpretations:**
 - Generalisation requires restricting $f$ to a class $\mathcal{F}$ (more knowledge = better bound).

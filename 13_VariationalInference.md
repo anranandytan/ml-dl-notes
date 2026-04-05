@@ -41,7 +41,7 @@ Bayesian inference requires computing the posterior $p(z \mid x)$. For all but t
 
 **ELBO decomposition:**
 
-$$\log p(x) = \underbrace{\mathbb{E}_{q(z)}\left[\log\frac{p(x, z)}{q(z)}\right]}_{\mathcal{L}(q)\;=\;\text{ELBO}} + D_{\mathrm{KL}}(q(z) \| p(z \mid x))$$
+$$\log p(x) = \underbrace{\mathbb{E}_{q(z)}\left[\log\frac{p(x, z)}{q(z)}\right]}_{\mathcal{L}(q) = \text{ELBO}} + D_{\mathrm{KL}}(q(z) \| p(z \mid x))$$
 
 Since $D_{\mathrm{KL}} \geq 0$, the ELBO is a lower bound: $\mathcal{L}(q) \leq \log p(x)$. Maximising $\mathcal{L}(q)$ over $q \in \mathcal{Q}$ is equivalent to minimising $D_{\mathrm{KL}}(q \| p(z\mid x))$.
 
@@ -63,15 +63,15 @@ $$q(z) = \prod_{j=1}^M q_j(z_j)$$
 
 This assumes all latent variables are mutually independent under $q$. Under this restriction, for fixed $\{q_i\}_{i \neq j}$, the ELBO-maximising choice of $q_j$ is:
 
-$$\boxed{\log q_j^*(z_j) = \mathbb{E}_{\prod_{i \neq j} q_i}[\log p(x, z)] + \text{const}}$$
+$$\boxed{\log q_j^{\ast}(z_j) = \mathbb{E}_{\prod_{i \neq j} q_i}[\log p(x, z)] + \text{const}}$$
 
-i.e., $q_j^*(z_j) \propto \exp\{\mathbb{E}_{i \neq j}[\log p(x, z)]\}$.
+i.e., $q_j^{\ast}(z_j) \propto \exp\{\mathbb{E}_{i \neq j}[\log p(x, z)]\}$.
 
 **Derivation.** Treating all $q_i$ with $i \neq j$ as fixed, the ELBO as a function of $q_j$ is:
 
 $$\mathcal{L}(q_j) = \int q_j(z_j)\underbrace{\mathbb{E}_{i \neq j}[\log p(x, z)]}_{=:\,\log \tilde{p}(z_j)}\,dz_j - \int q_j\log q_j\,dz_j + \text{const} = -D_{\mathrm{KL}}(q_j \| \tilde{p}) + \text{const}$$
 
-This is maximised when $q_j = \tilde{p}$, i.e., $q_j^*(z_j) \propto \exp\{\mathbb{E}_{i\neq j}[\log p(x,z)]\}$.
+This is maximised when $q_j = \tilde{p}$, i.e., $q_j^{\ast}(z_j) \propto \exp\{\mathbb{E}_{i\neq j}[\log p(x,z)]\}$.
 
 ### 4.2 Coordinate Ascent Variational Inference (CAVI)
 
@@ -108,7 +108,7 @@ A key technique to reduce variance: subtract a **baseline** $b$ (any constant w.
 
 $$\nabla_\phi \mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\nabla_\phi \log q_\phi(z) \cdot \bigl(\log p(x,z) - \log q_\phi(z) - b\bigr)\right]$$
 
-The optimal baseline minimising variance is $b^* = \mathbb{E}[\nabla_\phi\log q_\phi \cdot r] / \mathbb{E}[(\nabla_\phi\log q_\phi)^2]$ where $r$ is the reward. In practice, the **running mean of the reward** is a common approximation.
+The optimal baseline minimising variance is $b^{\ast} = \mathbb{E}[\nabla_\phi\log q_\phi \cdot r] / \mathbb{E}[(\nabla_\phi\log q_\phi)^2]$ where $r$ is the reward. In practice, the **running mean of the reward** is a common approximation.
 
 More generally, a **control variate** is any function $c(z)$ with known expectation $\mathbb{E}_q[c(z)]$. Subtracting $\lambda c(z)$ and adding back $\lambda\mathbb{E}_q[c(z)]$ does not bias the estimator but can reduce variance if $c$ correlates with the original integrand.
 

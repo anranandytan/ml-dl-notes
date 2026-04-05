@@ -8,7 +8,7 @@
 
 In Bayesian inference we need to compute expectations under the posterior $p(\theta \mid \mathcal{D})$:
 
-$$\mathbb{E}_{p(\theta|\mathcal{D})}[f(\theta)] = \int f(\theta)\, p(\theta \mid \mathcal{D})\, d\theta$$
+$$\mathbb{E}_{p(\theta|\mathcal{D})}[f(\theta)] = \int f(\theta)  p(\theta \mid \mathcal{D})  d\theta$$
 
 For most models this integral is analytically intractable. The posterior may be high-dimensional, multimodal, or have no closed form. **MCMC** constructs a Markov chain whose stationary distribution is exactly $p(\theta \mid \mathcal{D})$. Running the chain long enough and averaging over the samples gives Monte Carlo estimates of the integral.
 
@@ -53,7 +53,7 @@ $T(\theta' \mid \theta)$ is the **transition kernel**.
 
 A distribution $\pi$ is the **stationary distribution** of the chain if it is invariant under the transition:
 
-$$\pi(\theta') = \int T(\theta' \mid \theta)\, \pi(\theta)\, d\theta$$
+$$\pi(\theta') = \int T(\theta' \mid \theta)  \pi(\theta)  d\theta$$
 
 If the chain is at stationarity at time $t$, it remains there for all $t' > t$.
 
@@ -61,7 +61,7 @@ If the chain is at stationarity at time $t$, it remains there for all $t' > t$.
 
 A sufficient (but not necessary) condition for $\pi$ to be the stationary distribution is **detailed balance**:
 
-$$\pi(\theta)\, T(\theta' \mid \theta) = \pi(\theta')\, T(\theta \mid \theta') \qquad \forall\, \theta, \theta'$$
+$$\pi(\theta)  T(\theta' \mid \theta) = \pi(\theta')  T(\theta \mid \theta') \qquad \forall  \theta, \theta'$$
 
 **Why sufficient but not necessary:** detailed balance says the probability flux from $\theta$ to $\theta'$ equals the flux from $\theta'$ to $\theta$ — a stronger condition than stationarity, which only requires the *total* flux into each state to be balanced. There exist valid MCMC methods (e.g., lifted samplers, some slice samplers) that have $\pi$ as stationary distribution without satisfying detailed balance. In practice, most classical algorithms (MH, Gibbs) satisfy detailed balance.
 
@@ -90,36 +90,36 @@ Choose a **proposal distribution** $q(\theta' \mid \theta)$ that is easy to samp
 
 At each iteration $t$:
 
-1. Sample a candidate $\theta^* \sim q(\theta^* \mid \theta^{(t)})$.
+1. Sample a candidate $\theta^{\ast} \sim q(\theta^{\ast} \mid \theta^{(t)})$.
 2. Compute the **acceptance ratio**:
 
-$$\alpha = \min\left(1,\;\frac{\tilde{\pi}(\theta^*)\, q(\theta^{(t)} \mid \theta^*)}{\tilde{\pi}(\theta^{(t)})\, q(\theta^* \mid \theta^{(t)})}\right)$$
+$$\alpha = \min\!\left(1, \frac{\tilde{\pi}(\theta^{\ast}) q(\theta^{(t)} \mid \theta^{\ast})}{\tilde{\pi}(\theta^{(t)}) q(\theta^{\ast} \mid \theta^{(t)})}\right)$$
 
-3. Accept: set $\theta^{(t+1)} = \theta^*$ with probability $\alpha$; otherwise set $\theta^{(t+1)} = \theta^{(t)}$.
+3. Accept: set $\theta^{(t+1)} = \theta^{\ast}$ with probability $\alpha$; otherwise set $\theta^{(t+1)} = \theta^{(t)}$.
 
 ### 5.3 Why Detailed Balance Is Satisfied
 
 The MH transition kernel is:
 
-$$T(\theta' \mid \theta) = q(\theta' \mid \theta)\,\alpha(\theta, \theta') + \delta_\theta(\theta')\,r(\theta)$$
+$$T(\theta' \mid \theta) = q(\theta' \mid \theta) \alpha(\theta, \theta') + \delta_\theta(\theta') r(\theta)$$
 
 where $r(\theta) = 1 - \int q(\theta' \mid \theta)\alpha(\theta,\theta')\,d\theta'$ is the rejection probability and $\delta_\theta$ is the atom at $\theta$.
 
 For the continuous part ($\theta' \neq \theta$), verify detailed balance:
 
-$$\pi(\theta)\, q(\theta' \mid \theta)\,\alpha(\theta, \theta') = \pi(\theta)\, q(\theta' \mid \theta)\min\left(1,\frac{\pi(\theta')\, q(\theta \mid \theta')}{\pi(\theta)\, q(\theta' \mid \theta)}\right)$$
+$$\pi(\theta)  q(\theta' \mid \theta) \alpha(\theta, \theta') = \pi(\theta)  q(\theta' \mid \theta)\min\left(1,\frac{\pi(\theta')  q(\theta \mid \theta')}{\pi(\theta)  q(\theta' \mid \theta)}\right)$$
 
 **Case 1:** $\pi(\theta')q(\theta\mid\theta') \geq \pi(\theta)q(\theta'\mid\theta)$. Then $\alpha(\theta,\theta')=1$ and:
 
-$$\pi(\theta)\,q(\theta'\mid\theta)\cdot 1 = \pi(\theta')\,q(\theta\mid\theta')\cdot\frac{\pi(\theta)\,q(\theta'\mid\theta)}{\pi(\theta')\,q(\theta\mid\theta')} = \pi(\theta')\,q(\theta\mid\theta')\,\alpha(\theta',\theta) \checkmark$$
+$$\pi(\theta) q(\theta'\mid\theta)\cdot 1 = \pi(\theta') q(\theta\mid\theta')\cdot\frac{\pi(\theta) q(\theta'\mid\theta)}{\pi(\theta') q(\theta\mid\theta')} = \pi(\theta') q(\theta\mid\theta') \alpha(\theta',\theta) \checkmark$$
 
 **Case 2:** $\pi(\theta')q(\theta\mid\theta') < \pi(\theta)q(\theta'\mid\theta)$. Symmetric by swapping the roles of $\theta$ and $\theta'$.
 
 ### 5.4 Special Cases
 
-**Metropolis algorithm:** symmetric proposal $q(\theta' \mid \theta) = q(\theta \mid \theta')$ (e.g., Gaussian centred at $\theta$). Then $q$ cancels and $\alpha = \min(1, \tilde{\pi}(\theta^*)/\tilde{\pi}(\theta^{(t)}))$.
+**Metropolis algorithm:** symmetric proposal $q(\theta' \mid \theta) = q(\theta \mid \theta')$ (e.g., Gaussian centred at $\theta$). Then $q$ cancels and $\alpha = \min(1, \tilde{\pi}(\theta^{\ast})/\tilde{\pi}(\theta^{(t)}))$.
 
-**Random-walk Metropolis:** $\theta^* = \theta^{(t)} + \varepsilon$, $\varepsilon \sim \mathcal{N}(0, \Sigma_{\text{prop}})$. Step size $\Sigma_{\text{prop}}$ controls the trade-off: too small → slow exploration; too large → frequent rejection.
+**Random-walk Metropolis:** $\theta^{\ast} = \theta^{(t)} + \varepsilon$, $\varepsilon \sim \mathcal{N}(0, \Sigma_{\text{prop}})$. Step size $\Sigma_{\text{prop}}$ controls the trade-off: too small → slow exploration; too large → frequent rejection.
 
 **Optimal acceptance rate:** for random-walk MH in high dimensions, the acceptance rate should target approximately 23.4% (Roberts, Gelman & Gilks, 1997).
 
@@ -127,7 +127,7 @@ $$\pi(\theta)\,q(\theta'\mid\theta)\cdot 1 = \pi(\theta')\,q(\theta\mid\theta')\
 
 $q(\theta' \mid \theta) = q(\theta')$ (proposal does not depend on current state). Then:
 
-$$\alpha = \min\left(1,\; \frac{\pi(\theta^*)q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^*)}\right) = \min\left(1,\; \frac{w(\theta^*)}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
+$$\alpha = \min\!\left(1,  \frac{\pi(\theta^{\ast})q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^{\ast})}\right) = \min\!\left(1,  \frac{w(\theta^{\ast})}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
 
 This is the importance weight ratio. Works well when $q$ is a good approximation to $\pi$; breaks down when $\pi/q$ has heavy tails.
 
@@ -145,9 +145,9 @@ No proposal distribution is needed, and every sample is accepted — provided th
 
 ### 6.2 Gibbs Is a Special Case of MH
 
-Propose $\theta^*$ by sampling from the full conditional of $\theta_j$. The MH acceptance ratio is:
+Propose $\theta^{\ast}$ by sampling from the full conditional of $\theta_j$. The MH acceptance ratio is:
 
-$$\alpha = \frac{\pi(\theta_{j}^{*})\,\pi(\theta_{-j})\,p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)})\,\pi(\theta_{-j})\,p(\theta_{j}^{*}\mid\theta_{-j})} = \frac{\pi(\theta_{j}^{*}\mid\theta_{-j})\,p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)}\mid\theta_{-j})\,p(\theta_{j}^{*}\mid\theta_{-j})} = 1$$
+$$\alpha = \frac{\pi(\theta_{j}^{\ast}) \pi(\theta_{-j}) p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)}) \pi(\theta_{-j}) p(\theta_{j}^{\ast}\mid\theta_{-j})} = \frac{\pi(\theta_{j}^{\ast}\mid\theta_{-j}) p(\theta_{j}^{(t)}\mid\theta_{-j})}{\pi(\theta_{j}^{(t)}\mid\theta_{-j}) p(\theta_{j}^{\ast}\mid\theta_{-j})} = 1$$
 
 The ratio is always 1 because the proposal is exactly the target conditional. Gibbs sampling thus has 100% acceptance rate.
 

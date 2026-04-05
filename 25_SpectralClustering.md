@@ -81,7 +81,7 @@ $$L = D - W$$
 
 Partition $V$ into $K$ disjoint sets $A_1, \ldots, A_K$ (with $\bigcup_k A_k = V$). Define the **cut value** between a set $A$ and its complement $\bar{A} = V\setminus A$:
 
-$$w(A, \bar{A}) = \sum_{i\in A,\; j\in \bar{A}} w_{ij}$$
+$$w(A, \bar{A}) = \sum_{i\in A,  j\in \bar{A}} w_{ij}$$
 
 The total cut:
 
@@ -143,7 +143,7 @@ $$= \text{tr}\Big(Y^\top(D-W)Y\cdot(Y^\top DY)^{-1}\Big) = \text{tr}\Big(Y^\top 
 
 The optimisation problem becomes:
 
-$$\hat{Y} = \arg\min_{Y\in\{0,1\}^{N\times K}}\;\text{tr}\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
+$$\hat{Y} = \arg\min_{Y\in\{0,1\}^{N\times K}} \text{tr}\Big(Y^\top LY\,(Y^\top DY)^{-1}\Big)$$
 
 ### 6.3 Relaxation to a Continuous Problem
 
@@ -151,7 +151,7 @@ The integer constraint $Y\in\{0,1\}^{N\times K}$ makes this NP-hard. Relax to re
 
 **Change of variables:** Let $F = D^{1/2}Y$. Then $Y^\top DY = F^\top F$ and $Y^\top LY = F^\top D^{-1/2}LD^{-1/2}F$. The problem becomes:
 
-$$\hat{F} = \arg\min_{F^\top F=I}\;\text{tr}\big(F^\top L_{\text{norm}}F\big)$$
+$$\hat{F} = \arg\min_{F^\top F=I} \text{tr}\big(F^\top L_{\text{norm}}F\big)$$
 
 where $L_{\text{norm}} = D^{-1/2}LD^{-1/2}$ is the **symmetric normalised Laplacian**.
 

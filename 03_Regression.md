@@ -10,7 +10,7 @@
 
 Given data $(X,Y)$ with $X\in\mathbb{R}^{n\times p}$ and $Y\in\mathbb{R}^n$, fit a linear model $f_\lambda(x)=\lambda^\top x$:
 
-$$\min_\lambda\;F(\lambda) = \|Y-X\lambda\|_2^2 = \sum_{i=1}^n(y_i-\lambda^\top x_i)^2$$
+$$\min_\lambda F(\lambda) = \|Y-X\lambda\|_2^2 = \sum_{i=1}^n(y_i-\lambda^\top x_i)^2$$
 
 ### 1.2 Gradient and Closed-Form Solution
 
@@ -18,15 +18,15 @@ $$\min_\lambda\;F(\lambda) = \|Y-X\lambda\|_2^2 = \sum_{i=1}^n(y_i-\lambda^\top 
 
 $$\nabla F(\lambda) = -2X^\top(Y-X\lambda) = -2(X^\top Y - X^\top X\lambda)$$
 
-Setting to zero: $X^\top X\lambda^* = X^\top Y$.
+Setting to zero: $X^\top X\lambda^{\ast} = X^\top Y$.
 
 **OLS solution** (when $X^\top X$ is invertible):
 
-$$\lambda^* = (X^\top X)^{-1}X^\top Y$$
+$$\lambda^{\ast} = (X^\top X)^{-1}X^\top Y$$
 
 **Fitted values (hat matrix):**
 
-$$\hat{Y} = X\lambda^* = X(X^\top X)^{-1}X^\top Y =: HY$$
+$$\hat{Y} = X\lambda^{\ast} = X(X^\top X)^{-1}X^\top Y =: HY$$
 
 The matrix $H=X(X^\top X)^{-1}X^\top$ is the **hat matrix** — it projects $Y$ onto the column space of $X$.
 
@@ -40,7 +40,7 @@ The matrix $H=X(X^\top X)^{-1}X^\top$ is the **hat matrix** — it projects $Y$ 
 
 Ridge regression adds an $\ell_2$ penalty on the coefficients:
 
-$$\min_\lambda\;F(\lambda) = \frac{1}{n}\sum_{i=1}^n(y_i-\lambda^\top x_i)^2 + C\|\lambda\|_2^2 = \|Y-X\lambda\|_2^2 + C\|\lambda\|_2^2$$
+$$\min_\lambda F(\lambda) = \frac{1}{n}\sum_{i=1}^n(y_i-\lambda^\top x_i)^2 + C\|\lambda\|_2^2 = \|Y-X\lambda\|_2^2 + C\|\lambda\|_2^2$$
 
 The penalty $C\|\lambda\|_2^2$ shrinks all coefficients toward zero, preventing overfitting when $p$ is large or $X^\top X$ is near-singular.
 
@@ -52,9 +52,9 @@ $$\nabla F(\lambda) = -2X^\top(Y-X\lambda) + 2C\lambda = 2(-X^\top Y + X^\top X\
 
 Setting to zero:
 
-$$X^\top Y = (X^\top X+CI)\lambda^*$$
+$$X^\top Y = (X^\top X+CI)\lambda^{\ast}$$
 
-$$\boxed{\lambda^* = (X^\top X+CI)^{-1}X^\top Y}$$
+$$\boxed{\lambda^{\ast} = (X^\top X+CI)^{-1}X^\top Y}$$
 
 The matrix $(X^\top X+CI)$ is always invertible for $C>0$ (the eigenvalues of $X^\top X$ are $\geq 0$, so adding $C>0$ to each makes them all $>0$). This is one reason ridge is preferred to OLS when $X^\top X$ is singular.
 
@@ -82,7 +82,7 @@ As $C$ varies from 0 to $\infty$:
 
 **Visualisation — regularisation path:**
 - Horizontal axis: regularisation constant $C$.
-- Vertical axis: coefficient values $\lambda^*_j$.
+- Vertical axis: coefficient values $\lambda^{\ast}_j$.
 - Each curve shows how one coefficient changes as $C$ increases.
 
 ---
@@ -91,7 +91,7 @@ As $C$ varies from 0 to $\infty$:
 
 ### 3.1 Objective
 
-$$\min_\lambda\;F_1(\lambda) = \frac{1}{n}\sum_{i=1}^n(y_i-f_\lambda(x_i))^2 + C\|\lambda\|_1$$
+$$\min_\lambda F_1(\lambda) = \frac{1}{n}\sum_{i=1}^n(y_i-f_\lambda(x_i))^2 + C\|\lambda\|_1$$
 
 Unlike ridge, the $\ell_1$ penalty **does not** have a closed-form solution (because $\|\lambda\|_1$ is not differentiable at zero). Algorithms such as coordinate descent, ADMM, or proximal gradient methods are used.
 
