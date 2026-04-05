@@ -248,7 +248,7 @@ $$v_1(i) = \log \psi_1(y_0, i, x)$$
 
 $$v_t(i) = \max_{j \in \mathcal{S}} \left[\log \psi_t(j, i, x) + v_{t-1}(j)\right], \quad t = 2, \ldots, T$$
 
-Track back-pointers $\text{bp}_t(i) = \arg\max_j [\log \psi_t(j,i,x) + v_{t-1}(j)]$ to recover the optimal sequence. The final score is $\max_i v_T(i)$ and the sequence is recovered by tracing back-pointers from $\hat{y}_T = \arg\max_i v_T(i)$.
+Track back-pointers $\text{bp}_{t}(i) = \arg\max_j [\log \psi_{t}(j,i,x) + v_{t-1}(j)]$ to recover the optimal sequence. The final score is $\max_i v_T(i)$ and the sequence is recovered by tracing back-pointers from $\hat{y}_T = \arg\max_i v_T(i)$.
 
 **Time complexity:** $O(T \cdot |\mathcal{S}|^2)$ — same as forward-backward.
 

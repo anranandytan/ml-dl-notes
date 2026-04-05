@@ -49,9 +49,9 @@ Represent $N$ data points $\{x_i\}_{i=1}^N$ as a weighted undirected graph $G = 
 
 A common choice is the **Gaussian (RBF) kernel**:
 
-$$w_{ij} = \begin{cases} \exp\left(-\dfrac{\|x_i - x_j\|^2}{2\sigma^2}\right) & \text{if } (i,j) \in E \\ 0 & \text{otherwise} \end{cases}$$
+$$w_{ij} = \exp\left(-\dfrac{\|x_i - x_j\|^2}{2\sigma^2}\right)  \text{if } (i,j) \in E$$
 
-The bandwidth $\sigma$ controls the neighbourhood scale. The graph structure (which edges exist) is typically chosen by $\epsilon$-neighbourhood or $k$-nearest-neighbours.
+and equal to 0 otherwise. The bandwidth $\sigma$ controls the neighbourhood scale. The graph structure (which edges exist) is typically chosen by $\epsilon$-neighbourhood or $k$-nearest-neighbours.
 
 ### 4.2 Degree Matrix and Graph Laplacian
 

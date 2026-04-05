@@ -223,7 +223,7 @@ is intractable because $\nabla\log p_t(x_t)$ requires integrating over all $x_0$
 $$L(v) = \mathbb{E}_{x_0, x_t}\left[\left\lVert v - \nabla\log p_t(x_t)\right\rVert^2\right] = \mathbb{E}_{x_0, x_t}[h_{x_0}(v)] + \text{const}$$
 
 Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^{\ast}) = 0$:
-$$\mathbb{E}_{x_0,\,x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
+$$\mathbb{E}_{x_0,x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
 
 Therefore, minimising over $(x_0, x_t)$ jointly:
 
@@ -241,7 +241,7 @@ Training $s_\theta$ to match $\nabla\log p_t$ directly is unstable because $\lVe
 | Noise prediction | $\varepsilon_\theta(x_t, t) \approx \varepsilon$ | $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$ | $\varepsilon_\theta = -\sqrt{t} s_\theta$ |
 | $x_0$ prediction | $D_\theta(x_t, t) \approx x_0$ | $\mathbb{E}[\lVert D_\theta - x_0\rVert^2]$ | $D_\theta = x_t + t s_\theta$ |
 
-To see the noise-prediction form: write $x_t = x_0 + \sqrt{t} \varepsilon$ (with $\varepsilon \sim \mathcal{N}(0,I)$). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t} \varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t} s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$. This is the **DDPM** loss.
+To see the noise-prediction form: write $x_t = x_0 + \sqrt{t} \varepsilon$ (with $ \varepsilon \sim \mathcal{N} (0,I) $). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t} \varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t} s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$. This is the **DDPM** loss.
 
 ---
 
@@ -258,7 +258,7 @@ The score generalises to:
 $$\nabla\log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{\sigma_t^2}$$
 
 and the score matching loss is:
-$$\min_\theta \mathbb{E}_{x_0,\,\epsilon,\,x_t}\left[\left\lVert s_{{\theta}}(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\rVert^2\right]$$
+$$\min_\theta \mathbb{E}_{x_0, \epsilon, x_t}\left[\left\lVert s_{{\theta}}(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\rVert^2\right]$$
 
 ### 6.2 Probability Flow ODE
 
@@ -277,7 +277,7 @@ To generate samples, run the probability flow ODE backward from $t = T$ (noise) 
 
 $$x_{t-\delta} = x_t + (\sigma_{t-\delta} - \sigma_t)\cdot\frac{\varepsilon_\theta(x_t, t)}{\sigma_t}\cdot\sigma_t = x_t + \frac{\sigma_{t-\delta}-\sigma_t}{\sigma_t}\cdot\varepsilon_\theta(x_t,t)\cdot\sigma_t$$
 
-More precisely, from the forward ODE $dx_t = \dot{\sigma}_{t}\sigma_{t}\nabla\log p_t(x_t)\,dt$, the reverse step integrates:
+More precisely, from the forward ODE $dx_t = \dot{\sigma}_{t}\sigma_{t}\nabla\log p_t(x_t) dt$, the reverse step integrates:
 $$x_{t-\delta} = x_t + \nabla\log p_t(x_t)\int_{t-\delta}^{t}\dot{\sigma}_s\sigma_s ds = x_t + \nabla\log p_t(x_t)\cdot\frac{\sigma_t^2 - \sigma_{t-\delta}^2}{2}$$
 
 In terms of $\varepsilon_\theta(x_t, t) = \sigma_t\nabla\log p_t(x_t)$:
@@ -333,7 +333,7 @@ $$\text{Ent}_{{\pi}}(f^2) := \mathbb{E}_{{\pi}}[f^2\log f^2] \leq \frac{2}{\rho}
 
 then the Langevin dynamics converge exponentially fast:
 
-$$D_{\text{KL}}(q_t \,\|\, \pi) \leq e^{-2\rho t} D_{\text{KL}}(q_0 \,\|\, \pi)$$
+$$D_{\text{KL}}(q_t  \|  \pi) \leq e^{-2\rho t} D_{\text{KL}}(q_0  \|  \pi)$$
 
 By Pinsker's inequality ($d_{\text{TV}}^2 \leq \frac{1}{2}D_{\text{KL}}$) and the Otto–Villani theorem ($W_2^2 \leq \frac{2}{\rho}D_{\text{KL}}$):
 $$d_{\text{TV}}(q_t, \pi) \leq Ce^{-\rho t}, \qquad W_2(q_t, \pi) \leq C'e^{-\rho t}$$
@@ -383,7 +383,7 @@ $$= (1-\omega) \nabla\log p_t(x) + \omega \nabla\log p_t(x \mid c)$$
 **Training:** Train a single network $\varepsilon_\theta(x_t, t, c)$ that handles both conditional and unconditional generation. During training, randomly drop the condition (replace $c$ with a null token $\varnothing$) with some probability (typically 10–20%). The same network then approximates both $\varepsilon_\theta(x_t,t,c)$ and $\varepsilon_\theta(x_t,t,\varnothing) \approx$ unconditional noise.
 
 **Inference:** Combine the two outputs with scale $\omega$:
-$$\tilde{\varepsilon}_{{\theta}}(x_t, t, c) = (1-\omega)\,\varepsilon_{{\theta}}(x_t, t, \varnothing) + \omega\,\varepsilon_{{\theta}}(x_t, t, c)$$
+$$\tilde{\varepsilon}_{{\theta}}(x_t, t, c) = (1-\omega) \varepsilon_{{\theta}}(x_t, t, \varnothing) + \omega \varepsilon_{{\theta}}(x_t, t, c)$$
 
 In practice, $\omega \in [1.5, 7.5]$ gives a good trade-off between sample quality and diversity. CFG does not require a separate classifier and scales naturally to open-domain conditioning.
 
