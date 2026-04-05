@@ -241,7 +241,7 @@ Training $s_\theta$ to match $\nabla\log p_t$ directly is unstable because $\lVe
 | Noise prediction | $\varepsilon_\theta(x_t, t) \approx \varepsilon$ | $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$ | $\varepsilon_\theta = -\sqrt{t} s_\theta$ |
 | $x_0$ prediction | $D_\theta(x_t, t) \approx x_0$ | $\mathbb{E}[\lVert D_\theta - x_0\rVert^2]$ | $D_\theta = x_t + t s_\theta$ |
 
-To see the noise-prediction form: write $x_t = x_0 + \sqrt{t} \varepsilon$ (with $ \varepsilon \sim \mathcal{N} (0,I) $). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t} \varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t} s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$. This is the **DDPM** loss.
+To see the noise-prediction form: write $x_t = x_0 + \sqrt{t} \varepsilon$ (with $\varepsilon\sim\mathcal{N}(0,I)$). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t} \varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t} s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$. This is the **DDPM** loss.
 
 ---
 
