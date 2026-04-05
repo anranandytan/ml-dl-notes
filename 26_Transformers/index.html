@@ -1,0 +1,2415 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/26_Transformers/">
+      
+      
+        <link rel="prev" href="../25_SpectralClustering/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>26 · Transformers & RLHF - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#26-transformers-and-rlhf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              26 · Transformers & RLHF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-building-blocks-of-the-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Building Blocks of the Transformer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Building Blocks of the Transformer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-word-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Word Embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-positional-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Positional Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-linear-projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Linear Projection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Self-Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-multi-head-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Multi-Head Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-masked-attention-causal-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Masked Attention (Causal / Decoder)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-other-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Other Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-transformer-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Transformer Variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-positional-encoding-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Positional Encoding Variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reinforcement-learning-from-human-feedback-rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reinforcement Learning from Human Feedback (RLHF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Reinforcement Learning from Human Feedback (RLHF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-training-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Training Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-remarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Remarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ethics-and-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ethics and Impact
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Ethics and Impact">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-privacy-and-data-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Privacy and Data Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-copyright-infringement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Copyright Infringement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-academic-and-research-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Academic and Research Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-limitations-of-black-box-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Limitations of Black-Box Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-building-blocks-of-the-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Building Blocks of the Transformer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Building Blocks of the Transformer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-word-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Word Embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-positional-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Positional Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-linear-projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Linear Projection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-self-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Self-Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-multi-head-attention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Multi-Head Attention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-masked-attention-causal-decoder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Masked Attention (Causal / Decoder)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-other-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Other Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-transformer-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Transformer Variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-positional-encoding-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Positional Encoding Variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-reinforcement-learning-from-human-feedback-rlhf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Reinforcement Learning from Human Feedback (RLHF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Reinforcement Learning from Human Feedback (RLHF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-training-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Training Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-remarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Remarks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ethics-and-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ethics and Impact
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Ethics and Impact">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-privacy-and-data-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Privacy and Data Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-copyright-infringement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Copyright Infringement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-academic-and-research-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Academic and Research Integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-limitations-of-black-box-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Limitations of Black-Box Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="26-transformers-and-rlhf">26 — Transformers and RLHF</h1>
+<blockquote>
+<p><strong>Keywords:</strong> attention, self-attention, multi-head attention, positional encoding, transformer, RLHF, reward model, PPO, AI ethics, privacy</p>
+</blockquote>
+<hr />
+<h2 id="1-historical-context">1. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1980s</td>
+<td>Recurrent Neural Networks (RNNs): shared weights, backpropagation through time (BPTT); slow sequential training; vanishing gradients.</td>
+</tr>
+<tr>
+<td>1995</td>
+<td>Hochreiter &amp; Schmidhuber introduce <strong>LSTMs</strong> — designed to overcome vanishing gradients; dominant for sequential tasks until 2017.</td>
+</tr>
+<tr>
+<td>2010s</td>
+<td>Attention mechanisms emerge: learn how much each token should attend to others; improved long-range dependency modelling; still slow.</td>
+</tr>
+<tr>
+<td>2017</td>
+<td><strong>Vaswani et al.</strong> — "Attention is All You Need": the Transformer eliminates recurrence entirely; attention is now the sole mechanism.</td>
+</tr>
+<tr>
+<td>2018–present</td>
+<td>GPT, BERT, LLaMA, GPT-4, Claude: increasingly large Transformer-based language models.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-building-blocks-of-the-transformer">2. Building Blocks of the Transformer</h2>
+<h3 id="21-word-embedding">2.1 Word Embedding</h3>
+<p>Each token (word or subword) is mapped to a dense vector in <span class="arithmatex">\(\mathbb{R}^{d_{\text{model}}}\)</span>. These embedding vectors are <strong>learned parameters</strong>.</p>
+<h3 id="22-positional-encoding">2.2 Positional Encoding</h3>
+<p>Attention has no inherent notion of order — the same attention weights apply regardless of position. <strong>Positional encodings</strong> inject position information:</p>
+<div class="arithmatex">\[PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \qquad PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)\]</div>
+<p>where <span class="arithmatex">\(pos\)</span> is the position in the sequence and <span class="arithmatex">\(i\)</span> is the dimension index.</p>
+<p><strong>Why sinusoids?</strong>
+- Nearby positions have similar encodings (the model can learn relative distance).
+- The encoding generalises to unseen sequence lengths (extrapolation).
+- Values at most dimensions are close to 0 or 1, keeping them numerically stable.</p>
+<h3 id="23-linear-projection">2.3 Linear Projection</h3>
+<p>A linear layer <span class="arithmatex">\(W^\top\in\mathbb{R}^{d_{\text{small}}\times d_{\text{model}}}\)</span> projects the <span class="arithmatex">\(d_{\text{model}}\)</span>-dimensional embeddings down to a smaller <span class="arithmatex">\(d_{\text{small}}\)</span>-dimensional space before computing attention.</p>
+<h3 id="24-self-attention">2.4 Self-Attention</h3>
+<p>Self-attention allows each token to aggregate information from all other tokens, weighting by relevance.</p>
+<p><strong>Ingredients:</strong> Three learned weight matrices transform the input into:
+- <strong>Query matrix</strong> <span class="arithmatex">\(Q\in\mathbb{R}^{n\times d_{\text{small}}}\)</span>: what each token is "looking for."
+- <strong>Key matrix</strong> <span class="arithmatex">\(K\in\mathbb{R}^{n\times d_{\text{small}}}\)</span>: what each token "offers."
+- <strong>Value matrix</strong> <span class="arithmatex">\(V\in\mathbb{R}^{n\times d_{\text{small}}}\)</span>: the content each token contributes.</p>
+<p><strong>Attention filter:</strong> <span class="arithmatex">\(QK^\top\in\mathbb{R}^{n\times n}\)</span> — entry <span class="arithmatex">\((i,j)\)</span> measures compatibility between token <span class="arithmatex">\(i\)</span>'s query and token <span class="arithmatex">\(j\)</span>'s key.</p>
+<p><strong>Scaled dot-product attention:</strong></p>
+<div class="arithmatex">\[\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}}\right)V\in\mathbb{R}^{n\times d_{\text{small}}}\]</div>
+<p>The scaling by <span class="arithmatex">\(\sqrt{d_{\text{small}}}\)</span> prevents the dot products from becoming too large in magnitude (which would push the softmax into a saturated regime with near-zero gradients).</p>
+<h3 id="25-multi-head-attention">2.5 Multi-Head Attention</h3>
+<p>Rather than computing attention once, run <span class="arithmatex">\(h\)</span> parallel attention heads, each with its own projection matrices:</p>
+<div class="arithmatex">\[\text{head}_\tau = \text{Attention}(QW_\tau^Q,\, KW_\tau^K,\, VW_\tau^V)\]</div>
+<p>Concatenate and project:</p>
+<div class="arithmatex">\[\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\ldots,\text{head}_h)W^O\]</div>
+<p>Different heads can learn to attend to different types of relationships (syntactic, semantic, positional) simultaneously.</p>
+<h3 id="26-masked-attention-causal-decoder">2.6 Masked Attention (Causal / Decoder)</h3>
+<p>For autoregressive generation, each token should attend only to <strong>previous</strong> tokens (not future ones). Add a mask <span class="arithmatex">\(M\)</span> before the softmax:</p>
+<div class="arithmatex">\[\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_{\text{small}}}} + M\right)V\]</div>
+<p>where <span class="arithmatex">\(M_{ij}=-\infty\)</span> if <span class="arithmatex">\(j&gt;i\)</span> (future tokens are masked out) and <span class="arithmatex">\(0\)</span> otherwise.</p>
+<h3 id="27-other-components">2.7 Other Components</h3>
+<p><strong>Add &amp; Norm (Residual + Layer Normalization):</strong>
+- <strong>Residual connection:</strong> adds the input to the output of each sub-layer, preventing vanishing gradients and preserving information: <span class="arithmatex">\(\text{output} = \text{LayerNorm}(x + \text{sublayer}(x))\)</span>.
+- <strong>Layer normalization:</strong> normalises activations within each layer for stable training.</p>
+<p><strong>Feed-Forward Network (FFN):</strong> A position-wise two-layer MLP applied independently to each token:</p>
+<div class="arithmatex">\[\text{FFN}(x) = \max(0, xW_1+b_1)W_2+b_2\]</div>
+<p>The FFN adds nonlinearity and mixes information across feature dimensions — attention alone is a linear operation over the value vectors.</p>
+<hr />
+<h2 id="3-transformer-variants">3. Transformer Variants</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Architecture</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Encoder-only</strong> (BERT)</td>
+<td>Bidirectional attention (each token sees all others)</td>
+<td>Classification, NER, sentence embeddings</td>
+</tr>
+<tr>
+<td><strong>Decoder-only</strong> (GPT, Claude, LLaMA)</td>
+<td>Causal (masked) attention</td>
+<td>Text generation, language modelling</td>
+</tr>
+<tr>
+<td><strong>Encoder-decoder</strong> (original Transformer, T5)</td>
+<td>Encoder: bidirectional; Decoder: causal + cross-attention to encoder</td>
+<td>Translation, summarisation</td>
+</tr>
+</tbody>
+</table>
+<p>Most modern LLMs (GPT-4, Claude, LLaMA) are <strong>decoder-only</strong>:
+- Simpler: prompts and new generation separated by a unique token.
+- Encoder-only models are better when the entire input needs global processing (e.g., sentiment analysis).</p>
+<hr />
+<h2 id="4-positional-encoding-variants">4. Positional Encoding Variants</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Mechanism</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Absolute</strong> (sinusoidal)</td>
+<td>Fixed formula: <span class="arithmatex">\(\sin/\cos\)</span> of position</td>
+<td>Simple; models memorise trained positions; poor extrapolation</td>
+</tr>
+<tr>
+<td><strong>Relative</strong></td>
+<td>Learn attention bias based on relative distance <span class="arithmatex">\(i-j\)</span></td>
+<td>Better local context; computationally expensive (more parameters)</td>
+</tr>
+<tr>
+<td><strong>Rotary (RoPE)</strong></td>
+<td>Rotate query and key vectors by position angle</td>
+<td>Both absolute and relative info; better extrapolation; no learned parameters; used by most LLMs</td>
+</tr>
+<tr>
+<td><strong>Linear Bias (ALiBi)</strong></td>
+<td>Subtract a linear penalty <span class="arithmatex">\(\lvert i-j\rvert\)</span> from attention scores</td>
+<td>Easy extrapolation; no learned parameters; trades performance for context length</td>
+</tr>
+<tr>
+<td><strong>NoPE</strong></td>
+<td>No positional encoding</td>
+<td>Decoder-only transformers can implicitly learn position from masked attention patterns</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-reinforcement-learning-from-human-feedback-rlhf">5. Reinforcement Learning from Human Feedback (RLHF)</h2>
+<h3 id="51-motivation">5.1 Motivation</h3>
+<p>A pretrained language model generates fluent text but may not follow instructions or align with human values. RLHF fine-tunes the model to produce outputs humans prefer.</p>
+<h3 id="52-components">5.2 Components</h3>
+<ol>
+<li><strong>Agent:</strong> the language model (generates text).</li>
+<li><strong>Environment:</strong> the human (or a reward model trained to simulate humans).</li>
+<li><strong>Reward signal:</strong> human preference between two generated outputs.</li>
+</ol>
+<h3 id="53-training-pipeline">5.3 Training Pipeline</h3>
+<ol>
+<li>
+<p><strong>Collect preferences:</strong> Show a human two model outputs for the same prompt; they indicate which they prefer. Collect many such triples <span class="arithmatex">\((x, \tau^+, \tau^-)\)</span> where <span class="arithmatex">\(\tau^+\)</span> is preferred over <span class="arithmatex">\(\tau^-\)</span>.</p>
+</li>
+<li>
+<p><strong>Train a reward model:</strong> Starting from the pretrained model (which has learned language representations), fine-tune it to predict human preferences. Loss:</p>
+</li>
+</ol>
+<div class="arithmatex">\[\ell(\hat{r}) = -\sum_{x,\tau^+,\tau^-}\log P(\tau^+\succ\tau^-|x)\]</div>
+<p>where <span class="arithmatex">\(P(\tau^+\succ\tau^-|x) = \sigma(\hat{r}(x,\tau^+)-\hat{r}(x,\tau^-))\)</span> (Bradley-Terry model).</p>
+<ol>
+<li><strong>Fine-tune the language model</strong> using the reward model's signal, via <strong>Proximal Policy Optimisation (PPO)</strong> or similar. The language model is updated to generate outputs the reward model scores highly.</li>
+</ol>
+<h3 id="54-remarks">5.4 Remarks</h3>
+<ul>
+<li>RLHF originally used PPO (Schulman et al., 2017); newer methods include DPO (direct preference optimisation), RLHF without PPO.</li>
+<li>The quality of the reward model is critical — a misspecified reward model leads to <strong>reward hacking</strong> (the model finds loopholes to score high without genuine quality).</li>
+</ul>
+<hr />
+<h2 id="6-ethics-and-impact">6. Ethics and Impact</h2>
+<h3 id="61-privacy-and-data-concerns">6.1 Privacy and Data Concerns</h3>
+<ul>
+<li>LLMs are trained on vast amounts of web data, often including personal information.</li>
+<li>Models can <strong>memorise</strong> and reproduce training data, including sensitive personal details.</li>
+<li>Conversations with commercial LLMs are typically logged and may be used for future training.</li>
+<li>Minimal regulation currently governs what data can be used to train models.</li>
+</ul>
+<h3 id="62-copyright-infringement">6.2 Copyright Infringement</h3>
+<ul>
+<li>Web content is not necessarily free to use commercially.</li>
+<li>AI music generators (e.g., Suno) have been sued for training on copyrighted songs without permission or payment.</li>
+<li>Similar issues arise with visual art and written works.</li>
+<li>The legal framework is still evolving.</li>
+</ul>
+<h3 id="63-academic-and-research-integrity">6.3 Academic and Research Integrity</h3>
+<ul>
+<li>Reviewers using LLMs to generate reviews violates conference policies.</li>
+<li>LLMs can hallucinate citations, facts, and results — uncritical use in research is dangerous.</li>
+<li>Transparency in AI-assisted writing is an active ethical debate.</li>
+</ul>
+<h3 id="64-limitations-of-black-box-models">6.4 Limitations of Black-Box Models</h3>
+<p>Black-box models (deep neural networks, large transformers) are:
+- <strong>Hard to troubleshoot</strong> during development.
+- <strong>Hard to audit</strong> for bias and fairness.
+- <strong>Hard to explain</strong> to stakeholders or regulators.
+- <strong>Brittle:</strong> adversarial examples, distributional shift, and dataset biases can cause dramatic failures.</p>
+<p>Interpretable models (decision trees, GAMs, sparse linear models) are preferred in high-stakes domains (medicine, criminal justice, finance) where accountability matters.</p>
+<hr />
+<h2 id="7-summary">7. Summary</h2>
+<div class="highlight"><pre><span></span><code>Transformer core:
+  Input → Embedding + Positional Encoding
+        → Multi-Head Self-Attention (scaled dot-product)
+        → Add &amp; Norm (residual connection)
+        → Feed-Forward Network (per-token MLP)
+        → Add &amp; Norm
+        → (repeat L times)
+        → Output head
+
+Attention(Q,K,V) = softmax(QKᵀ / √d) · V
+
+Multi-head: run h attention heads in parallel, concatenate, project
+
+RLHF:
+  1. Collect human preferences: (prompt, preferred, rejected)
+  2. Train reward model on preferences
+  3. Fine-tune LM with PPO to maximise reward
+</code></pre></div>
+<hr />
+<h2 id="8-references">8. References</h2>
+<ol>
+<li><strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &amp; Polosukhin, I.</strong> (2017). Attention is all you need. <em>NeurIPS 2017</em>. [Original Transformer paper.]</li>
+<li><strong>Devlin, J., Chang, M.-W., Lee, K., &amp; Toutanova, K.</strong> (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. <em>NAACL 2019</em>. [Encoder-only Transformer; bidirectional pretraining.]</li>
+<li><strong>Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., &amp; Sutskever, I.</strong> (2019). Language models are unsupervised multitask learners (GPT-2). OpenAI Blog. [Decoder-only scaling.]</li>
+<li><strong>Ouyang, L., Wu, J., Jiang, X., Almeida, D., et al.</strong> (2022). Training language models to follow instructions with human feedback (InstructGPT). <em>NeurIPS 2022</em>. [RLHF for LLM alignment.]</li>
+<li><strong>Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., &amp; Liu, Y.</strong> (2021). RoFormer: Enhanced transformer with rotary position embedding. <em>arXiv:2104.09864</em>. [RoPE positional encoding.]</li>
+<li><strong>Press, O., Smith, N. A., &amp; Lewis, M.</strong> (2022). Train short, test long: Attention with linear biases enables input length extrapolation. <em>ICLR 2022</em>. [ALiBi positional encoding.]</li>
+<li><strong>Schulman, J., Wolski, F., Dhariwal, P., Radford, A., &amp; Klimov, O.</strong> (2017). Proximal policy optimization algorithms. <em>arXiv:1707.06347</em>. [PPO algorithm used in RLHF.]</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

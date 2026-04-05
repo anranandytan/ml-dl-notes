@@ -1,0 +1,340 @@
+/*
+ * extra.css — overrides for mkdocs-material to match anranandytan.github.io
+ *
+ * Design tokens lifted directly from style.css:
+ *   --ink   #111111   body text
+ *   --mid   #555553   secondary text, labels
+ *   --light #999997   captions, metadata
+ *   --rule  #e4e3e0   dividers
+ *   --bg    #ffffff   page background
+ *   --bg2   #f8f7f5   subtle surface
+ *   --link  #1a4a8a   hyperlinks
+ *
+ * Typography:
+ *   Body      → Georgia, 'Times New Roman', serif
+ *   UI / meta → 'Helvetica Neue', Arial, sans-serif
+ */
+
+/* ── 1. COLOUR PALETTE ───────────────────────────────────────────────── */
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:        #111111;
+  --md-primary-fg-color--light: #555553;
+  --md-primary-fg-color--dark:  #000000;
+  --md-primary-bg-color:        #ffffff;
+  --md-accent-fg-color:         #1a4a8a;
+
+  --md-default-fg-color:           #111111;
+  --md-default-fg-color--light:    #555553;
+  --md-default-fg-color--lighter:  #999997;
+  --md-default-fg-color--lightest: #e4e3e0;
+  --md-default-bg-color:           #ffffff;
+  --md-default-bg-color--light:    #f8f7f5;
+  --md-default-bg-color--lighter:  #f8f7f5;
+  --md-default-bg-color--lightest: #f8f7f5;
+
+  --md-code-bg-color:   #f8f7f5;
+  --md-code-fg-color:   #111111;
+  --md-typeset-color:   #111111;
+  --md-typeset-a-color: #1a4a8a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color:        #f0efec;
+  --md-primary-fg-color--light: #a8a7a4;
+  --md-primary-bg-color:        #111110;
+  --md-accent-fg-color:         #7aabf0;
+
+  --md-default-fg-color:           #f0efec;
+  --md-default-fg-color--light:    #a8a7a4;
+  --md-default-fg-color--lighter:  #666664;
+  --md-default-fg-color--lightest: #2a2a28;
+  --md-default-bg-color:           #111110;
+  --md-default-bg-color--light:    #1a1a18;
+  --md-default-bg-color--lighter:  #1a1a18;
+  --md-default-bg-color--lightest: #1a1a18;
+
+  --md-code-bg-color:   #1a1a18;
+  --md-code-fg-color:   #f0efec;
+  --md-typeset-color:   #f0efec;
+  --md-typeset-a-color: #7aabf0;
+}
+
+
+/* ── 2. TYPOGRAPHY ───────────────────────────────────────────────────── */
+
+/* Body: serif, matching style.css */
+.md-typeset {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--md-default-fg-color);
+}
+
+/* Headings: keep serif, not bold */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: normal;
+  letter-spacing: 0;
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset h1 { font-size: 1.6rem;  margin-bottom: 0.25rem; }
+.md-typeset h2 { font-size: 1.15rem; margin-top: 2.2rem; }
+.md-typeset h3 { font-size: 1rem;    margin-top: 1.6rem; }
+
+/* Thin rule under h2 instead of the heavy Material line */
+.md-typeset h2 {
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  padding-bottom: 0.3rem;
+}
+
+/* Navigation and UI: sans-serif */
+.md-nav,
+.md-header,
+.md-tabs,
+.md-footer,
+.md-search,
+.md-typeset .md-button {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ── 3. HEADER ───────────────────────────────────────────────────────── */
+
+.md-header {
+  background-color: var(--md-default-bg-color);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: none;
+}
+
+.md-header__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.95rem;
+  font-weight: normal;
+  color: var(--md-default-fg-color);
+}
+
+/* Remove the coloured top bar that Material adds */
+.md-header[data-md-state="shadow"] {
+  box-shadow: none;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+
+/* ── 4. LEFT NAVIGATION ──────────────────────────────────────────────── */
+
+.md-nav {
+  font-size: 0.78rem;
+}
+
+/* Section labels: uppercase small caps, matching .label in style.css */
+.md-nav__title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--lighter);
+  padding: 0.4rem 0.6rem;
+}
+
+.md-nav__link {
+  color: var(--md-default-fg-color--light);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.78rem;
+  transition: color 0.15s;
+}
+
+.md-nav__link:hover,
+.md-nav__link--active {
+  color: var(--md-default-fg-color);
+}
+
+.md-nav__link--active {
+  font-weight: 700;
+}
+
+
+/* ── 5. PAGE CONTENT AREA ────────────────────────────────────────────── */
+
+/* Max width: 900px matching style.css --max */
+.md-grid { max-width: 900px; }
+
+/* Content padding */
+.md-content__inner {
+  padding: 2rem 1rem 3rem;
+}
+
+/* Paragraphs */
+.md-typeset p {
+  margin-bottom: 1rem;
+}
+
+/* Links */
+.md-typeset a {
+  color: var(--md-typeset-a-color);
+  text-decoration: none;
+}
+.md-typeset a:hover {
+  text-decoration: underline;
+}
+
+
+/* ── 6. TABLES ───────────────────────────────────────────────────────── */
+
+.md-typeset table:not([class]) {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.84rem;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.md-typeset table:not([class]) thead {
+  background: transparent;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset table:not([class]) th {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--md-default-fg-color--lighter);
+  padding: 0.55rem 0.8rem;
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  vertical-align: top;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset table:not([class]) tr:last-child td {
+  border-bottom: none;
+}
+
+/* Remove the alternating row colours Material adds */
+.md-typeset table:not([class]) tr:nth-child(even) td {
+  background: transparent;
+}
+
+
+/* ── 7. CODE BLOCKS ──────────────────────────────────────────────────── */
+
+.md-typeset code {
+  font-size: 0.84em;
+  background: var(--md-code-bg-color);
+  border-radius: 0;
+  padding: 0.1em 0.35em;
+  color: var(--md-code-fg-color);
+  font-family: 'SF Mono', 'Fira Mono', 'Consolas', monospace;
+}
+
+.md-typeset pre {
+  border-radius: 0;
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+  padding: 1rem 1.2rem;
+  background: var(--md-code-bg-color);
+}
+
+.md-typeset pre code {
+  background: transparent;
+  padding: 0;
+}
+
+
+/* ── 8. MATH ─────────────────────────────────────────────────────────── */
+
+/* Give display math a little breathing room */
+.md-typeset .arithmatex {
+  overflow-x: auto;
+  margin: 1.2rem 0;
+}
+
+/* MathJax rendered output */
+mjx-container[display="true"] {
+  margin: 1.2rem auto;
+  overflow-x: auto;
+}
+
+
+/* ── 9. BLOCKQUOTES (keyword / hint blocks) ──────────────────────────── */
+
+.md-typeset blockquote {
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+  padding-left: 1rem;
+  color: var(--md-default-fg-color--light);
+  font-style: normal;
+  margin: 1.2rem 0;
+}
+
+
+/* ── 10. FOOTER ──────────────────────────────────────────────────────── */
+
+.md-footer {
+  background: var(--md-default-bg-color);
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  color: var(--md-default-fg-color--lighter);
+  font-size: 0.73rem;
+}
+
+.md-footer-meta {
+  background: transparent;
+}
+
+.md-footer__link {
+  color: var(--md-default-fg-color--light);
+}
+
+
+/* ── 11. SEARCH ──────────────────────────────────────────────────────── */
+
+.md-search__input {
+  border-radius: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.85rem;
+}
+
+
+/* ── 12. BACK-TO-TOP BUTTON ──────────────────────────────────────────── */
+
+.md-top {
+  background: var(--md-default-bg-color);
+  border: 1.5px solid var(--md-default-fg-color);
+  color: var(--md-default-fg-color);
+  border-radius: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: none;
+}
+
+.md-top:hover {
+  background: var(--md-default-fg-color);
+  color: var(--md-default-bg-color);
+}
+
+
+/* ── 13. REMOVE MATERIAL FLOURISHES ──────────────────────────────────── */
+
+/* No rounded corners anywhere */
+.md-button,
+.md-tag,
+[class*="md-"] {
+  border-radius: 0 !important;
+}
+
+/* Suppress the animated underline on nav items */
+.md-tabs__link::after {
+  display: none;
+}
+
+/* Remove the primary-colour header bar at very top */
+.md-header::before {
+  display: none;
+}

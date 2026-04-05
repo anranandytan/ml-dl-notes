@@ -1,0 +1,2322 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/18_CRF/">
+      
+      
+        <link rel="prev" href="../17_ParticleFilter/">
+      
+      
+        <link rel="next" href="../19_GenerativeModels/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>18 · Conditional Random Field - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#18-conditional-random-field" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              18 · Conditional Random Field
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-background-markov-random-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Background: Markov Random Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-memm-and-the-label-bias-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. MEMM and the Label Bias Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. MEMM and the Label Bias Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-memm-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MEMM Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-the-label-bias-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 The Label Bias Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-chain-structured-crf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Chain-Structured CRF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Chain-Structured CRF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-deriving-crf-from-mrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Deriving CRF from MRF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-feature-functions-and-parameterisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Feature Functions and Parameterisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-compact-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Compact Notation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-learning-parameter-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Learning (Parameter Estimation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Learning (Parameter Estimation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-maximum-likelihood-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Maximum Likelihood Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-computing-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Computing the Gradient
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Inference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Inference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-factored-form-of-py-mid-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Factored Form of \(p(Y \mid X)\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-forward-backward-algorithm-marginal-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Forward-Backward Algorithm (Marginal Inference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-map-inference-viterbi-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 MAP Inference — Viterbi Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-background-markov-random-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Background: Markov Random Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-memm-and-the-label-bias-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. MEMM and the Label Bias Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. MEMM and the Label Bias Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-memm-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MEMM Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-the-label-bias-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 The Label Bias Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-chain-structured-crf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Chain-Structured CRF
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Chain-Structured CRF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-deriving-crf-from-mrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Deriving CRF from MRF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-feature-functions-and-parameterisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Feature Functions and Parameterisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-compact-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Compact Notation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-learning-parameter-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Learning (Parameter Estimation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Learning (Parameter Estimation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-maximum-likelihood-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Maximum Likelihood Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-computing-the-gradient" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Computing the Gradient
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Inference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Inference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-factored-form-of-py-mid-x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Factored Form of \(p(Y \mid X)\)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-forward-backward-algorithm-marginal-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Forward-Backward Algorithm (Marginal Inference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-map-inference-viterbi-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 MAP Inference — Viterbi Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="18-conditional-random-field">18 — Conditional Random Field</h1>
+<blockquote>
+<p><strong>Keywords:</strong> structured prediction, graphical model, MRF, label bias, forward-backward algorithm, Viterbi, feature functions, log-linear model</p>
+</blockquote>
+<hr />
+<h2 id="1-motivation-intuition">1. Motivation &amp; Intuition</h2>
+<p>Many real-world problems require predicting <strong>structured outputs</strong> — sequences, trees, or graphs — rather than a single label. Examples include:</p>
+<ul>
+<li><strong>Part-of-speech tagging:</strong> given a sentence <span class="arithmatex">\(x = (x_1, \ldots, x_T)\)</span>, predict the tag sequence <span class="arithmatex">\(y = (y_1, \ldots, y_T)\)</span>.</li>
+<li><strong>Named entity recognition (NER):</strong> label each word as PERSON, LOCATION, OTHER, etc.</li>
+<li><strong>Gene sequence labelling, handwriting recognition, speech tagging.</strong></li>
+</ul>
+<p>A naive approach applies an independent classifier at each position, ignoring label dependencies entirely. Better approaches (HMM, MEMM, CRF) model the joint distribution over the entire label sequence.</p>
+<p><strong>The key insight of CRF</strong> is to model <span class="arithmatex">\(p(Y \mid X)\)</span> directly — the conditional distribution of the label sequence given the observations — rather than modelling the joint <span class="arithmatex">\(p(X, Y)\)</span>. This is the discriminative vs. generative distinction:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Models</th>
+<th>Advantage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMM</td>
+<td><span class="arithmatex">\(p(X, Y) = p(Y)p(X \mid Y)\)</span></td>
+<td>Simple, generative; strong independence assumptions</td>
+</tr>
+<tr>
+<td>MEMM</td>
+<td><span class="arithmatex">\(p(Y \mid X) = \prod_t p(y_t \mid y_{t-1}, x_{1:T})\)</span></td>
+<td>Discriminative; but suffers from label bias</td>
+</tr>
+<tr>
+<td><strong>CRF</strong></td>
+<td><span class="arithmatex">\(p(Y \mid X) = \frac{1}{Z(X)}\prod_t \psi_t(y_{t-1}, y_t, X)\)</span></td>
+<td>Discriminative; <strong>global normalisation</strong> avoids label bias</td>
+</tr>
+</tbody>
+</table>
+<p>CRFs allow arbitrary, overlapping <strong>feature functions</strong> over the entire input <span class="arithmatex">\(x_{1:T}\)</span> and any pair of adjacent labels. This flexibility — without the generative modelling cost — is the main reason CRFs became the standard for sequence labelling throughout the 2000s and remain relevant today as components of deep models.</p>
+<hr />
+<h2 id="2-historical-context">2. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1989</td>
+<td>Hidden Markov Models (HMMs) popularised for speech recognition and sequence labelling (Rabiner's tutorial).</td>
+</tr>
+<tr>
+<td>1996</td>
+<td>Maximum Entropy Markov Models (MEMMs) introduced as discriminative alternatives to HMMs.</td>
+</tr>
+<tr>
+<td>2001</td>
+<td><strong>Lafferty, McCallum &amp; Pereira</strong> introduce Conditional Random Fields, explicitly diagnosing and fixing the label bias problem of MEMMs.</td>
+</tr>
+<tr>
+<td>2003–2008</td>
+<td>CRFs become the dominant model for NLP sequence labelling (NER, POS, chunking).</td>
+</tr>
+<tr>
+<td>2015–present</td>
+<td>Neural CRFs: the output layer of a BiLSTM (or Transformer) feeds into a CRF layer, combining learned representations with structured decoding.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-background-markov-random-fields">3. Background: Markov Random Fields</h2>
+<p>A <strong>Markov Random Field (MRF)</strong> — also called an undirected graphical model — defines a joint distribution via <strong>clique potential functions</strong> (also called factors):</p>
+<div class="arithmatex">\[p(x) = \frac{1}{Z} \prod_{c \in \mathcal{C}} \psi_c(x_c)\]</div>
+<p>where <span class="arithmatex">\(\mathcal{C}\)</span> is the set of maximal cliques, <span class="arithmatex">\(x_c\)</span> denotes the variables in clique <span class="arithmatex">\(c\)</span>, and <span class="arithmatex">\(Z = \sum_x \prod_c \psi_c(x_c)\)</span> is the partition function ensuring normalisation.</p>
+<p>Each potential <span class="arithmatex">\(\psi_c \geq 0\)</span> can always be written in log-linear form by defining <span class="arithmatex">\(\psi_c(x_c) = \exp[-E_c(x_c)]\)</span>, where <span class="arithmatex">\(E_c\)</span> is an "energy" (lower energy = higher probability). Equivalently, defining <span class="arithmatex">\(F_c := -E_c\)</span>:</p>
+<div class="arithmatex">\[p(x) = \frac{1}{Z} \prod_{c} \exp[F_c(x_c)] = \frac{1}{Z} \exp\left[\sum_{c} F_c(x_c)\right]\]</div>
+<p>This exponential (Gibbs) form is convenient because the log-probability is a <strong>sum</strong> of local energies, making gradient computations tractable.</p>
+<hr />
+<h2 id="4-memm-and-the-label-bias-problem">4. MEMM and the Label Bias Problem</h2>
+<h3 id="41-memm-definition">4.1 MEMM Definition</h3>
+<p>The <strong>Maximum Entropy Markov Model (MEMM)</strong> factorises the conditional as a product of locally normalised distributions:</p>
+<div class="arithmatex">\[P(Y \mid X, \lambda) = \prod_{t=1}^{T} P(y_t \mid y_{t-1},\, x_{1:T},\, \lambda)\]</div>
+<p>Each factor <span class="arithmatex">\(P(y_t \mid y_{t-1}, x_{1:T}, \lambda)\)</span> is a local maximum-entropy (log-linear) classifier, normalised over the possible values of <span class="arithmatex">\(y_t\)</span> given the previous state <span class="arithmatex">\(y_{t-1}\)</span>.</p>
+<h3 id="42-the-label-bias-problem">4.2 The Label Bias Problem</h3>
+<p>The label bias problem (first named by Lafferty et al., 2001) is a fundamental flaw of <strong>per-state local normalisation</strong>.</p>
+<p>Consider a state <span class="arithmatex">\(y_{t-1}\)</span> with only <strong>one possible successor</strong> state. The local distribution <span class="arithmatex">\(P(y_t \mid y_{t-1}, x_{1:T})\)</span> must assign probability 1 to that successor regardless of the observation <span class="arithmatex">\(x\)</span>. Effectively, the transition is <strong>blind to the input</strong> at that step.</p>
+<p>States with few outgoing transitions concentrate probability mass on their successors irrespective of the evidence. This biases the model toward hypotheses that pass through low-branching states — a purely structural artifact with no connection to the data.</p>
+<p><strong>Why CRF solves this:</strong> CRF uses a <strong>single global partition function</strong> <span class="arithmatex">\(Z(X)\)</span> that normalises over the entire label sequence. No per-state local normalisation occurs, so every transition competes globally and must be consistent with the full observed sequence.</p>
+<hr />
+<h2 id="5-chain-structured-crf">5. Chain-Structured CRF</h2>
+<h3 id="51-deriving-crf-from-mrf">5.1 Deriving CRF from MRF</h3>
+<p>A CRF models <span class="arithmatex">\(p(Y \mid X)\)</span> using an MRF structure over the label sequence <span class="arithmatex">\(Y\)</span>, treating the observations <span class="arithmatex">\(X\)</span> as fixed conditioning variables (not modelled). For a <strong>chain-structured</strong> CRF, the graph is a linear chain <span class="arithmatex">\(y_1 - y_2 - \cdots - y_T\)</span>, with cliques consisting of adjacent pairs <span class="arithmatex">\((y_{t-1}, y_t)\)</span>.</p>
+<p>Applying the MRF factor decomposition to the label sequence, conditioned on <span class="arithmatex">\(X\)</span>:</p>
+<div class="arithmatex">\[p(Y \mid X) = \frac{1}{Z(X)} \prod_{t=1}^{T} \psi_t(y_{t-1},\, y_t,\, X)\]</div>
+<p>where <span class="arithmatex">\(Z(X) = \sum_{y} \prod_{t=1}^T \psi_t(y_{t-1}, y_t, X)\)</span> now depends on <span class="arithmatex">\(X\)</span> (unlike the MRF partition function, which is a constant). Each potential <span class="arithmatex">\(\psi_t\)</span> depends on the entire input <span class="arithmatex">\(X = x_{1:T}\)</span>, giving the model access to non-local context.</p>
+<p>Writing each potential in log-linear form:</p>
+<div class="arithmatex">\[\psi_t(y_{t-1}, y_t, X) = \exp[F_t(y_{t-1}, y_t, X)]\]</div>
+<p>so that:</p>
+<div class="arithmatex">\[p(Y \mid X) = \frac{1}{Z(X)} \exp\left[\sum_{t=1}^{T} F_t(y_{t-1}, y_t, X)\right]\]</div>
+<h3 id="52-feature-functions-and-parameterisation">5.2 Feature Functions and Parameterisation</h3>
+<p>Each <span class="arithmatex">\(F_t\)</span> is decomposed into two types of <strong>feature functions</strong>:</p>
+<p><strong>Transition features</strong> <span class="arithmatex">\(f_k(y_{t-1}, y_t, X)\)</span>: capture dependencies between adjacent labels and the input. Example: "the current word is capitalised AND the previous label is O AND the current label is B-PER."</p>
+<p><strong>State (emission) features</strong> <span class="arithmatex">\(g_l(y_t, X)\)</span>: capture dependencies between a single label and the input. Example: "the current word ends in -ing AND the current label is VBG."</p>
+<p>The full parameterisation (with weight vectors <span class="arithmatex">\(\lambda \in \mathbb{R}^K\)</span> for transition features and <span class="arithmatex">\(\eta \in \mathbb{R}^L\)</span> for state features):</p>
+<div class="arithmatex">\[F_t(y_{t-1}, y_t, X) = \sum_{k=1}^{K} \lambda_k f_k(y_{t-1}, y_t, X) + \sum_{l=1}^{L} \eta_l g_l(y_t, X)\]</div>
+<p>Substituting into <span class="arithmatex">\(p(Y \mid X)\)</span>:</p>
+<div class="arithmatex">\[p(Y \mid X) = \frac{1}{Z(X,\lambda,\eta)} \exp\left[\sum_{t=1}^{T}\left(\sum_{k=1}^{K} \lambda_k f_k(y_{t-1}, y_t, X) + \sum_{l=1}^{L} \eta_l g_l(y_t, X)\right)\right]\]</div>
+<p>Since the double sum can be rearranged (weights are independent of <span class="arithmatex">\(t\)</span>):</p>
+<div class="arithmatex">\[= \frac{1}{Z(X,\lambda,\eta)} \exp\left[\lambda^\top \underbrace{\sum_{t=1}^{T} f(y_{t-1}, y_t, X)}_{\text{total transition feature count}} + \eta^\top \underbrace{\sum_{t=1}^{T} g(y_t, X)}_{\text{total state feature count}}\right]\]</div>
+<h3 id="53-compact-notation">5.3 Compact Notation</h3>
+<p>Define the concatenated parameter vector and sufficient statistic:</p>
+<div class="arithmatex">\[\theta = \begin{pmatrix} \lambda \\ \eta \end{pmatrix} \in \mathbb{R}^{K+L}, \qquad H(y, X) = \begin{pmatrix} \displaystyle\sum_{t=1}^{T} f(y_{t-1}, y_t, X) \\[6pt] \displaystyle\sum_{t=1}^{T} g(y_t, X) \end{pmatrix} \in \mathbb{R}^{K+L}\]</div>
+<p>Then the CRF distribution takes the elegant form of an <strong>exponential family</strong>:</p>
+<div class="arithmatex">\[\boxed{p(Y = y \mid X = x) = \frac{1}{Z(x,\theta)} \exp\left[\theta^\top H(y, x)\right]}\]</div>
+<p>where <span class="arithmatex">\(Z(x, \theta) = \sum_{y'} \exp[\theta^\top H(y', x)]\)</span>.</p>
+<p>This is a log-linear model over the entire sequence. The sufficient statistic <span class="arithmatex">\(H(y, x)\)</span> is the vector of <strong>accumulated feature counts</strong> along the labelling <span class="arithmatex">\(y\)</span>.</p>
+<hr />
+<h2 id="6-learning-parameter-estimation">6. Learning (Parameter Estimation)</h2>
+<h3 id="61-maximum-likelihood-objective">6.1 Maximum Likelihood Objective</h3>
+<p>Given <span class="arithmatex">\(N\)</span> i.i.d. training examples <span class="arithmatex">\(\{(x^{(i)}, y^{(i)})\}_{i=1}^{N}\)</span>, we maximise the conditional log-likelihood:</p>
+<div class="arithmatex">\[\hat{\theta} = \arg\max_{\theta} \sum_{i=1}^{N} \log p(y^{(i)} \mid x^{(i)})\]</div>
+<p>Expanding with the CRF formula:</p>
+<div class="arithmatex">\[\sum_{i=1}^{N} \log p(y^{(i)} \mid x^{(i)}) = \sum_{i=1}^{N} \left[\theta^\top H(y^{(i)}, x^{(i)}) - \log Z(x^{(i)}, \theta)\right]\]</div>
+<div class="arithmatex">\[= \sum_{i=1}^{N} \left[\lambda^\top \sum_{t=1}^{T} f(y_{t-1}^{(i)}, y_t^{(i)}, x^{(i)}) + \eta^\top \sum_{t=1}^{T} g(y_t^{(i)}, x^{(i)}) - \log Z(x^{(i)}, \lambda, \eta)\right]\]</div>
+<p>This objective is <strong>concave</strong> in <span class="arithmatex">\(\theta\)</span> (since <span class="arithmatex">\(\log Z\)</span> is convex in <span class="arithmatex">\(\theta\)</span>), so gradient ascent or L-BFGS finds the global maximum.</p>
+<h3 id="62-computing-the-gradient">6.2 Computing the Gradient</h3>
+<p>The gradient w.r.t. <span class="arithmatex">\(\lambda\)</span> is:</p>
+<div class="arithmatex">\[\nabla_\lambda \mathcal{L} = \sum_{i=1}^{N} \left[\sum_{t=1}^{T} f(y_{t-1}^{(i)}, y_t^{(i)}, x^{(i)}) - \nabla_\lambda \log Z(x^{(i)}, \lambda, \eta)\right]\]</div>
+<p><strong>Computing <span class="arithmatex">\(\nabla_\lambda \log Z\)</span>:</strong> We differentiate <span class="arithmatex">\(\log Z(x, \lambda, \eta) = \log \sum_y \exp[\theta^\top H(y, x)]\)</span>:</p>
+<div class="arithmatex">\[\nabla_\lambda \log Z = \frac{\nabla_\lambda Z}{Z} = \frac{\sum_y \exp[\theta^\top H(y,x)] \cdot \sum_t f(y_{t-1},y_t,x)}{\sum_y \exp[\theta^\top H(y,x)]}\]</div>
+<div class="arithmatex">\[= \sum_y p(y \mid x) \sum_{t=1}^{T} f(y_{t-1}, y_t, x) = \mathbb{E}_{p(y \mid x)}\left[\sum_{t=1}^{T} f(y_{t-1}, y_t, x)\right]\]</div>
+<p><strong>Exchanging sum and expectation</strong> (both are finite):</p>
+<div class="arithmatex">\[= \sum_{t=1}^{T} \sum_y p(y \mid x)\, f(y_{t-1}, y_t, x)\]</div>
+<p>For each <span class="arithmatex">\(t\)</span>, we can marginalise out all labels except <span class="arithmatex">\(y_{t-1}\)</span> and <span class="arithmatex">\(y_t\)</span>:</p>
+<div class="arithmatex">\[\sum_y p(y \mid x)\, f(y_{t-1}, y_t, x) = \sum_{y_{t-1}} \sum_{y_t} \underbrace{\left(\sum_{y \setminus \{y_{t-1}, y_t\}} p(y \mid x)\right)}_{= p(y_{t-1}, y_t \mid x)} f(y_{t-1}, y_t, x)\]</div>
+<div class="arithmatex">\[= \sum_{y_{t-1}} \sum_{y_t} p(y_{t-1}, y_t \mid x)\, f(y_{t-1}, y_t, x)\]</div>
+<p>Therefore the full gradient is:</p>
+<div class="arithmatex">\[\boxed{\nabla_\lambda \mathcal{L} = \sum_{i=1}^{N} \left[\sum_{t=1}^{T} f(y_{t-1}^{(i)}, y_t^{(i)}, x^{(i)}) - \sum_{t=1}^{T} \sum_{j, k} p(y_{t-1}^{(i)} = j,\, y_t^{(i)} = k \mid x^{(i)})\, f(j, k, x^{(i)})\right]}\]</div>
+<p><strong>Interpretation:</strong> The gradient is <strong>observed feature counts minus expected feature counts</strong> (under the current model). At convergence, these two are equal — the model's expected sufficient statistics match the empirical ones. This is the standard result for exponential family MLE.</p>
+<p>The gradient w.r.t. <span class="arithmatex">\(\eta\)</span> has an identical structure with <span class="arithmatex">\(g\)</span> in place of <span class="arithmatex">\(f\)</span> and <span class="arithmatex">\(p(y_t \mid x)\)</span> in place of <span class="arithmatex">\(p(y_{t-1}, y_t \mid x)\)</span>.</p>
+<p><strong>Key observation:</strong> Computing the gradient requires the marginals <span class="arithmatex">\(p(y_{t-1}, y_t \mid x)\)</span> and <span class="arithmatex">\(p(y_t \mid x)\)</span> for every <span class="arithmatex">\(t\)</span> and every training example. These are computed efficiently via the <strong>forward-backward algorithm</strong> (Section 7.2).</p>
+<hr />
+<h2 id="7-inference">7. Inference</h2>
+<p>Given a trained CRF, there are three standard inference tasks:</p>
+<ol>
+<li><strong>Marginal inference:</strong> compute <span class="arithmatex">\(p(y_t = i \mid x)\)</span> for each position <span class="arithmatex">\(t\)</span> and label <span class="arithmatex">\(i \in \mathcal{S}\)</span>.</li>
+<li><strong>Pairwise marginal inference:</strong> compute <span class="arithmatex">\(p(y_{t-1} = j, y_t = i \mid x)\)</span> — needed for learning.</li>
+<li><strong>MAP inference (decoding):</strong> find <span class="arithmatex">\(\hat{y} = \arg\max_{y} p(y \mid x)\)</span> — the most probable label sequence.</li>
+</ol>
+<h3 id="71-factored-form-of-py-mid-x">7.1 Factored Form of <span class="arithmatex">\(p(Y \mid X)\)</span></h3>
+<p>Write the joint as:</p>
+<div class="arithmatex">\[p(y \mid x) = \frac{1}{Z} \prod_{t=1}^{T} \psi_t(y_{t-1}, y_t, x)\]</div>
+<p>where <span class="arithmatex">\(\psi_t(y_{t-1}, y_t, x) = \exp[\lambda^\top f(y_{t-1}, y_t, x) + \eta^\top g(y_t, x)]\)</span>.</p>
+<h3 id="72-forward-backward-algorithm-marginal-inference">7.2 Forward-Backward Algorithm (Marginal Inference)</h3>
+<p>To compute <span class="arithmatex">\(p(y_t = i \mid x)\)</span>, we marginalise over all other labels:</p>
+<div class="arithmatex">\[p(y_t = i \mid x) = \sum_{y : y_t = i} p(y \mid x) = \frac{1}{Z} \sum_{y : y_t = i} \prod_{t'=1}^{T} \psi_{t'}(y_{t'-1}, y_{t'}, x)\]</div>
+<p>The key observation is that this sum <strong>decomposes</strong> into a product of a "left part" and a "right part":</p>
+<div class="arithmatex">\[p(y_t = i \mid x) = \frac{1}{Z}  \underbrace{\left(\sum_{y_{1:t-1}} \prod_{t'=1}^{t} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\alpha_t(i)} \cdot \underbrace{\left(\sum_{y_{t+1:T}} \prod_{t'=t+1}^{T} \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t=i}\right)}_{\beta_t(i)}\]</div>
+<p><strong>Forward variable</strong> <span class="arithmatex">\(\alpha_t(i)\)</span>: the (unnormalised) probability of all sequences <span class="arithmatex">\(y_{1:t}\)</span> ending in <span class="arithmatex">\(y_t = i\)</span>:</p>
+<div class="arithmatex">\[\alpha_1(i) = \psi_1(y_0, i,\, x) \qquad \text{(}y_0 \text{ is a special START token)}\]</div>
+<div class="arithmatex">\[\alpha_t(i) = \sum_{j \in \mathcal{S}} \psi_t(j,\, i,\, x)  \alpha_{t-1}(j), \quad t = 2, \ldots, T\]</div>
+<p><strong>Backward variable</strong> <span class="arithmatex">\(\beta_t(i)\)</span>: the (unnormalised) probability of all sequences <span class="arithmatex">\(y_{t+1:T}\)</span> given <span class="arithmatex">\(y_t = i\)</span>:</p>
+<div class="arithmatex">\[\beta_T(i) = 1 \qquad \forall\, i \in \mathcal{S}\]</div>
+<div class="arithmatex">\[\beta_t(i) = \sum_{j \in \mathcal{S}} \psi_{t+1}(i,\, j,\, x)  \beta_{t+1}(j), \quad t = T-1, \ldots, 1\]</div>
+<p><strong>Partition function</strong> (from forward variables at the last step):</p>
+<div class="arithmatex">\[Z = \sum_{i \in \mathcal{S}} \alpha_T(i)\]</div>
+<p><strong>Marginals:</strong></p>
+<div class="arithmatex">\[p(y_t = i \mid x) = \frac{\alpha_t(i)\,\beta_t(i)}{Z}\]</div>
+<div class="arithmatex">\[p(y_{t-1} = j,  y_t = i \mid x) = \frac{\alpha_{t-1}(j) \psi_t(j, i, x) \beta_t(i)}{Z}\]</div>
+<p><strong>Time complexity:</strong> <span class="arithmatex">\(O(T \cdot |\mathcal{S}|^2)\)</span> — linear in sequence length, quadratic in the number of labels.</p>
+<h3 id="73-map-inference-viterbi-algorithm">7.3 MAP Inference — Viterbi Algorithm</h3>
+<p>MAP decoding finds:</p>
+<div class="arithmatex">\[\hat{y} = \arg\max_{y_1, \ldots, y_T} p(y \mid x) = \arg\max_{y_1, \ldots, y_T} \sum_{t=1}^{T} \log \psi_t(y_{t-1}, y_t, x)\]</div>
+<p>This is solved by <strong>Viterbi dynamic programming</strong>. Define:</p>
+<div class="arithmatex">\[v_t(i) = \max_{y_{1:t-1}} \sum_{t'=1}^{t} \log \psi_{t'}(y_{t'-1}, y_{t'}, x)\bigg|_{y_t = i}\]</div>
+<p>the score of the best partial path ending in state <span class="arithmatex">\(i\)</span> at time <span class="arithmatex">\(t\)</span>. Recursion:</p>
+<div class="arithmatex">\[v_1(i) = \log \psi_1(y_0, i, x)\]</div>
+<div class="arithmatex">\[v_t(i) = \max_{j \in \mathcal{S}} \left[\log \psi_t(j, i, x) + v_{t-1}(j)\right], \quad t = 2, \ldots, T\]</div>
+<p>Track back-pointers <span class="arithmatex">\(\text{bp}_{t}(i) = \arg\max_j [\log \psi_{t}(j,i,x) + v_{t-1}(j)]\)</span> to recover the optimal sequence. The final score is <span class="arithmatex">\(\max_i v_T(i)\)</span> and the sequence is recovered by tracing back-pointers from <span class="arithmatex">\(\hat{y}_T = \arg\max_i v_T(i)\)</span>.</p>
+<p><strong>Time complexity:</strong> <span class="arithmatex">\(O(T \cdot |\mathcal{S}|^2)\)</span> — same as forward-backward.</p>
+<hr />
+<h2 id="8-summary">8. Summary</h2>
+<div class="highlight"><pre><span></span><code>Input: x = (x_1, ..., x_T)
+Output: y = (y_1, ..., y_T)
+
+CRF:  p(y|x) = (1/Z(x)) * exp[ θᵀ H(y,x) ]
+
+                    ┌─────────────────────────┐
+                    │  Global normalisation   │
+                    │  Z(x) = Σ_y exp[...]   │  ← avoids label bias
+                    └─────────────────────────┘
+
+Learning:  gradient = observed counts − expected counts
+           expected counts via forward-backward  (O(T|S|²))
+
+Decoding:  Viterbi  (O(T|S|²))
+</code></pre></div>
+<p>The CRF's power comes from three things working together:
+1. <strong>Global normalisation</strong> eliminates label bias.
+2. <strong>Arbitrary feature functions</strong> over the full input and label pairs enable rich, overlapping features.
+3. <strong>Efficient dynamic programming</strong> (forward-backward, Viterbi) makes both learning and inference tractable despite the exponential number of label sequences.</p>
+<hr />
+<h2 id="9-references">9. References</h2>
+<ol>
+<li><strong>Lafferty, J., McCallum, A., &amp; Pereira, F.</strong> (2001). Conditional random fields: Probabilistic models for segmenting and labeling sequence data. <em>Proceedings of ICML 2001</em>, 282–289. [Original CRF paper; introduces label bias diagnosis.]</li>
+<li><strong>Sutton, C. &amp; McCallum, A.</strong> (2012). An introduction to conditional random fields. <em>Foundations and Trends in Machine Learning</em>, 4(4), 267–373. [Comprehensive tutorial; free PDF available.]</li>
+<li><strong>Lafferty, J.</strong> (1996). Bernstein polynomials and the label bias problem. [Background on label bias in MEMMs.]</li>
+<li><strong>Rabiner, L. R.</strong> (1989). A tutorial on hidden Markov models and selected applications in speech recognition. <em>Proceedings of the IEEE</em>, 77(2), 257–286. [Forward-backward and Viterbi algorithms.]</li>
+<li><strong>Bishop, C. M.</strong> (2006). <em>Pattern Recognition and Machine Learning</em>. Springer. §8.3 (Markov Random Fields), §8.4 (Inference in graphical models).</li>
+<li><strong>Murphy, K. P.</strong> (2012). <em>Machine Learning: A Probabilistic Perspective</em>. MIT Press. §19 (Undirected graphical models), §19.6 (CRFs).</li>
+<li><strong>Huang, Z., Xu, W., &amp; Yu, K.</strong> (2015). Bidirectional LSTM-CRF models for sequence labeling. <em>arXiv:1508.01991</em>. [Neural CRF; state-of-the-art NER with CRF output layer.]</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

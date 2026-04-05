@@ -1,0 +1,2189 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/12_EM/">
+      
+      
+        <link rel="prev" href="../11_GraphicalModels/">
+      
+      
+        <link rel="next" href="../13_VariationalInference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>12 · EM Algorithm - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#12-em-algorithm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              12 · EM Algorithm
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-elbo-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The ELBO Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-em-algorithm-as-coordinate-ascent-on-the-elbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The EM Algorithm as Coordinate Ascent on the ELBO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The EM Algorithm as Coordinate Ascent on the ELBO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-e-step-tighten-the-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 E-Step: Tighten the Bound
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-m-step-maximise-the-elbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 M-Step: Maximise the ELBO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-the-em-update-in-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 The EM Update in Full
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-proof-of-monotonic-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Proof of Monotonic Improvement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-concrete-example-gaussian-mixture-model-gmm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Concrete Example: Gaussian Mixture Model (GMM)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Concrete Example: Gaussian Mixture Model (GMM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-e-step-compute-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 E-Step: Compute Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-m-step-update-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 M-Step: Update Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-connection-to-variational-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Connection to Variational Inference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-the-elbo-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. The ELBO Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-the-em-algorithm-as-coordinate-ascent-on-the-elbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. The EM Algorithm as Coordinate Ascent on the ELBO
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. The EM Algorithm as Coordinate Ascent on the ELBO">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-e-step-tighten-the-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 E-Step: Tighten the Bound
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-m-step-maximise-the-elbo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 M-Step: Maximise the ELBO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-the-em-update-in-full" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 The EM Update in Full
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-proof-of-monotonic-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Proof of Monotonic Improvement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-concrete-example-gaussian-mixture-model-gmm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Concrete Example: Gaussian Mixture Model (GMM)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Concrete Example: Gaussian Mixture Model (GMM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-e-step-compute-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 E-Step: Compute Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-m-step-update-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 M-Step: Update Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-connection-to-variational-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Connection to Variational Inference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="12-em-algorithm">12 — EM Algorithm</h1>
+<blockquote>
+<p><strong>Keywords:</strong> expectation-maximisation, latent variables, ELBO, marginal likelihood, Q-function, monotonic improvement, Gaussian mixture model</p>
+</blockquote>
+<hr />
+<h2 id="1-motivation-intuition">1. Motivation &amp; Intuition</h2>
+<p>Many probabilistic models involve <strong>latent (unobserved) variables</strong> <span class="arithmatex">\(z\)</span> alongside observed data <span class="arithmatex">\(x\)</span>. Examples include:</p>
+<ul>
+<li><strong>Gaussian Mixture Models (GMM):</strong> <span class="arithmatex">\(x\)</span> is a data point; <span class="arithmatex">\(z\)</span> is the (unknown) cluster assignment.</li>
+<li><strong>Hidden Markov Models (HMM):</strong> <span class="arithmatex">\(x\)</span> is an observation sequence; <span class="arithmatex">\(z\)</span> is the (unknown) hidden state sequence.</li>
+<li><strong>Factor Analysis / PCA:</strong> <span class="arithmatex">\(x\)</span> is high-dimensional data; <span class="arithmatex">\(z\)</span> is a low-dimensional latent code.</li>
+</ul>
+<p>In all these cases, the <strong>marginal likelihood</strong> <span class="arithmatex">\(p(x|\theta) = \int p(x,z|\theta)\,dz\)</span> is what we want to maximise over <span class="arithmatex">\(\theta\)</span>, but the integral is typically intractable — either because the space of <span class="arithmatex">\(z\)</span> is large (summing over exponentially many assignments) or because the integral has no closed form.</p>
+<p><strong>The EM idea.</strong> Instead of directly maximising <span class="arithmatex">\(\log p(x|\theta)\)</span>, alternate between two steps:</p>
+<ol>
+<li><strong>E-step:</strong> Compute (or approximate) the posterior <span class="arithmatex">\(p(z|x,\theta^{(t)})\)</span> — infer what the latent variables probably are, given the current parameter estimate.</li>
+<li><strong>M-step:</strong> Maximise the expected complete-data log-likelihood <span class="arithmatex">\(\mathbb{E}_{z|x,\theta^{(t)}}[\log p(x,z|\theta)]\)</span> over <span class="arithmatex">\(\theta\)</span> — pretend we know <span class="arithmatex">\(z\)</span> (in expectation) and fit the parameters.</li>
+</ol>
+<p>The guarantee: every EM iteration <strong>never decreases</strong> the marginal log-likelihood <span class="arithmatex">\(\log p(x|\theta)\)</span>.</p>
+<p>The intuition is a coordinate ascent on the ELBO (see Section 4): the E-step ascends in <span class="arithmatex">\(q\)</span>, the M-step ascends in <span class="arithmatex">\(\theta\)</span>.</p>
+<hr />
+<h2 id="2-historical-context">2. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1950s</td>
+<td>Individual special cases of EM (e.g., factor analysis updates, mixture model fitting) developed independently.</td>
+</tr>
+<tr>
+<td>1977</td>
+<td><strong>Dempster, Laird &amp; Rubin</strong> unify all these special cases under the name "EM algorithm" in their landmark paper, prove the monotonic improvement guarantee, and give a general convergence theory.</td>
+</tr>
+<tr>
+<td>1983</td>
+<td>Wu proves convergence of EM to a stationary point under regularity conditions.</td>
+</tr>
+<tr>
+<td>1990s</td>
+<td>EM becomes the standard algorithm for training HMMs (Baum-Welch algorithm is a special case), mixture models, and factor analysis.</td>
+</tr>
+<tr>
+<td>2000s</td>
+<td><strong>Variational EM</strong> replaces the exact E-step with an approximate posterior <span class="arithmatex">\(q(z)\)</span>, connecting EM to variational inference and VAEs.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-setup">3. Setup</h2>
+<p>Let the elements of the problem be:</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(x\)</span></td>
+<td><strong>Observed data</strong></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(z\)</span></td>
+<td><strong>Latent variables</strong> (unobserved)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\((x, z)\)</span></td>
+<td><strong>Complete data</strong> (if <span class="arithmatex">\(z\)</span> were known, estimation would be easy)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\theta\)</span></td>
+<td><strong>Parameters</strong> to be estimated</td>
+</tr>
+</tbody>
+</table>
+<p>Our goal is to find:
+$<span class="arithmatex">\(\hat{\theta} = \arg\max_\theta \log p(x|\theta)\)</span>$</p>
+<p>The <strong>complete-data log-likelihood</strong> <span class="arithmatex">\(\log p(x,z|\theta)\)</span> is typically easy to maximise. The difficulty is that <span class="arithmatex">\(z\)</span> is unobserved, so we cannot use it directly.</p>
+<hr />
+<h2 id="4-the-elbo-decomposition">4. The ELBO Decomposition</h2>
+<p>The key identity underlying EM is a decomposition of the marginal log-likelihood <span class="arithmatex">\(\log p(x|\theta)\)</span>.</p>
+<p>Introduce an <strong>arbitrary distribution</strong> <span class="arithmatex">\(q(z)\)</span> over the latent variables. Starting from:
+$<span class="arithmatex">\(\log p(x|\theta) = \log p(x,z|\theta) - \log p(z|x,\theta)\)</span>$</p>
+<p>Multiply both sides by <span class="arithmatex">\(q(z)\)</span> and integrate over <span class="arithmatex">\(z\)</span>:</p>
+<p><strong>Left-hand side:</strong>
+$<span class="arithmatex">\(\int q(z)\,\log p(x|\theta)\,dz = \log p(x|\theta)\int q(z)\,dz = \log p(x|\theta)\)</span>$</p>
+<p>since <span class="arithmatex">\(\log p(x|\theta)\)</span> does not depend on <span class="arithmatex">\(z\)</span> and <span class="arithmatex">\(q(z)\)</span> is a normalised density.</p>
+<p><strong>Right-hand side:</strong> Add and subtract <span class="arithmatex">\(\log q(z)\)</span>:
+$<span class="arithmatex">\(\int q(z)\left[\log p(x,z|\theta) - \log p(z|x,\theta)\right]dz = \int q(z)\left[\log\frac{p(x,z|\theta)}{q(z)} - \log\frac{p(z|x,\theta)}{q(z)}\right]dz\)</span>$</p>
+<p>Define:
+$<span class="arithmatex">\(\text{ELBO}(q,\theta)  :=  \int q(z)\log\frac{p(x,z|\theta)}{q(z)}\,dz  =  \mathbb{E}_{q}\left[\log p(x,z|\theta)\right] - \mathbb{E}_{q}\left[\log q(z)\right]\)</span>$</p>
+<div class="arithmatex">\[D_{\text{KL}}(q(z)\|p(z|x,\theta))  :=  \int q(z)\log\frac{q(z)}{p(z|x,\theta)}\,dz  \geq  0 \quad\text{(always non-negative)}\]</div>
+<p>Note the sign in the second term:
+$<span class="arithmatex">\(\int q(z)\log\frac{p(z|x,\theta)}{q(z)}\,dz = -D_{\text{KL}}(q(z)\|p(z|x,\theta))\)</span>$</p>
+<p>Therefore:</p>
+<div class="arithmatex">\[\boxed{\log p(x|\theta) = \text{ELBO}(q,\theta) + D_{\text{KL}}(q(z)\|p(z|x,\theta))}\]</div>
+<p>Since <span class="arithmatex">\(D_{\text{KL}} \geq 0\)</span>, the ELBO is always a <strong>lower bound</strong> on <span class="arithmatex">\(\log p(x|\theta)\)</span>:
+$<span class="arithmatex">\(\text{ELBO}(q,\theta) \leq \log p(x|\theta)\)</span>$</p>
+<p>The bound is <strong>tight</strong> (equality holds) if and only if <span class="arithmatex">\(D_{\text{KL}} = 0\)</span>, i.e., <span class="arithmatex">\(q(z) = p(z|x,\theta)\)</span>.</p>
+<hr />
+<h2 id="5-the-em-algorithm-as-coordinate-ascent-on-the-elbo">5. The EM Algorithm as Coordinate Ascent on the ELBO</h2>
+<h3 id="51-e-step-tighten-the-bound">5.1 E-Step: Tighten the Bound</h3>
+<p>Fix <span class="arithmatex">\(\theta = \theta^{(t)}\)</span> and choose <span class="arithmatex">\(q\)</span> to make the ELBO as tight as possible:</p>
+<div class="arithmatex">\[q^{\ast}(z) = \arg\min_{q}  D_{\text{KL}}(q(z)\|p(z|x,\theta^{(t)})) = p(z|x,\theta^{(t)})\]</div>
+<p>Setting <span class="arithmatex">\(q(z) = p(z|x,\theta^{(t)})\)</span> makes <span class="arithmatex">\(D_{\text{KL}} = 0\)</span>, so:
+$<span class="arithmatex">\(\text{ELBO}(q^{\ast}, \theta^{(t)}) = \log p(x|\theta^{(t)})\)</span>$</p>
+<p>The ELBO is now tight at the current <span class="arithmatex">\(\theta^{(t)}\)</span>.</p>
+<p>The E-step computes (or approximates) the posterior <span class="arithmatex">\(p(z|x,\theta^{(t)})\)</span>. With <span class="arithmatex">\(q\)</span> fixed at this posterior, the ELBO becomes:</p>
+<div class="arithmatex">\[\text{ELBO}(q^{\ast},\theta) = \int p(z|x,\theta^{(t)})\log\frac{p(x,z|\theta)}{p(z|x,\theta^{(t)})}\,dz\]</div>
+<div class="arithmatex">\[= \underbrace{\int p(z|x,\theta^{(t)})\log p(x,z|\theta)\,dz}_{Q(\theta,\,\theta^{(t)})} - \underbrace{\int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t)})\,dz}_{\text{constant w.r.t. }\theta}\]</div>
+<p>Since the second term does not depend on <span class="arithmatex">\(\theta\)</span>, maximising the ELBO over <span class="arithmatex">\(\theta\)</span> is equivalent to maximising <span class="arithmatex">\(Q(\theta, \theta^{(t)})\)</span>.</p>
+<h3 id="52-m-step-maximise-the-elbo">5.2 M-Step: Maximise the ELBO</h3>
+<p>Fix <span class="arithmatex">\(q = p(z|x,\theta^{(t)})\)</span> and maximise the ELBO over <span class="arithmatex">\(\theta\)</span>:</p>
+<div class="arithmatex">\[\theta^{(t+1)} = \arg\max_\theta \text{ELBO}(q^{\ast},\theta) = \arg\max_\theta Q(\theta,\theta^{(t)})\]</div>
+<p>where:</p>
+<div class="arithmatex">\[\boxed{Q(\theta,\theta^{(t)}) = \mathbb{E}_{z|x,\theta^{(t)}}\left[\log p(x,z|\theta)\right] = \int p(z|x,\theta^{(t)})\,\log p(x,z|\theta)\,dz}\]</div>
+<p>This is the <strong>expected complete-data log-likelihood</strong>, i.e. the log-likelihood we would have if we could observe <span class="arithmatex">\(z\)</span>, averaged over its posterior distribution given the current parameters. For many models (exponential families), this maximisation has a closed-form solution.</p>
+<h3 id="53-the-em-update-in-full">5.3 The EM Update in Full</h3>
+<div class="arithmatex">\[\theta^{(t+1)} = \arg\max_\theta \mathbb{E}_{z|x,\theta^{(t)}}\left[\log p(x,z|\theta)\right]\]</div>
+<hr />
+<h2 id="6-proof-of-monotonic-improvement">6. Proof of Monotonic Improvement</h2>
+<p><strong>Theorem.</strong> The EM algorithm satisfies <span class="arithmatex">\(\log p(x|\theta^{(t+1)}) \geq \log p(x|\theta^{(t)})\)</span> for all <span class="arithmatex">\(t\)</span>.</p>
+<p><strong>Proof.</strong> Define:
+$<span class="arithmatex">\(Q(\theta,\theta^{(t)}) = \int p(z|x,\theta^{(t)})\log p(x,z|\theta)\,dz\)</span>$
+$<span class="arithmatex">\(H(\theta,\theta^{(t)}) = \int p(z|x,\theta^{(t)})\log p(z|x,\theta)\,dz\)</span>$</p>
+<p>From the identity <span class="arithmatex">\(\log p(x|\theta) = \log p(x,z|\theta) - \log p(z|x,\theta)\)</span>, integrating both sides against <span class="arithmatex">\(p(z|x,\theta^{(t)})\)</span>:</p>
+<div class="arithmatex">\[\log p(x|\theta) = Q(\theta,\theta^{(t)}) - H(\theta,\theta^{(t)}) \quad \text{for all } \theta\]</div>
+<p>Evaluating the difference between <span class="arithmatex">\(\theta^{(t+1)}\)</span> and <span class="arithmatex">\(\theta^{(t)}\)</span>:</p>
+<div class="arithmatex">\[\log p(x|\theta^{(t+1)}) - \log p(x|\theta^{(t)}) = \underbrace{\big[Q(\theta^{(t+1)},\theta^{(t)}) - Q(\theta^{(t)},\theta^{(t)})\big]}_{\geq\, 0} - \underbrace{\big[H(\theta^{(t+1)},\theta^{(t)}) - H(\theta^{(t)},\theta^{(t)})\big]}_{\leq\, 0}\]</div>
+<p><strong>First term is <span class="arithmatex">\(\geq 0\)</span>:</strong> By the definition of the M-step, <span class="arithmatex">\(\theta^{(t+1)}\)</span> maximises <span class="arithmatex">\(Q(\theta, \theta^{(t)})\)</span>, so <span class="arithmatex">\(Q(\theta^{(t+1)},\theta^{(t)}) \geq Q(\theta^{(t)},\theta^{(t)})\)</span>.</p>
+<p><strong>Second term is <span class="arithmatex">\(\leq 0\)</span>:</strong> Compute <span class="arithmatex">\(H(\theta^{(t+1)},\theta^{(t)}) - H(\theta^{(t)},\theta^{(t)})\)</span>:</p>
+<div class="arithmatex">\[= \int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t+1)})\,dz - \int p(z|x,\theta^{(t)})\log p(z|x,\theta^{(t)})\,dz\]</div>
+<div class="arithmatex">\[= \int p(z|x,\theta^{(t)})\log\frac{p(z|x,\theta^{(t+1)})}{p(z|x,\theta^{(t)})}\,dz = -D_{\text{KL}}\left(p(z|x,\theta^{(t)}) \big\| p(z|x,\theta^{(t+1)})\right) \leq 0\]</div>
+<p>The inequality holds because KL divergence is always non-negative (by Jensen's inequality applied to the concave <span class="arithmatex">\(\log\)</span>). Therefore:</p>
+<div class="arithmatex">\[\log p(x|\theta^{(t+1)}) - \log p(x|\theta^{(t)}) \geq 0 \qquad \square\]</div>
+<p><strong>Remarks:</strong>
+- The proof shows monotonic improvement is guaranteed for <strong>any</strong> M-step that increases <span class="arithmatex">\(Q\)</span>, not just the exact maximiser. This is the basis for <strong>generalised EM (GEM)</strong>, where the M-step is replaced by any ascent step.
+- EM converges to a <strong>stationary point</strong> of <span class="arithmatex">\(\log p(x|\theta)\)</span> (local maximum or saddle point), not necessarily the global maximum.
+- The convergence rate is linear, with rate determined by the fraction of "missing information" (Fisher's missing information principle).</p>
+<hr />
+<h2 id="7-concrete-example-gaussian-mixture-model-gmm">7. Concrete Example: Gaussian Mixture Model (GMM)</h2>
+<p>A GMM with <span class="arithmatex">\(K\)</span> components models:
+$<span class="arithmatex">\(p(x|\theta) = \sum_{k=1}^{K} \pi_k\,\mathcal{N}(x|\mu_k, \Sigma_k), \qquad \theta = \{\pi_k, \mu_k, \Sigma_k\}_{k=1}^K\)</span>$</p>
+<p>The latent variable <span class="arithmatex">\(z \in \{1,\ldots,K\}\)</span> is the component assignment. The complete-data distribution:
+$<span class="arithmatex">\(p(x,z|\theta) = p(z|\theta)\,p(x|z,\theta) = \pi_z\,\mathcal{N}(x|\mu_z, \Sigma_z)\)</span>$</p>
+<h3 id="71-e-step-compute-responsibilities">7.1 E-Step: Compute Responsibilities</h3>
+<div class="arithmatex">\[r_{ik} := p(z_i = k \mid x_i, \theta^{(t)}) = \frac{\pi_k^{(t)}\,\mathcal{N}(x_i|\mu_k^{(t)}, \Sigma_k^{(t)})}{\sum_{j=1}^K \pi_j^{(t)}\,\mathcal{N}(x_i|\mu_j^{(t)}, \Sigma_j^{(t)})}\]</div>
+<p>This is just Bayes' rule: <span class="arithmatex">\(r_{ik}\)</span> is the posterior probability that data point <span class="arithmatex">\(x_i\)</span> belongs to cluster <span class="arithmatex">\(k\)</span>.</p>
+<h3 id="72-m-step-update-parameters">7.2 M-Step: Update Parameters</h3>
+<div class="arithmatex">\[Q(\theta,\theta^{(t)}) = \sum_{i=1}^N\sum_{k=1}^K r_{ik}\left[\log\pi_k + \log\mathcal{N}(x_i|\mu_k,\Sigma_k)\right]\]</div>
+<p>Maximising over each set of parameters (subject to <span class="arithmatex">\(\sum_k \pi_k = 1\)</span>):</p>
+<div class="arithmatex">\[N_k = \sum_{i=1}^N r_{ik} \quad\text{(effective number of points in cluster }k\text{)}\]</div>
+<div class="arithmatex">\[\pi_k^{(t+1)} = \frac{N_k}{N}, \qquad \mu_k^{(t+1)} = \frac{\sum_i r_{ik}\,x_i}{N_k}, \qquad \Sigma_k^{(t+1)} = \frac{\sum_i r_{ik}(x_i-\mu_k^{(t+1)})(x_i-\mu_k^{(t+1)})^\top}{N_k}\]</div>
+<p>These are <strong>soft-assignment</strong> analogues of the hard <span class="arithmatex">\(k\)</span>-means updates, with <span class="arithmatex">\(r_{ik}\)</span> playing the role of fractional membership.</p>
+<hr />
+<h2 id="8-connection-to-variational-inference">8. Connection to Variational Inference</h2>
+<p>In the exact EM algorithm, the E-step requires computing <span class="arithmatex">\(p(z|x,\theta^{(t)})\)</span> exactly, which may itself be intractable. <strong>Variational EM</strong> replaces the exact posterior with a tractable approximation <span class="arithmatex">\(q_\phi(z) \approx p(z|x,\theta)\)</span> from a parametric family (e.g., a mean-field factorisation).</p>
+<p>The objective becomes:
+$<span class="arithmatex">\(\max_{\theta,\phi} \text{ELBO}(q_\phi, \theta) = \mathbb{E}_{q_\phi(z)}\left[\log p(x,z|\theta)\right] - D_{\text{KL}}(q_\phi(z)\|p(z))\)</span>$</p>
+<p>This is precisely the <strong>VAE objective</strong>: <span class="arithmatex">\(\theta\)</span> are the decoder parameters, <span class="arithmatex">\(\phi\)</span> are the encoder parameters, and the KL term regularises the approximate posterior toward a simple prior.</p>
+<hr />
+<h2 id="9-summary">9. Summary</h2>
+<div class="highlight"><pre><span></span><code>Goal: max_θ  log p(x|θ)  [intractable due to latent z]
+
+Key identity:
+  log p(x|θ)  =  ELBO(q, θ)  +  KL(q(z) ‖ p(z|x,θ))
+              ≥  ELBO(q, θ)        [since KL ≥ 0]
+
+EM = coordinate ascent on ELBO:
+
+  E-step:  q ← p(z|x, θ^(t))         [KL → 0, bound tightens]
+  M-step:  θ ← argmax_θ Q(θ, θ^(t))  [ascend in θ]
+
+Guarantee:  log p(x|θ^(t+1)) ≥ log p(x|θ^(t))   [monotone]
+</code></pre></div>
+<p>The proof uses two facts:
+1. The M-step ensures <span class="arithmatex">\(Q(\theta^{(t+1)}, \theta^{(t)}) \geq Q(\theta^{(t)}, \theta^{(t)})\)</span>.
+2. Jensen's inequality ensures <span class="arithmatex">\(H(\theta^{(t+1)}, \theta^{(t)}) - H(\theta^{(t)}, \theta^{(t)}) = -D_{\text{KL}} \leq 0\)</span>.</p>
+<p>Together these guarantee each iteration increases the marginal log-likelihood.</p>
+<hr />
+<h2 id="10-references">10. References</h2>
+<ol>
+<li><strong>Dempster, A. P., Laird, N. M., &amp; Rubin, D. B.</strong> (1977). Maximum likelihood from incomplete data via the EM algorithm. <em>Journal of the Royal Statistical Society: Series B</em>, 39(1), 1–38. [The original EM paper; introduces the Q-function and monotone convergence proof.]</li>
+<li><strong>Wu, C. F. J.</strong> (1983). On the convergence properties of the EM algorithm. <em>The Annals of Statistics</em>, 11(1), 95–103. [Formal convergence proof under regularity conditions.]</li>
+<li><strong>Bishop, C. M.</strong> (2006). <em>Pattern Recognition and Machine Learning</em>. Springer. §9.2 (GMM via EM), §9.3 (EM in general), §9.4 (The EM algorithm in general).</li>
+<li><strong>Murphy, K. P.</strong> (2012). <em>Machine Learning: A Probabilistic Perspective</em>. MIT Press. Ch. 11 (Mixture models and EM).</li>
+<li><strong>Neal, R. M. &amp; Hinton, G. E.</strong> (1998). A view of the EM algorithm that justifies incremental, sparse, and other variants. In <em>Learning in Graphical Models</em> (pp. 355–368). [Interprets EM as coordinate ascent on a free energy / ELBO — the key connection to variational inference.]</li>
+<li><strong>Kingma, D. P. &amp; Welling, M.</strong> (2014). Auto-encoding variational Bayes. <em>ICLR 2014</em>. [VAE = variational EM with amortised inference.]</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

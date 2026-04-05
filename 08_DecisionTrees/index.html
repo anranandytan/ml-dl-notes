@@ -1,0 +1,2419 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/08_DecisionTrees/">
+      
+      
+        <link rel="prev" href="../07_GaussianProcess/">
+      
+      
+        <link rel="next" href="../09_Ensembles/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>08 · Decision Trees - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#08-decision-trees" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              08 · Decision Trees
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-greedy-tree-induction-general-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Greedy Tree Induction (General Procedure)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-splitting-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Splitting Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Splitting Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-entropy-and-information-gain-c45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Entropy and Information Gain (C4.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-gini-index-cart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Gini Index (CART)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-c45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. C4.5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cart-classification-and-regression-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CART — Classification and Regression Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. CART — Classification and Regression Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Regression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-analytical-bound-on-tree-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Analytical Bound on Tree Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-advantages-and-disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Advantages and Disadvantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-gosdt-generalised-and-scalable-optimal-sparse-decision-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. GOSDT — Generalised and Scalable Optimal Sparse Decision Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. GOSDT — Generalised and Scalable Optimal Sparse Decision Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-preprocessing-binarisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Preprocessing: Binarisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-key-data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Key Data Structures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Bounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-findorcreatenode-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 FindOrCreateNode Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-main-branch-and-bound-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Main Branch-and-Bound Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-advantages-and-disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Advantages and Disadvantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-greedy-tree-induction-general-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Greedy Tree Induction (General Procedure)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-splitting-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Splitting Criteria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Splitting Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-entropy-and-information-gain-c45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Entropy and Information Gain (C4.5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-gini-index-cart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Gini Index (CART)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-c45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. C4.5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cart-classification-and-regression-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. CART — Classification and Regression Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. CART — Classification and Regression Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Regression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-analytical-bound-on-tree-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Analytical Bound on Tree Size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-advantages-and-disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Advantages and Disadvantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-gosdt-generalised-and-scalable-optimal-sparse-decision-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. GOSDT — Generalised and Scalable Optimal Sparse Decision Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. GOSDT — Generalised and Scalable Optimal Sparse Decision Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-preprocessing-binarisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Preprocessing: Binarisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-key-data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Key Data Structures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-bounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 Bounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-findorcreatenode-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 FindOrCreateNode Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-main-branch-and-bound-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 Main Branch-and-Bound Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-advantages-and-disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 Advantages and Disadvantages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="08-decision-trees">08 — Decision Trees</h1>
+<blockquote>
+<p><strong>Keywords:</strong> information gain, Gini index, C4.5, CART, pruning, GOSDT, branch-and-bound, optimal sparse trees</p>
+</blockquote>
+<hr />
+<h2 id="1-motivation-intuition">1. Motivation &amp; Intuition</h2>
+<p>A decision tree partitions the input space into rectangular regions by asking a sequence of yes/no questions about the features. At each internal node, one feature is tested; each branch corresponds to a range of that feature's values; each leaf assigns a prediction.</p>
+<p><strong>Key appeal:</strong>
+- Naturally <strong>interpretable</strong> — a human can follow the path from root to leaf.
+- Handles <strong>nonlinearities</strong> and <strong>interactions</strong> without feature engineering.
+- Works for both classification and regression.
+- Can handle imbalanced data by reweighting.</p>
+<p><strong>Key weakness:</strong> a single tree grown without care is a high-variance estimator — small changes in training data can produce a very different tree. Ensemble methods (random forests, boosting) address this.</p>
+<hr />
+<h2 id="2-historical-context">2. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1963</td>
+<td>Morgan &amp; Sonquist introduce AID (Automatic Interaction Detection) — an early recursive partitioning method.</td>
+</tr>
+<tr>
+<td>1984</td>
+<td><strong>Breiman, Friedman, Olshen &amp; Stone</strong> introduce <strong>CART</strong> (Classification And Regression Trees).</td>
+</tr>
+<tr>
+<td>1993</td>
+<td><strong>Quinlan</strong> introduces <strong>C4.5</strong>, improving on his earlier ID3 algorithm with better pruning and continuous features.</td>
+</tr>
+<tr>
+<td>2022</td>
+<td><strong>Lin, Zhong, Seltzer &amp; Rudin</strong> introduce <strong>GOSDT</strong> — the first practical algorithm for <em>optimal</em> sparse decision trees with provable guarantees.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-greedy-tree-induction-general-procedure">3. Greedy Tree Induction (General Procedure)</h2>
+<p>All standard algorithms grow a tree greedily:</p>
+<ol>
+<li><strong>Start</strong> at the root with all training data.</li>
+<li><strong>Choose</strong> a feature and split point to partition the data, according to a splitting criterion.</li>
+<li><strong>Recurse</strong> on each child node.</li>
+<li><strong>Stop</strong> when a stopping condition is met:</li>
+<li>All observations in a node have the same class (pure leaf).</li>
+<li>No features remain to split on.</li>
+<li>The node has fewer than <span class="arithmatex">\(n_{\min}\)</span> observations.</li>
+<li><strong>Prune</strong> the grown tree to reduce overfitting.</li>
+<li><strong>Assign</strong> each leaf the majority class (classification) or mean response (regression).</li>
+</ol>
+<p><strong>Training probability at leaf <span class="arithmatex">\(j\)</span>:</strong></p>
+<div class="arithmatex">\[\left[\frac{n^{+}_j}{n^{+}_j + n^{-}_j}, \frac{n^{-}_j}{n^{+}_j + n^{-}_j}\right]\]</div>
+<hr />
+<h2 id="4-splitting-criteria">4. Splitting Criteria</h2>
+<h3 id="41-entropy-and-information-gain-c45">4.1 Entropy and Information Gain (C4.5)</h3>
+<p><strong>Shannon entropy</strong> of a distribution <span class="arithmatex">\([p_1, \ldots, p_M]\)</span>:</p>
+<div class="arithmatex">\[H(p_1,\ldots,p_M) = -\sum_{j=1}^M p_j \log p_j\]</div>
+<p>Entropy is 0 when the distribution is pure (one class dominates) and maximal when uniform.</p>
+<p><strong>Information Gain</strong> of splitting on feature <span class="arithmatex">\(A\)</span>, which partitions the data into <span class="arithmatex">\(J\)</span> branches:</p>
+<div class="arithmatex">\[\text{Gain}(S, A) = H\left(\frac{n_+}{n_+ + n_-}, \frac{n_-}{n_+ + n_-}\right) - \sum_{j=1}^J \frac{n^{+}_j + n^{-}_j}{n_+ + n_-}\,H\left(\frac{n^{+}_j}{n^{+}_j+n^{-}_j}, \frac{n^{-}_j}{n^{+}_j+n^{-}_j}\right)\]</div>
+<p>This is the reduction in entropy achieved by the split. A gain of 0 means the feature carries no information about the label.</p>
+<p><strong>Information Gain Ratio (IGR)</strong> — corrects for features with many values (which always achieve high gain):</p>
+<div class="arithmatex">\[\text{IGR}(S, A) = \frac{\text{Gain}(S,A)}{\text{SplitInfo}(S,A)}, \qquad \text{SplitInfo}(S,A) = -\sum_{j=1}^J \frac{|S_j|}{|S|}\log\frac{|S_j|}{|S|}\]</div>
+<h3 id="42-gini-index-cart">4.2 Gini Index (CART)</h3>
+<div class="arithmatex">\[\text{Gini}(p) = 2p(1-p) = 2 \times \text{Var}(\text{Bernoulli}(p))\]</div>
+<p>This equals twice the variance of a Bernoulli random variable with probability <span class="arithmatex">\(p\)</span>. Like entropy, it is 0 for pure nodes and maximal at <span class="arithmatex">\(p = 0.5\)</span>.</p>
+<p><strong>Misclassification error:</strong> <span class="arithmatex">\(1 - \max(p, 1-p)\)</span> is another option, but it is less sensitive to changes in class proportions than entropy or Gini and is rarely used for splitting.</p>
+<hr />
+<h2 id="5-c45">5. C4.5</h2>
+<p><strong>Splitting criterion:</strong> Information Gain Ratio.</p>
+<p><strong>Pruning strategy (three options for each subtree):</strong></p>
+<ol>
+<li><strong>Leave as-is</strong> — keep the subtree unchanged.</li>
+<li><strong>Collapse to a leaf</strong> — replace the subtree with a leaf labelled by the majority class in the data <span class="arithmatex">\(S\)</span> at that node.</li>
+<li><strong>Replace with best subtree</strong> — replace the subtree with the most-used child branch.</li>
+</ol>
+<p>C4.5 computes an upper confidence bound on the error probability for each option using a binomial bound with <span class="arithmatex">\(\alpha = 0.25\)</span>, and chooses the option with the lowest bound.</p>
+<p><strong>Advantages vs. CART:</strong>
+- Handles multi-way splits naturally.
+- Uses information gain ratio, which penalises high-arity features.</p>
+<p><strong>Disadvantages:</strong>
+- Default settings produce trees that are completely uninterpretable (too deep, too many branches).</p>
+<hr />
+<h2 id="6-cart-classification-and-regression-trees">6. CART — Classification and Regression Trees</h2>
+<p><strong>Splitting criterion:</strong> Gini index (classification) or squared error (regression).</p>
+<p><strong>Structural restriction:</strong> CART makes only <strong>binary splits</strong> (<span class="arithmatex">\(\leq s\)</span> vs. <span class="arithmatex">\(&gt; s\)</span>).</p>
+<h3 id="61-classification">6.1 Classification</h3>
+<p>At each node, find feature <span class="arithmatex">\(j\)</span> and split point <span class="arithmatex">\(s\)</span> to minimise the weighted Gini impurity across the two children.</p>
+<p><strong>Pruning (Minimum Cost Complexity):</strong> Each candidate subtree is assigned a cost:</p>
+<div class="arithmatex">\[\text{cost}(\text{subtree}) = \sum_{\text{leaves } j}\sum_{x_i\in\text{leaf }j} \mathbf{1}[y_i \neq \text{leaf's class}] + C \cdot |  ext{leaves}|\]</div>
+<p>Choose the subtree with the lowest cost. Increasing <span class="arithmatex">\(C\)</span> prunes more aggressively.</p>
+<h3 id="62-regression">6.2 Regression</h3>
+<p>For real-valued targets, find feature <span class="arithmatex">\(j\)</span> and split point <span class="arithmatex">\(s\)</span> that minimise the total within-leaf variance:</p>
+<div class="arithmatex">\[\min_{j,s}\left[\min_{C_1}\sum_{x_i:x_i^{(j)}\leq s}(y_i-C_1)^2 + \min_{C_2}\sum_{x_i:x_i^{(j)}&gt;s}(y_i-C_2)^2\right]\]</div>
+<p>The optimal leaf values are simply the means: <span class="arithmatex">\(C_1 = \bar{y}_{\text{left}}\)</span>, <span class="arithmatex">\(C_2 = \bar{y}_{\text{right}}\)</span>.</p>
+<p><strong>Regression tree cost:</strong></p>
+<div class="arithmatex">\[\text{cost} = \sum_{\text{leaves }j}\sum_{x_i\in S_j}(y_i-\bar{y}_{S_j})^2 + C\cdot|  ext{leaves}|\]</div>
+<h3 id="63-analytical-bound-on-tree-size">6.3 Analytical Bound on Tree Size</h3>
+<p><strong>Basic Size Bound.</strong> Given any reference objective value <span class="arithmatex">\(R^c\)</span>, any optimal tree <span class="arithmatex">\(\text{tree}^{\ast}\)</span> satisfies:</p>
+<div class="arithmatex">\[|\text{leaves}(\text{tree}^{\ast})| \leq \left\lfloor \frac{R^c}{C}\right\rfloor\]</div>
+<p>This is because each additional leaf must reduce the unregularised objective by at least <span class="arithmatex">\(C\)</span>.</p>
+<h3 id="64-advantages-and-disadvantages">6.4 Advantages and Disadvantages</h3>
+<table>
+<thead>
+<tr>
+<th>Advantages</th>
+<th>Disadvantages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interpretable</td>
+<td>Greedy — not globally optimal</td>
+</tr>
+<tr>
+<td>Handles nonlinearities</td>
+<td>No proof of optimality</td>
+</tr>
+<tr>
+<td>No feature scaling needed</td>
+<td>Tends to struggle with imbalanced data</td>
+</tr>
+<tr>
+<td>Can be easily reweighted</td>
+<td>More interpretable but less accurate than C4.5</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-gosdt-generalised-and-scalable-optimal-sparse-decision-trees">7. GOSDT — Generalised and Scalable Optimal Sparse Decision Trees</h2>
+<p>GOSDT finds <strong>provably optimal</strong> sparse decision trees — no splitting or pruning heuristics.</p>
+<h3 id="71-objective">7.1 Objective</h3>
+<div class="arithmatex">\[R(\text{tree},\{(x_i,y_i)\}) = \frac{1}{n}\sum_{i=1}^n \mathbf{1}[y_i \neq \hat{y}_i^{\text{tree}}] + \lambda \cdot | ext{leaves}|(\text{tree}), \quad \text{depth}(\text{tree}) \leq D\]</div>
+<ul>
+<li><span class="arithmatex">\(\lambda\)</span> (soft): penalises the number of leaves (sparsity).</li>
+<li><span class="arithmatex">\(D\)</span> (hard): caps the depth of the tree.</li>
+</ul>
+<h3 id="72-preprocessing-binarisation">7.2 Preprocessing: Binarisation</h3>
+<p>Convert all features to binary variables:
+- For a continuous feature, find all midpoints between consecutive distinct values and create indicator variables <span class="arithmatex">\(\mathbf{1}[x^{(j)} \geq \theta]\)</span>.
+- To limit explosion in binary features: run a fast greedy algorithm (C4.5, random forest) first and only keep splits that were used by those algorithms.</p>
+<h3 id="73-key-data-structures">7.3 Key Data Structures</h3>
+<p>Each subproblem (a node in the search space) is identified by a <strong>bit-vector</strong> <span class="arithmatex">\(s\)</span> indicating which training points fall into that node.</p>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dependency graph <span class="arithmatex">\(G\)</span></strong></td>
+<td>Stores all subproblems, their parent-child relationships, and bounds on the objective</td>
+</tr>
+<tr>
+<td><strong>Priority queue <span class="arithmatex">\(Q\)</span></strong></td>
+<td>Orders subproblems for exploration (higher priority = more promising)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="74-bounds">7.4 Bounds</h3>
+<p>For each subproblem <span class="arithmatex">\(p\)</span> (identified by data subset <span class="arithmatex">\(s\)</span>):</p>
+<div class="arithmatex">\[p.\text{lb} = 0 + 2\lambda \qquad \text{(at least 2 leaves needed)}$$
+$$p.\text{ub} = \frac{n_{\min}(s)}{n} + \lambda \qquad \text{(trivial leaf solution)}\]</div>
+<p><strong>Theorem 1.</strong> If <span class="arithmatex">\(p.\text{ub} - p.\text{lb} \leq 0\)</span>, then the trivial (leaf) solution is already optimal for this subproblem — no further splitting can improve it.</p>
+<h3 id="75-findorcreatenode-algorithm">7.5 FindOrCreateNode Algorithm</h3>
+<div class="highlight"><pre><span></span><code>FindOrCreateNode(G, s):
+  if G.find(s) = NULL:
+    p.id  ← s
+    p.lb  ← 0 + 2λ
+    p.ub  ← (# minority labels in s)/n + λ
+    if p.ub - p.lb ≤ 0:
+      p.lb ← p.ub          [node is already a leaf: bound is tight]
+    G.insert(p)
+  return G.find(s)
+</code></pre></div>
+<h3 id="76-main-branch-and-bound-loop">7.6 Main Branch-and-Bound Loop</h3>
+<div class="highlight"><pre><span></span><code>while p_root.lb ≠ p_root.ub:
+  s ← Q.pop()
+  p ← G.find(s)
+  if p.ub = p.lb: continue    [already solved]
+
+  (lb&#39;, ub&#39;) ← (∞, ∞)
+  for j = 1, ..., #features:
+    (s_L, s_R) ← split(s, j)
+    p_L ← FindOrCreateNode(G, s_L)
+    p_R ← FindOrCreateNode(G, s_R)
+    lb&#39; ← min(lb&#39;, p_L.lb + p_R.lb)
+    ub&#39; ← min(ub&#39;, p_L.ub + p_R.ub)
+
+  p.ub ← min(p.ub, ub&#39;)
+  p.lb ← min(p.ub, max(p.lb, lb&#39;))    [bound update]
+
+  propagate bound updates to parents; push parents to Q
+
+  for j = 1, ..., #features:           [push promising children]
+    if p_L.lb + p_R.lb &lt; p_L.ub + p_R.ub  and  ≤ p.ub:
+      Q.push(s_L, s_R)
+
+return G
+</code></pre></div>
+<p><strong>Pruning logic:</strong> If the sum of children's lower bounds already exceeds the parent's upper bound, that split can never be part of any optimal solution — prune immediately.</p>
+<h3 id="77-advantages-and-disadvantages">7.7 Advantages and Disadvantages</h3>
+<table>
+<thead>
+<tr>
+<th>Advantages</th>
+<th>Disadvantages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Provably optimal (or near-optimal)</td>
+<td>Cannot prove optimality for very large datasets</td>
+</tr>
+<tr>
+<td>No splitting/pruning heuristics</td>
+<td>More complex to implement</td>
+</tr>
+<tr>
+<td>Handles custom objectives</td>
+<td>Scalability still an active research area</td>
+</tr>
+<tr>
+<td>Interpretable, small models</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-summary">8. Summary</h2>
+<div class="highlight"><pre><span></span><code>Splitting criteria:
+  C4.5  → Information Gain Ratio    (multi-way splits, entropy-based)
+  CART  → Gini index / MSE          (binary splits, simple formula)
+
+Pruning:
+  C4.5  → Upper confidence bound on error (binomial, α=0.25)
+  CART  → Minimum Cost Complexity: cost = misclassification + C·#leaves
+
+Optimal trees:
+  GOSDT → Branch-and-bound with bit-vector subproblems
+          lb = 0 + 2λ,  ub = minority_fraction + λ
+          Optimise: (1/n)·misclassification + λ·#leaves
+</code></pre></div>
+<hr />
+<h2 id="9-references">9. References</h2>
+<ol>
+<li><strong>Quinlan, J. R.</strong> (1993). <em>C4.5: Programs for Machine Learning</em>. Morgan Kaufmann. [The definitive C4.5 reference.]</li>
+<li><strong>Breiman, L., Friedman, J., Olshen, R., &amp; Stone, C.</strong> (1984). <em>Classification and Regression Trees</em>. Wadsworth. [Original CART book.]</li>
+<li><strong>Lin, J., Zhong, C., Hu, D., Rudin, C., &amp; Seltzer, M.</strong> (2020). Generalized and scalable optimal sparse decision trees. <em>Proceedings of ICML 2020</em>. [GOSDT algorithm.]</li>
+<li><strong>Hastie, T., Tibshirani, R., &amp; Friedman, J.</strong> (2009). <em>The Elements of Statistical Learning</em> (2<sup>nd</sup> ed.). Springer. Ch. 9 (Additive models, trees, and related methods).</li>
+<li><strong>Mitchell, T.</strong> (1997). <em>Machine Learning</em>. McGraw-Hill. Ch. 3 (Decision tree learning). [Accessible introduction including ID3.]</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

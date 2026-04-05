@@ -1,0 +1,2432 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/11_GraphicalModels/">
+      
+      
+        <link rel="prev" href="../10_NeuralNetworks/">
+      
+      
+        <link rel="next" href="../12_EM/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>11 · Gaussian Graphical Models - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11-gaussian-graphical-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              11 · Gaussian Graphical Models
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-problem-are-we-solving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What Problem Are We Solving?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-multivariate-gaussian-and-its-precision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Multivariate Gaussian and Its Precision Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The Multivariate Gaussian and Its Precision Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-why-the-precision-matrix-is-more-natural-for-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Why the Precision Matrix Is More Natural for Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-three-key-independence-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Three Key Independence Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gaussian-bayesian-network-directed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Gaussian Bayesian Network (Directed)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Gaussian Bayesian Network (Directed)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-structural-equation-model-sem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Structural Equation Model (SEM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-covariance-from-the-sem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Covariance from the SEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-d-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 d-Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-gaussian-markov-network-undirected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Gaussian Markov Network (Undirected)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Gaussian Markov Network (Undirected)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-mrf-factor-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 MRF Factor Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-reading-the-potentials-from-the-gaussian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Reading the Potentials from the Gaussian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-full-conditional-distribution-markov-blanket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Full Conditional Distribution (Markov Blanket)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparing-gbn-and-gmn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparing GBN and GMN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Comparing GBN and GMN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-converting-a-gbn-to-a-gmn-moralisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Converting a GBN to a GMN: Moralisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-structure-learning-graphical-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Structure Learning: Graphical Lasso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Structure Learning: Graphical Lasso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-the-graphical-lasso-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 The Graphical Lasso Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-problem-are-we-solving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What Problem Are We Solving?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-multivariate-gaussian-and-its-precision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Multivariate Gaussian and Its Precision Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The Multivariate Gaussian and Its Precision Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-why-the-precision-matrix-is-more-natural-for-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Why the Precision Matrix Is More Natural for Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-three-key-independence-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Three Key Independence Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gaussian-bayesian-network-directed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Gaussian Bayesian Network (Directed)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Gaussian Bayesian Network (Directed)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-structural-equation-model-sem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Structural Equation Model (SEM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-covariance-from-the-sem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Covariance from the SEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-d-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 d-Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-gaussian-markov-network-undirected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Gaussian Markov Network (Undirected)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Gaussian Markov Network (Undirected)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-mrf-factor-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 MRF Factor Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-reading-the-potentials-from-the-gaussian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Reading the Potentials from the Gaussian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-full-conditional-distribution-markov-blanket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Full Conditional Distribution (Markov Blanket)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparing-gbn-and-gmn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparing GBN and GMN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Comparing GBN and GMN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-converting-a-gbn-to-a-gmn-moralisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Converting a GBN to a GMN: Moralisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-structure-learning-graphical-lasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Structure Learning: Graphical Lasso
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Structure Learning: Graphical Lasso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-the-graphical-lasso-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 The Graphical Lasso Objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="11-gaussian-graphical-models">11 — Gaussian Graphical Models</h1>
+<blockquote>
+<p><strong>Keywords:</strong> precision matrix, conditional independence, partial correlation, Gaussian Bayesian network, Gaussian Markov network, structural equation model, graphical lasso, moralisation</p>
+</blockquote>
+<hr />
+<h2 id="1-what-problem-are-we-solving">1. What Problem Are We Solving?</h2>
+<p>A multivariate Gaussian with <span class="arithmatex">\(p\)</span> variables has a covariance matrix <span class="arithmatex">\(\Sigma\in\mathbb{R}^{p\times p}\)</span> with <span class="arithmatex">\(O(p^2)\)</span> free parameters. When <span class="arithmatex">\(p\)</span> is large (e.g., genes, brain regions, financial assets), this is:
+- <strong>Too many parameters</strong> to estimate reliably from limited data.
+- <strong>Hard to interpret</strong> — every variable appears correlated with every other.</p>
+<p>Real systems are <strong>sparse</strong>: most variables are conditionally independent given the rest. A <strong>Gaussian Graphical Model (GGM)</strong> makes this sparsity explicit by representing the dependency structure as a graph.</p>
+<p><strong>Two complementary types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Graph</th>
+<th>Independence encoded via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gaussian Bayesian Network (GBN)</td>
+<td>Directed Acyclic Graph (DAG)</td>
+<td>Factorisation of joint distribution</td>
+</tr>
+<tr>
+<td>Gaussian Markov Network (GMN)</td>
+<td>Undirected graph</td>
+<td>Zero entries of the precision matrix</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-historical-notes">2. Historical Notes</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1921</td>
+<td>Sewall Wright introduces <strong>path analysis</strong> for genetics — the precursor to linear Gaussian BNs.</td>
+</tr>
+<tr>
+<td>1972</td>
+<td><strong>Dempster</strong> introduces covariance selection: fitting a sparse inverse covariance matrix.</td>
+</tr>
+<tr>
+<td>1990</td>
+<td><strong>Whittaker</strong> systematises Gaussian graphical models in <em>Graphical Models in Applied Multivariate Statistics</em>.</td>
+</tr>
+<tr>
+<td>1996</td>
+<td><strong>Lauritzen</strong> provides the definitive mathematical treatment in <em>Graphical Models</em> (Oxford).</td>
+</tr>
+<tr>
+<td>2008</td>
+<td><strong>Friedman, Hastie &amp; Tibshirani</strong> introduce the <strong>graphical lasso (glasso)</strong>: <span class="arithmatex">\(\ell_1\)</span>-penalised MLE for sparse precision matrices — the dominant method for structure learning.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-the-multivariate-gaussian-and-its-precision-matrix">3. The Multivariate Gaussian and Its Precision Matrix</h2>
+<p>Let <span class="arithmatex">\(x=(x_1,\ldots,x_p)^\top\sim\mathcal{N}(\mu,\Sigma)\)</span> with:</p>
+<div class="arithmatex">\[\Sigma = \begin{pmatrix}
+\sigma_{11} &amp; \sigma_{12} &amp; \cdots &amp; \sigma_{1p}\\
+\sigma_{21} &amp; \sigma_{22} &amp; \cdots &amp; \sigma_{2p}\\
+\vdots      &amp; \vdots      &amp; \ddots &amp; \vdots     \\
+\sigma_{p1} &amp; \sigma_{p2} &amp; \cdots &amp; \sigma_{pp}
+\end{pmatrix}, \qquad \sigma_{ij} = \text{Cov}(x_i,x_j)\]</div>
+<p>The <strong>precision matrix</strong> (also: concentration matrix, information matrix) is:</p>
+<div class="arithmatex">\[\Lambda = \Sigma^{-1}, \qquad \Lambda_{ij} = \lambda_{ij}\]</div>
+<h3 id="31-why-the-precision-matrix-is-more-natural-for-graphs">3.1 Why the Precision Matrix Is More Natural for Graphs</h3>
+<p>The covariance <span class="arithmatex">\(\sigma_{ij}\)</span> captures <em>marginal</em> dependence between <span class="arithmatex">\(x_i\)</span> and <span class="arithmatex">\(x_j\)</span> — even if their association is entirely explained by a common cause. The precision entry <span class="arithmatex">\(\lambda_{ij}\)</span> captures <em>conditional</em> dependence — what remains after accounting for all other variables. This is precisely what a graph edge should represent.</p>
+<h3 id="32-three-key-independence-properties">3.2 Three Key Independence Properties</h3>
+<p><strong>Property 1 — Marginal independence:</strong></p>
+<div class="arithmatex">\[x_i\perp x_j \iff \sigma_{ij}=0\]</div>
+<p>If the covariance is zero, <span class="arithmatex">\(x_i\)</span> and <span class="arithmatex">\(x_j\)</span> are uncorrelated, and (for Gaussians) uncorrelated implies independent.</p>
+<p><strong>Property 2 — Conditional independence:</strong></p>
+<div class="arithmatex">\[x_i\perp x_j\mid x_{-ij} \iff \lambda_{ij}=0\]</div>
+<p>where <span class="arithmatex">\(x_{-ij}=\{x_k:k\neq i, k\neq j\}\)</span> denotes all other variables. <strong>This is the central result</strong>: the zero pattern of <span class="arithmatex">\(\Lambda\)</span> is the conditional independence graph. Edge <span class="arithmatex">\((i,j)\)</span> is absent iff <span class="arithmatex">\(\lambda_{ij}=0\)</span>.</p>
+<p><strong>Why?</strong> The density of a multivariate Gaussian involves <span class="arithmatex">\(x^\top\Lambda x\)</span>. Terms <span class="arithmatex">\(\lambda_{ij}x_ix_j\)</span> (for <span class="arithmatex">\(i\neq j\)</span>) couple <span class="arithmatex">\(x_i\)</span> and <span class="arithmatex">\(x_j\)</span> in the exponent. If <span class="arithmatex">\(\lambda_{ij}=0\)</span>, the density factorises over <span class="arithmatex">\(x_i\)</span> and <span class="arithmatex">\(x_j\)</span> conditional on all others.</p>
+<p><strong>Property 3 — Partial correlation:</strong></p>
+<div class="arithmatex">\[\rho_{ij\cdot\text{rest}} = -\frac{\lambda_{ij}}{\sqrt{\lambda_{ii}\lambda_{jj}}}\]</div>
+<p>The <strong>partial correlation</strong> between <span class="arithmatex">\(x_i\)</span> and <span class="arithmatex">\(x_j\)</span> given all others is proportional to <span class="arithmatex">\(-\lambda_{ij}\)</span>. It is zero if and only if <span class="arithmatex">\(\lambda_{ij}=0\)</span>.</p>
+<p><strong>Warning:</strong> <span class="arithmatex">\(\sigma_{ij}=0 \not\Rightarrow \lambda_{ij}=0\)</span> (marginal independence does not imply conditional independence) and vice versa. These are genuinely different concepts.</p>
+<hr />
+<h2 id="4-gaussian-bayesian-network-directed">4. Gaussian Bayesian Network (Directed)</h2>
+<h3 id="41-definition">4.1 Definition</h3>
+<p>A <strong>Gaussian Bayesian Network</strong> is a DAG where each variable <span class="arithmatex">\(x_i\)</span> has a Gaussian conditional distribution given its parents <span class="arithmatex">\(x_{\text{pa}(i)}\)</span>:</p>
+<div class="arithmatex">\[p(x) = \prod_{i=1}^p p(x_i\mid x_{\text{pa}(i)})\]</div>
+<div class="arithmatex">\[p(x_i\mid x_{\text{pa}(i)}) = \mathcal{N}\left(\mu_i + \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j), \sigma_i^2\right)\]</div>
+<p>The conditional mean is an affine function of the parents (each centred at its own marginal mean <span class="arithmatex">\(\mu_j\)</span>).</p>
+<p><strong>Parameters:</strong> For each node <span class="arithmatex">\(i\)</span>, we need <span class="arithmatex">\(|\text{pa}(i)|\)</span> regression coefficients <span class="arithmatex">\(w_{ij}\)</span>, a conditional variance <span class="arithmatex">\(\sigma_i^2\)</span>, and an intercept <span class="arithmatex">\(\mu_i\)</span>.</p>
+<h3 id="42-structural-equation-model-sem">4.2 Structural Equation Model (SEM)</h3>
+<p>Subtracting the marginal mean from both sides of the conditional gives a <strong>structural equation</strong>:</p>
+<div class="arithmatex">\[x_i - \mu_i = \sum_{j\in\text{pa}(i)}w_{ij}(x_j-\mu_j) + \sigma_i\varepsilon_i, \qquad \varepsilon_i\overset{\text{iid}}{\sim}\mathcal{N}(0,1)\]</div>
+<p>The deviation of <span class="arithmatex">\(x_i\)</span> from its mean is explained by deviations of its parents from their means, plus independent noise.</p>
+<p><strong>Matrix form.</strong> Stack all <span class="arithmatex">\(p\)</span> equations: let <span class="arithmatex">\(W\in\mathbb{R}^{p\times p}\)</span> be the weight matrix (<span class="arithmatex">\(W_{ij}=w_{ij}\)</span> if <span class="arithmatex">\(j\in\text{pa}(i)\)</span>, else <span class="arithmatex">\(0\)</span>) and <span class="arithmatex">\(S=\text{diag}(\sigma_1,\ldots,\sigma_p)\)</span>:</p>
+<div class="arithmatex">\[(x-\mu) = W(x-\mu) + S\varepsilon\]</div>
+<div class="arithmatex">\[(I-W)(x-\mu) = S\varepsilon\]</div>
+<div class="arithmatex">\[\boxed{x-\mu = (I-W)^{-1}S\varepsilon}\]</div>
+<p><strong>Why is <span class="arithmatex">\((I-W)\)</span> invertible?</strong> Because the DAG can always be topologically ordered. In that order, <span class="arithmatex">\(W\)</span> is <em>strictly lower triangular</em> (parents always have smaller indices than children). A strictly lower-triangular matrix has all eigenvalues equal to 0, so <span class="arithmatex">\((I-W)\)</span> has all eigenvalues equal to 1 and is always invertible.</p>
+<h3 id="43-covariance-from-the-sem">4.3 Covariance from the SEM</h3>
+<p>Since <span class="arithmatex">\(\varepsilon\sim\mathcal{N}(0,I)\)</span> and <span class="arithmatex">\(x-\mu=(I-W)^{-1}S\varepsilon\)</span>:</p>
+<div class="arithmatex">\[\Sigma = \text{Cov}(x) = (I-W)^{-1}S\,\mathbb{E}[\varepsilon\varepsilon^\top]\,S^\top(I-W)^{-\top} = (I-W)^{-1}S^2(I-W)^{-\top}\]</div>
+<p>where <span class="arithmatex">\(S^2=\text{diag}(\sigma_1^2,\ldots,\sigma_p^2)\)</span>.</p>
+<p><strong>Equivalently:</strong> <span class="arithmatex">\(\Lambda=\Sigma^{-1}=(I-W)^\top S^{-2}(I-W)\)</span>. The precision matrix has a simple factored form in terms of the DAG weights.</p>
+<h3 id="44-d-separation">4.4 d-Separation</h3>
+<p>In a DAG, conditional independence is read off via <strong>d-separation</strong> (directional separation). Three nodes <span class="arithmatex">\(A\)</span>, <span class="arithmatex">\(B\)</span>, <span class="arithmatex">\(C\)</span> satisfy <span class="arithmatex">\(A\perp B\mid C\)</span> if all paths from <span class="arithmatex">\(A\)</span> to <span class="arithmatex">\(B\)</span> are <em>blocked</em> given <span class="arithmatex">\(C\)</span>.</p>
+<p>A path is blocked at a node <span class="arithmatex">\(Z\)</span> if:
+- <strong>Chain</strong> (<span class="arithmatex">\(A\to Z\to B\)</span>) or <strong>fork</strong> (<span class="arithmatex">\(A\leftarrow Z\to B\)</span>): <span class="arithmatex">\(Z\)</span> is in the conditioning set <span class="arithmatex">\(C\)</span>.
+- <strong>Collider</strong> (<span class="arithmatex">\(A\to Z\leftarrow B\)</span>): <span class="arithmatex">\(Z\)</span> and all its descendants are <em>not</em> in <span class="arithmatex">\(C\)</span>.</p>
+<p><strong>Example:</strong> In <span class="arithmatex">\(X\to Z\to Y\)</span>, conditioning on <span class="arithmatex">\(Z\)</span> blocks the path, so <span class="arithmatex">\(X\perp Y\mid Z\)</span>. In <span class="arithmatex">\(X\to Z\leftarrow Y\)</span> (a collider), not conditioning on <span class="arithmatex">\(Z\)</span> means <span class="arithmatex">\(X\perp Y\)</span> marginally, but conditioning on <span class="arithmatex">\(Z\)</span> opens the path — <span class="arithmatex">\(X\not\perp Y\mid Z\)</span>.</p>
+<hr />
+<h2 id="5-gaussian-markov-network-undirected">5. Gaussian Markov Network (Undirected)</h2>
+<h3 id="51-mrf-factor-decomposition">5.1 MRF Factor Decomposition</h3>
+<p>A <strong>Gaussian Markov Network (GMN)</strong> is an undirected graphical model. The joint factorises over cliques:</p>
+<div class="arithmatex">\[p(x) = \frac{1}{Z}\prod_{c\in\mathcal{C}}\psi_c(x_c)\]</div>
+<p>For a Gaussian, write each potential in log-linear form <span class="arithmatex">\(\psi_c = \exp(-E_c)\)</span>:</p>
+<div class="arithmatex">\[p(x) = \frac{1}{Z}\exp\left(-\sum_c E_c(x_c)\right) = \frac{1}{Z}\exp(-E(x))\]</div>
+<h3 id="52-reading-the-potentials-from-the-gaussian">5.2 Reading the Potentials from the Gaussian</h3>
+<p>The Gaussian density:</p>
+<div class="arithmatex">\[p(x)\propto\exp\left(-\frac{1}{2}(x-\mu)^\top\Lambda(x-\mu)\right)\]</div>
+<p>Expanding (and defining <span class="arithmatex">\(h=\Lambda\mu\)</span>):</p>
+<div class="arithmatex">\[p(x) \propto \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)\]</div>
+<p>Decomposing by pairs of variables:</p>
+<div class="arithmatex">\[p(x) \propto \exp\left(\sum_i (-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i) + \sum_{i&lt;j}(-\lambda_{ij}x_ix_j)\right)\]</div>
+<p>This gives us:
+- <strong>Node potential</strong> for <span class="arithmatex">\(x_i\)</span>: <span class="arithmatex">\(\psi_i(x_i)\propto\exp\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)\)</span>
+- <strong>Edge potential</strong> for <span class="arithmatex">\((x_i,x_j)\)</span>: <span class="arithmatex">\(\psi_{ij}(x_i,x_j)\propto\exp\left(-\lambda_{ij}x_ix_j\right)\)</span></p>
+<p><strong>Graph structure from <span class="arithmatex">\(\Lambda\)</span>:</strong> Edge <span class="arithmatex">\((i,j)\)</span> exists in the GMN if and only if <span class="arithmatex">\(\lambda_{ij}\neq 0\)</span>.</p>
+<h3 id="53-full-conditional-distribution-markov-blanket">5.3 Full Conditional Distribution (Markov Blanket)</h3>
+<p>The full conditional of <span class="arithmatex">\(x_i\)</span> given all others <span class="arithmatex">\(x_{-i}\)</span> is found by collecting all terms in <span class="arithmatex">\(\log p(x)\)</span> that involve <span class="arithmatex">\(x_i\)</span>:</p>
+<div class="arithmatex">\[\log p(x_i\mid x_{-i}) = -\frac{1}{2}\lambda_{ii}x_i^2 + x_i\left(h_i-\sum_{j\neq i}\lambda_{ij}x_j\right) + \text{const}\]</div>
+<p>Completing the square in <span class="arithmatex">\(x_i\)</span>:</p>
+<div class="arithmatex">\[\boxed{x_i\mid x_{-i}\sim\mathcal{N}\left(\frac{h_i-\sum_{j\neq i}\lambda_{ij}x_j}{\lambda_{ii}},  \frac{1}{\lambda_{ii}}\right)}\]</div>
+<p>where <span class="arithmatex">\(h_i=(\Lambda\mu)_i\)</span>.</p>
+<p><strong>For zero-mean <span class="arithmatex">\(\mu=0\)</span></strong> (so <span class="arithmatex">\(h=0\)</span>):</p>
+<div class="arithmatex">\[x_i\mid x_{-i}\sim\mathcal{N}\left(-\sum_{j\neq i}\frac{\lambda_{ij}}{\lambda_{ii}}x_j,  \frac{1}{\lambda_{ii}}\right)\]</div>
+<p><strong>Key observations:</strong>
+1. The conditional mean of <span class="arithmatex">\(x_i\)</span> depends only on its <strong>neighbours</strong> in the graph (nodes <span class="arithmatex">\(j\)</span> with <span class="arithmatex">\(\lambda_{ij}\neq 0\)</span>). All non-neighbours drop out — this is the Markov property.
+2. The conditional variance is <span class="arithmatex">\(1/\lambda_{ii}\)</span>, determined solely by the diagonal precision entry.
+3. The sign of <span class="arithmatex">\(\lambda_{ij}\)</span> determines whether neighbour <span class="arithmatex">\(j\)</span> has a positive or negative influence on the conditional mean of <span class="arithmatex">\(x_i\)</span>.</p>
+<hr />
+<h2 id="6-comparing-gbn-and-gmn">6. Comparing GBN and GMN</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>GBN (Directed)</th>
+<th>GMN (Undirected)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Graph</strong></td>
+<td>DAG</td>
+<td>Undirected graph</td>
+</tr>
+<tr>
+<td><strong>Independence</strong></td>
+<td>d-separation in DAG</td>
+<td><span class="arithmatex">\(\lambda_{ij}=0\)</span> iff no edge</td>
+</tr>
+<tr>
+<td><strong>Parameters</strong></td>
+<td>Weights <span class="arithmatex">\(w_{ij}\)</span>, variances <span class="arithmatex">\(\sigma_i^2\)</span></td>
+<td>Precision matrix <span class="arithmatex">\(\Lambda\)</span></td>
+</tr>
+<tr>
+<td><strong>Covariance</strong></td>
+<td><span class="arithmatex">\(\Sigma=(I-W)^{-1}S^2(I-W)^{-\top}\)</span></td>
+<td><span class="arithmatex">\(\Sigma=\Lambda^{-1}\)</span></td>
+</tr>
+<tr>
+<td><strong>Learning</strong></td>
+<td>OLS regression per node</td>
+<td>MLE / graphical lasso for <span class="arithmatex">\(\Lambda\)</span></td>
+</tr>
+<tr>
+<td><strong>Directed cycles</strong></td>
+<td>Not allowed</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h3 id="61-converting-a-gbn-to-a-gmn-moralisation">6.1 Converting a GBN to a GMN: Moralisation</h3>
+<p>Every GBN can be converted to a GMN representing the same independence structure via <strong>moralisation</strong>:</p>
+<ol>
+<li>For each child node that has multiple parents, add an undirected edge between every pair of its parents (this is the "marrying" step — parents of the same child become connected).</li>
+<li>Replace all directed edges with undirected edges.</li>
+</ol>
+<p>The resulting undirected graph may have more edges than the precision matrix sparsity pattern of <span class="arithmatex">\(\Sigma^{-1}\)</span> — the GBN encodes more independence than the corresponding GMN after moralisation.</p>
+<hr />
+<h2 id="7-structure-learning-graphical-lasso">7. Structure Learning: Graphical Lasso</h2>
+<h3 id="71-the-problem">7.1 The Problem</h3>
+<p>Given <span class="arithmatex">\(N\)</span> i.i.d. observations from <span class="arithmatex">\(\mathcal{N}(\mu,\Sigma)\)</span>, we want to estimate <span class="arithmatex">\(\Lambda=\Sigma^{-1}\)</span> under the assumption that it is <strong>sparse</strong> (few non-zero off-diagonal entries = sparse graph).</p>
+<p>The MLE for <span class="arithmatex">\(\Lambda\)</span> is <span class="arithmatex">\(\hat{\Sigma}^{-1}\)</span> (inverse sample covariance), which is always dense and undefined when <span class="arithmatex">\(p&gt;N\)</span>. We need regularisation.</p>
+<h3 id="72-the-graphical-lasso-objective">7.2 The Graphical Lasso Objective</h3>
+<p><strong>Friedman, Hastie &amp; Tibshirani (2008)</strong> propose the <span class="arithmatex">\(\ell_1\)</span>-penalised log-likelihood:</p>
+<div class="arithmatex">\[\hat{\Lambda} = \arg\max_{\Lambda\succ 0} \left[\log\det\Lambda - \text{tr}(\hat{\Sigma}\Lambda) - \rho\|\Lambda\|_1\right]\]</div>
+<p>where:
+- <span class="arithmatex">\(\hat{\Sigma}=\frac{1}{N}\sum_i(x_i-\bar{x})(x_i-\bar{x})^\top\)</span> is the sample covariance.
+- <span class="arithmatex">\(\|\Lambda\|_1=\sum_{i\neq j}|\lambda_{ij}|\)</span> is the off-diagonal <span class="arithmatex">\(\ell_1\)</span> norm (diagonal not penalised).
+- <span class="arithmatex">\(\rho&gt;0\)</span> controls sparsity: larger <span class="arithmatex">\(\rho\)</span> forces more entries to zero.</p>
+<p><strong>Why <span class="arithmatex">\(\log\det\Lambda - \text{tr}(\hat{\Sigma}\Lambda)\)</span>?</strong> The Gaussian log-likelihood for <span class="arithmatex">\(\Lambda\)</span> is <span class="arithmatex">\(\frac{N}{2}[\log\det\Lambda - \text{tr}(\hat{\Sigma}\Lambda)] + \text{const}\)</span>. The penalised objective replaces this with an <span class="arithmatex">\(\ell_1\)</span> penalty.</p>
+<h3 id="73-properties">7.3 Properties</h3>
+<ul>
+<li>The objective is <strong>concave</strong> in <span class="arithmatex">\(\Lambda\)</span> (for fixed penalty): <span class="arithmatex">\(\log\det\Lambda\)</span> is concave, <span class="arithmatex">\(-\text{tr}(\hat{\Sigma}\Lambda)\)</span> is linear.</li>
+<li>Solved by <strong>coordinate descent</strong> (the glasso algorithm): iterate over each row/column of <span class="arithmatex">\(\Lambda\)</span>, solving a Lasso-type subproblem.</li>
+<li>The penalty <span class="arithmatex">\(\rho\)</span> can be chosen by cross-validation or by BIC.</li>
+<li>Entries set to zero correspond to absent edges in the estimated graph.</li>
+</ul>
+<hr />
+<h2 id="8-summary">8. Summary</h2>
+<div class="highlight"><pre><span></span><code>Gaussian Graphical Model = Gaussian + Graph structure
+
+Two types:
+  GBN (directed):     p(x) = ∏ p(xᵢ|x_{pa(i)})
+                      Independence via d-separation
+                      x − μ = (I−W)⁻¹Sε   [SEM form]
+
+  GMN (undirected):   p(x) ∝ exp(−½xᵀΛx + hᵀx)
+                      λᵢⱼ = 0  ⟺  xᵢ ⊥ xⱼ | rest  [KEY RESULT]
+                      Node potential: N(−Σⱼ≠ᵢ(λᵢⱼ/λᵢᵢ)xⱼ, 1/λᵢᵢ)
+
+Precision matrix Λ = Σ⁻¹:
+  σᵢⱼ = 0  ⟺  marginal independence
+  λᵢⱼ = 0  ⟺  conditional independence
+
+Structure learning:
+  Graphical Lasso: max_{Λ≻0} [log det Λ − tr(Σ̂Λ) − ρ‖Λ‖₁]
+</code></pre></div>
+<hr />
+<h2 id="9-references">9. References</h2>
+<ol>
+<li><strong>Lauritzen, S. L.</strong> (1996). <em>Graphical Models</em>. Oxford University Press. — Definitive mathematical treatment of Gaussian and discrete graphical models.</li>
+<li><strong>Whittaker, J.</strong> (1990). <em>Graphical Models in Applied Multivariate Statistics</em>. Wiley. — Classical reference for Gaussian graphical models and covariance selection.</li>
+<li><strong>Koller, D. &amp; Friedman, N.</strong> (2009). <em>Probabilistic Graphical Models: Principles and Techniques</em>. MIT Press. Ch. 7 (Gaussian networks). — Comprehensive; covers both directed and undirected Gaussian models.</li>
+<li><strong>Friedman, J., Hastie, T., &amp; Tibshirani, R.</strong> (2008). Sparse inverse covariance estimation with the graphical lasso. <em>Biostatistics</em>, 9(3), 432–441. — Graphical lasso algorithm.</li>
+<li><strong>Bishop, C. M.</strong> (2006). <em>Pattern Recognition and Machine Learning</em>. Springer. §8.1 (Bayesian networks), §8.3 (Markov random fields).</li>
+<li><strong>Wright, S.</strong> (1921). Correlation and causation. <em>Journal of Agricultural Research</em>, 20(7), 557–585. — Original path analysis paper.</li>
+<li><strong>Dempster, A. P.</strong> (1972). Covariance selection. <em>Biometrics</em>, 28(1), 157–175. — First systematic treatment of sparse inverse covariance estimation.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

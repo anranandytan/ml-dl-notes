@@ -1,0 +1,2402 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/09_Ensembles/">
+      
+      
+        <link rel="prev" href="../08_DecisionTrees/">
+      
+      
+        <link rel="next" href="../10_NeuralNetworks/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>09 · Ensembles & Boosting - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#09-ensembles-boosting-and-gams" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              09 · Ensembles & Boosting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Random Forest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Random Forest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-bagging-bootstrap-aggregating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Bagging (Bootstrap Aggregating)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-decision-forests-random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Decision Forests (Random Forest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-out-of-bag-oob-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Out-of-Bag (OOB) Error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-variable-importance-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Variable Importance (Permutation Importance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-variable-reliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Variable Reliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Variable Reliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-model-reliance-mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Model Reliance (MR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-conditional-model-reliance-cmr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Conditional Model Reliance (CMR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-shap-shapley-additive-explanations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SHAP (SHapley Additive exPlanations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-model-class-reliance-mcr-the-rashomon-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Model Class Reliance (MCR) — The Rashomon Set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-summary-which-measure-for-which-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Summary: Which Measure for Which Question?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-boosting-and-adaboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Boosting and AdaBoost
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Boosting and AdaBoost">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-boosting-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Boosting Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-adaboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 AdaBoost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-adaboost-as-coordinate-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 AdaBoost as Coordinate Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-generalised-additive-models-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Generalised Additive Models (GAMs)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Generalised Additive Models (GAMs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-training-with-adaboost-boosted-stumps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Training with AdaBoost (Boosted Stumps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-fastsparse-sparse-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 FastSparse — Sparse GAMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-when-to-use-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 When to Use GAMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Random Forest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Random Forest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-bagging-bootstrap-aggregating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Bagging (Bootstrap Aggregating)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-decision-forests-random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Decision Forests (Random Forest)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-out-of-bag-oob-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Out-of-Bag (OOB) Error
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-variable-importance-permutation-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Variable Importance (Permutation Importance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-variable-reliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Variable Reliance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Variable Reliance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-model-reliance-mr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Model Reliance (MR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-conditional-model-reliance-cmr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Conditional Model Reliance (CMR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-shap-shapley-additive-explanations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SHAP (SHapley Additive exPlanations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-model-class-reliance-mcr-the-rashomon-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Model Class Reliance (MCR) — The Rashomon Set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-summary-which-measure-for-which-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Summary: Which Measure for Which Question?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-boosting-and-adaboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Boosting and AdaBoost
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Boosting and AdaBoost">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-boosting-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Boosting Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-adaboost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 AdaBoost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-adaboost-as-coordinate-descent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 AdaBoost as Coordinate Descent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-generalised-additive-models-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Generalised Additive Models (GAMs)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Generalised Additive Models (GAMs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-training-with-adaboost-boosted-stumps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Training with AdaBoost (Boosted Stumps)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-fastsparse-sparse-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 FastSparse — Sparse GAMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-when-to-use-gams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 When to Use GAMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="09-ensembles-boosting-and-gams">09 — Ensembles, Boosting, and GAMs</h1>
+<blockquote>
+<p><strong>Keywords:</strong> bagging, random forest, OOB error, variable importance, model reliance, SHAP, AdaBoost, coordinate descent, exponential loss, GAM, FastSparse</p>
+</blockquote>
+<hr />
+<h2 id="1-random-forest">1. Random Forest</h2>
+<h3 id="11-motivation">1.1 Motivation</h3>
+<p>A single decision tree has high variance: a small change in the training data can produce a very different tree. <strong>Random forests</strong> reduce variance by averaging many trees that are deliberately made diverse.</p>
+<blockquote>
+<p><strong>Core idea:</strong> if you average many different yet accurate models, the variance decreases proportionally, while bias stays low.</p>
+</blockquote>
+<h3 id="12-bagging-bootstrap-aggregating">1.2 Bagging (Bootstrap Aggregating)</h3>
+<p>Draw <span class="arithmatex">\(n\)</span> points from the training set <strong>with replacement</strong> (a bootstrap sample). Grow a full tree on this sample. Repeat <span class="arithmatex">\(T\)</span> times and average (regression) or majority-vote (classification) the <span class="arithmatex">\(T\)</span> trees.</p>
+<p>Bagging reduces variance without increasing bias, because the ensemble expectation equals the single-tree expectation.</p>
+<h3 id="13-decision-forests-random-forest">1.3 Decision Forests (Random Forest)</h3>
+<p>Random forests improve on bagging by <strong>decorrelating</strong> the trees: at each split, only <span class="arithmatex">\(m\)</span> randomly chosen features (out of <span class="arithmatex">\(p\)</span> total) are considered.</p>
+<p><strong>Algorithm:</strong></p>
+<div class="highlight"><pre><span></span><code>For t = 1, ..., T:
+  1. Draw a bootstrap sample of size n from training data.
+  2. Grow tree_t using:
+       - At each split, pick m features at random (out of p).
+       - Evaluate splitting criterion on all m candidates.
+       - Split on the best feature.
+       - Stop splitting when node has &lt; n_min observations.
+Output: majority vote (classification) or mean (regression) of all T trees.
+</code></pre></div>
+<p><strong>Effect of <span class="arithmatex">\(m\)</span>:</strong>
+- Small <span class="arithmatex">\(m\)</span>: trees are less correlated (lower variance), but each tree is weaker (higher bias).
+- Large <span class="arithmatex">\(m\)</span> (→ <span class="arithmatex">\(p\)</span>): trees resemble bagged trees (more correlated, less diverse).
+- Typical defaults: <span class="arithmatex">\(m = \lfloor\sqrt{p}\rfloor\)</span> for classification, <span class="arithmatex">\(m = \lfloor p/3 \rfloor\)</span> for regression.</p>
+<p><strong>Comparison with a single decision tree:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Modification</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bootstrap resamples</td>
+<td>Diverse trees → reduces variance</td>
+</tr>
+<tr>
+<td>Random feature subset at each split</td>
+<td>Less correlation among trees → reduces variance further</td>
+</tr>
+<tr>
+<td>No pruning</td>
+<td>Trees fit tightly → reduces bias</td>
+</tr>
+<tr>
+<td>Majority vote / average</td>
+<td>Smooths individual errors → reduces variance</td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-out-of-bag-oob-error">1.4 Out-of-Bag (OOB) Error</h3>
+<p>Each bootstrap sample omits roughly <span class="arithmatex">\(1/e \approx 37\%\)</span> of the training points. These <strong>out-of-bag</strong> points provide a free validation set for each tree.</p>
+<p><strong>OOB error:</strong> For each point <span class="arithmatex">\(x_i\)</span>, predict using only the trees for which <span class="arithmatex">\(x_i\)</span> was OOB. Average these predictions to get an unbiased error estimate — no separate validation set needed.</p>
+<h3 id="15-variable-importance-permutation-importance">1.5 Variable Importance (Permutation Importance)</h3>
+<p>For tree <span class="arithmatex">\(\text{tree}_t\)</span> and feature <span class="arithmatex">\(j\)</span>:</p>
+<ol>
+<li>Compute the OOB error <span class="arithmatex">\(\text{err}_t\)</span> on <span class="arithmatex">\(\text{OOB}_t\)</span>.</li>
+<li>Randomly <strong>permute</strong> only feature <span class="arithmatex">\(j\)</span> in <span class="arithmatex">\(\text{OOB}_t\)</span> → <span class="arithmatex">\(\text{OOB}_{t,\text{perm}}\)</span>.</li>
+<li>Compute the new OOB error <span class="arithmatex">\(\text{err}_{t,\text{perm}}\)</span> on the permuted data.</li>
+<li>The raw importance of feature <span class="arithmatex">\(j\)</span> is the average increase in error:</li>
+</ol>
+<div class="arithmatex">\[\text{VarImportance}(j) = \frac{1}{T}\sum_t\left(\text{err}_{t,\text{perm}} - \text{err}_t\right)\]</div>
+<p>A large positive value means permuting feature <span class="arithmatex">\(j\)</span> hurts performance — the feature is important.</p>
+<p><strong>Pros:</strong> Complex and powerful; has a natural notion of variable importance.<br />
+<strong>Cons:</strong> Black box; prone to overfitting without careful tuning; slow to train.</p>
+<hr />
+<h2 id="2-variable-reliance">2. Variable Reliance</h2>
+<p>Beyond "is feature <span class="arithmatex">\(j\)</span> important to model <span class="arithmatex">\(f\)</span>?", several richer questions arise. This section covers the key measures.</p>
+<h3 id="21-model-reliance-mr">2.1 Model Reliance (MR)</h3>
+<p><strong>Idea:</strong> scramble feature <span class="arithmatex">\(j\)</span> (breaking its relationship with the label and other features) and measure how much performance degrades.</p>
+<p><strong>Swapping-based MR</strong> (more principled than random permutation):</p>
+<div class="arithmatex">\[\text{MR}_{\text{diff}}(f, j) = \frac{1}{n(n-1)}\sum_{i\neq k}\text{loss}(y_i, f([x_{i,j\text{swapped with }k}]))-\text{Loss}(f(\mathbf{X}),\mathbf{Y})\]</div>
+<div class="arithmatex">\[\text{MR}_{\text{ratio}}(f, j) = \frac{\text{ScrambledLoss}}{\text{Loss}(f(\mathbf{X}),\mathbf{Y})}\]</div>
+<ul>
+<li><span class="arithmatex">\(\text{MR}_{\text{diff}} = 0\)</span> or <span class="arithmatex">\(\text{MR}_{\text{ratio}} = 1\)</span>: feature <span class="arithmatex">\(j\)</span> is not used by <span class="arithmatex">\(f\)</span>.</li>
+</ul>
+<p><strong>Caveat:</strong> scrambled data points may fall outside the training distribution, so the measure reflects model reliance, not necessarily causal importance.</p>
+<h3 id="22-conditional-model-reliance-cmr">2.2 Conditional Model Reliance (CMR)</h3>
+<p>CMR isolates the <strong>unique information</strong> in feature <span class="arithmatex">\(j\)</span> that cannot be predicted from the other features.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>For each point <span class="arithmatex">\(i\)</span>, predict <span class="arithmatex">\(x_{i,1}\)</span> from all other features: <span class="arithmatex">\(\hat{x}_{i,1} = \hat{\mathbb{E}}(X_{i,1}|X_{i,-1}=x_{i,-1})\)</span>.</li>
+<li>The unique information for point <span class="arithmatex">\(i\)</span> is the residual: <span class="arithmatex">\(x_{i,1} - \hat{x}_{i,1}\)</span>.</li>
+<li>Create a scrambled version: <span class="arithmatex">\(x_{ik,1}^{\text{scr}} = (x_{i,1}-\hat{x}_{i,1}) + \hat{x}_{k,1}\)</span> (transfer unique info of <span class="arithmatex">\(i\)</span> to context of <span class="arithmatex">\(k\)</span>).</li>
+<li>Compute scrambled loss and form the ratio:</li>
+</ol>
+<div class="arithmatex">\[\text{CMR}_{\text{ratio}}(f, 1) = \frac{\frac{1}{n(n-1)}\sum_{i\neq k}\text{loss}(y_k, f(x_{ik}^{\text{scr}}))}{\text{Loss}(f(\mathbf{X}),\mathbf{Y})}\]</div>
+<p><span class="arithmatex">\(\text{CMR}_{\text{ratio}} = 1\)</span> means feature 1 provides no unique information to model <span class="arithmatex">\(f\)</span>.</p>
+<h3 id="23-shap-shapley-additive-explanations">2.3 SHAP (SHapley Additive exPlanations)</h3>
+<p>SHAP explains the contribution of feature <span class="arithmatex">\(j\)</span> to a <strong>specific prediction</strong> for a specific model.</p>
+<p>Based on the Shapley value from cooperative game theory: add features one at a time in every possible order, measure the marginal contribution of feature <span class="arithmatex">\(j\)</span>, and average over all orderings:</p>
+<div class="arithmatex">\[\phi_j = \sum_{S\subseteq F\setminus\{j\}}\frac{|S|!(|F|-|S|-1)!}{|F|!}\left[f_{S\cup\{j\}}(x_{S\cup\{j\}})-f_S(x_S)\right]\]</div>
+<p>where <span class="arithmatex">\(f_S(x_S) = \mathbb{E}[f(x_S, X_{\bar{S}}) \mid X_S = x_S]\)</span> is the model's prediction marginalising out the features not in <span class="arithmatex">\(S\)</span> (expectation over <span class="arithmatex">\(X_{\bar{S}}\)</span>).</p>
+<p><strong>Approximations:</strong>
+- Feature independence: <span class="arithmatex">\(f_S(x_S)\approx \mathbb{E}[f(x_S, X_{\bar{S}})]\)</span>.
+- Linear model: <span class="arithmatex">\(f_S(x_S)\approx f([x_S, \mathbb{E}[\mathbf{X}_{\bar{S}}]])\)</span>.</p>
+<h3 id="24-model-class-reliance-mcr-the-rashomon-set">2.4 Model Class Reliance (MCR) — The Rashomon Set</h3>
+<p><strong>Rashomon set:</strong> the set of all models that are nearly as good as a reference model <span class="arithmatex">\(f_{\text{ref}}\)</span>:</p>
+<div class="arithmatex">\[\text{Rset}(\mathcal{F},\epsilon,f_{\text{ref}}) = \{f\in\mathcal{F}: \text{Loss}(f)\leq\text{Loss}(f_{\text{ref}})+\epsilon\}\]</div>
+<p><strong>MCR</strong> gives the <em>range</em> of model reliance values across all models in the Rashomon set:</p>
+<div class="arithmatex">\[[\text{MCR}_-, \text{MCR}_+] = \left[\min_{f\in\text{Rset}}\text{MR}(f,j), \max_{f\in\text{Rset}}\text{MR}(f,j)\right]\]</div>
+<p><strong>Interpretation:</strong>
+- <span class="arithmatex">\([1, 1.001]\)</span>: no good model needs feature <span class="arithmatex">\(j\)</span> — safe to remove.
+- <span class="arithmatex">\([1.5, 2.3]\)</span>: all good models rely on feature <span class="arithmatex">\(j\)</span> — it is essential.
+- <span class="arithmatex">\([1, 4]\)</span>: some good models use it, some don't — ambiguous.</p>
+<p><strong>CMCR</strong> extends this to conditional reliance (unique information × Rashomon set).</p>
+<h3 id="25-summary-which-measure-for-which-question">2.5 Summary: Which Measure for Which Question?</h3>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Measure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Important to this specific model?</td>
+<td>MR</td>
+</tr>
+<tr>
+<td>Unique information important to this model?</td>
+<td>CMR</td>
+</tr>
+<tr>
+<td>Important for this specific prediction by this model?</td>
+<td>SHAP</td>
+</tr>
+<tr>
+<td>Important to the learning algorithm?</td>
+<td>Algorithm Reliance (AR)</td>
+</tr>
+<tr>
+<td>Important to any good model in a class?</td>
+<td>MCR</td>
+</tr>
+<tr>
+<td>Unique information important to any good model?</td>
+<td>CMCR</td>
+</tr>
+<tr>
+<td>Stable importance across near-optimal models?</td>
+<td>RID (Rashomon Important Distribution)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-boosting-and-adaboost">3. Boosting and AdaBoost</h2>
+<h3 id="31-boosting-philosophy">3.1 Boosting Philosophy</h3>
+<p><strong>Boosting</strong> iteratively trains weak classifiers with respect to a changing distribution over the training data:
+- Increase weights of misclassified points (focus on hard cases).
+- Decrease weights of correctly classified points.
+- Combine all weak classifiers with learned weights into a strong classifier.</p>
+<p><strong>Why coordinate descent?</strong> The gradient of the boosted objective is expensive or impossible to compute directly (e.g., for decision trees). Coordinate descent — moving one weak classifier coefficient at a time — sidesteps this.</p>
+<h3 id="32-adaboost">3.2 AdaBoost</h3>
+<p><strong>Setup:</strong> Training data <span class="arithmatex">\(\{(x_i, y_i)\}_{i=1}^n\)</span> with <span class="arithmatex">\(y_i\in\{-1,+1\}\)</span>; weak learning algorithm <span class="arithmatex">\(A\)</span>; <span class="arithmatex">\(T\)</span> rounds.</p>
+<p><strong>Notation:</strong>
+- <span class="arithmatex">\(\mathbf{d}_t\)</span>: distribution (weights) over examples at round <span class="arithmatex">\(t\)</span>.
+- <span class="arithmatex">\(h_t\)</span>: weak classifier chosen at round <span class="arithmatex">\(t\)</span>.
+- <span class="arithmatex">\(\alpha_t\)</span>: coefficient for <span class="arithmatex">\(h_t\)</span> in the ensemble.
+- <span class="arithmatex">\(\mathbf{M}\in\mathbb{R}^{n\times p}\)</span>: margin matrix, <span class="arithmatex">\(M_{ij} = y_i h_j(x_i)\in\{-1,+1\}\)</span>.
+- Final classifier: <span class="arithmatex">\(H(x) = \text{sign}\left(\sum_{t=1}^T \alpha_t h_t(x)\right)\)</span>.</p>
+<p><strong>Exponential loss</strong> (upper bounds misclassification error):</p>
+<div class="arithmatex">\[R^{\text{train}}(\boldsymbol{\lambda}) = \frac{1}{n}\sum_{i=1}^n e^{-(\mathbf{M}\boldsymbol{\lambda})_i} \geq \frac{1}{n}\sum_{i=1}^n \mathbf{1}[y_i f(x_i)\leq 0]\]</div>
+<p><strong>AdaBoost update at round <span class="arithmatex">\(t\)</span>:</strong></p>
+<p>At each round, find the weak classifier <span class="arithmatex">\(h_t\)</span> minimising the weighted error:</p>
+<div class="arithmatex">\[\text{Error}_t = \sum_{i: h_t(x_i)\neq y_i} d_{t,i}\]</div>
+<p>Compute the coefficient:</p>
+<div class="arithmatex">\[\alpha_t = \frac{1}{2}\ln\left(\frac{1-\text{Error}_t}{\text{Error}_t}\right)\]</div>
+<p>Update weights (unnormalised):</p>
+<div class="arithmatex">\[d_{t+1,i} \propto d_{t,i}\cdot e^{-\alpha_t y_i h_t(x_i)}\]</div>
+<p>Normalise so <span class="arithmatex">\(\sum_i d_{t+1,i} = 1\)</span>.</p>
+<p><strong>Training error bound.</strong> Define <span class="arithmatex">\(\gamma_t = \frac{1}{2} - \text{Error}_t\)</span> (the edge of the weak classifier). Then:</p>
+<div class="arithmatex">\[\frac{1}{n}\sum_i \mathbf{1}[y_i\neq H(x_i)] \leq R^{\text{train}}(\boldsymbol{\lambda}_T) = \prod_{t=1}^T 2\sqrt{\text{Error}_t(1-\text{Error}_t)} = \prod_t\sqrt{1-4\gamma_t^2}\]</div>
+<p>Using <span class="arithmatex">\(1+x\leq e^x\)</span>:</p>
+<div class="arithmatex">\[R^{\text{train}}(\boldsymbol{\lambda}_T)\leq e^{-2\sum_t\gamma_t^2}\leq e^{-2T\gamma_{\text{min}}^2}\]</div>
+<p>Training error decreases <strong>exponentially</strong> in the number of rounds, provided each weak classifier does slightly better than random (<span class="arithmatex">\(\gamma_t &gt; 0\)</span>).</p>
+<h3 id="33-adaboost-as-coordinate-descent">3.3 AdaBoost as Coordinate Descent</h3>
+<p>AdaBoost is coordinate descent on the exponential loss <span class="arithmatex">\(R^{\text{train}}(\boldsymbol{\lambda})\)</span>:
+- "Run weak learning algorithm" = "choose coordinate <span class="arithmatex">\(j\)</span>" = "choose weak classifier <span class="arithmatex">\(h_j\)</span>".
+- "Update <span class="arithmatex">\(\alpha_t\)</span>" = "move along coordinate <span class="arithmatex">\(j\)</span> by step size <span class="arithmatex">\(\alpha_t\)</span>".</p>
+<p><strong>Why AdaBoost tends not to overfit:</strong>
+- It implicitly maximises the <strong>margin</strong> <span class="arithmatex">\(y_i f(x_i)/\|f\|\)</span> — pushing predictions away from the decision boundary.
+- The iterative procedure itself acts as an implicit regulariser, even with no explicit penalty.</p>
+<hr />
+<h2 id="4-generalised-additive-models-gams">4. Generalised Additive Models (GAMs)</h2>
+<h3 id="41-structure">4.1 Structure</h3>
+<p>A GAM decomposes the prediction as a sum of univariate component functions:</p>
+<div class="arithmatex">\[g(\hat{y}(x)) = \sum_{j=1}^p f_j(x_{\cdot,j})\]</div>
+<p>where <span class="arithmatex">\(g\)</span> is a link function (e.g., identity for regression, logit for classification). No interaction terms between variables, so each <span class="arithmatex">\(f_j\)</span> can be inspected independently — comparable interpretability to linear models, but with arbitrary nonlinearity per feature.</p>
+<h3 id="42-training-with-adaboost-boosted-stumps">4.2 Training with AdaBoost (Boosted Stumps)</h3>
+<p>Each <span class="arithmatex">\(f_j\)</span> is built from a sum of <strong>decision stumps</strong> (trees with one split):</p>
+<div class="arithmatex">\[f_j(x_{\cdot,j}) = \sum_\ell \lambda_{j,\ell}\,\text{stump}(j,\ell)(x)\]</div>
+<p>At each AdaBoost iteration, a weighted step function is added to one component function. After training, regroup stumps by feature:</p>
+<div class="arithmatex">\[g(\hat{y}(x)) = \sum_t\alpha_t h_t(x) = \sum_j\sum_\ell \lambda_{j,\ell}\,\text{stump}(j,\ell)(x), \quad \lambda_{j,\ell} = \sum_{t:\, h_t=\text{stump}(j,\ell)}\alpha_t\]</div>
+<p><strong>Backfitting</strong> (alternative training): iterate over features, model the residual <span class="arithmatex">\(y - \sum_{k\neq j}f_k\)</span>, and update <span class="arithmatex">\(f_j\)</span>.</p>
+<p><strong>GA<span class="arithmatex">\(^2\)</span>M (pairwise interactions):</strong> add interaction terms via forward selection:</p>
+<div class="arithmatex">\[g(\hat{y}(x)) = \sum_j f_j(x_{\cdot,j}) + \sum_{k\neq j} f_{k,j}(x_{\cdot,k}, x_{\cdot,j})\]</div>
+<h3 id="43-fastsparse-sparse-gams">4.3 FastSparse — Sparse GAMs</h3>
+<p>FastSparse produces interpretable GAMs with <strong>few</strong> stumps by minimising:</p>
+<div class="arithmatex">\[R^0_{\text{train}}(\boldsymbol{\lambda}) = R_{\text{train}}(\boldsymbol{\lambda}) + C_0\|\boldsymbol{\lambda}\|_0\]</div>
+<p>where <span class="arithmatex">\(\|\boldsymbol{\lambda}\|_0\)</span> counts non-zero coefficients.</p>
+<p><strong>Update rule — Case 1</strong> (<span class="arithmatex">\(\lambda_{t,j}=0\)</span>, consider adding stump <span class="arithmatex">\(j\)</span>):</p>
+<p>Include stump <span class="arithmatex">\(j\)</span> only if doing so reduces <span class="arithmatex">\(R^0_{\text{train}}\)</span> by at least <span class="arithmatex">\(C_0\)</span>, i.e.:</p>
+<div class="arithmatex">\[d_- \notin \left[\frac{1}{2} - \frac{\sqrt{C_0(2R_{\text{train}}-C_0)}}{2R_{\text{train}}},  \frac{1}{2}\right]\]</div>
+<p>If <span class="arithmatex">\(d_- \leq\)</span> the lower bound, set <span class="arithmatex">\(\lambda_{t+1,j} = \frac{1}{2}\ln\frac{1-d_-}{d_-}\)</span>; otherwise keep <span class="arithmatex">\(\lambda_{t+1,j}=0\)</span>.</p>
+<p><strong>Update rule — Case 2</strong> (<span class="arithmatex">\(\lambda_{t,j}\neq 0\)</span>, consider removing stump <span class="arithmatex">\(j\)</span>):</p>
+<p>Temporarily remove stump <span class="arithmatex">\(j\)</span>, compute the modified error rate <span class="arithmatex">\(d^{\backslash j}_-\)</span>, and apply the same interval check using <span class="arithmatex">\(R^{\backslash j}_{\text{train}}\)</span>. If the check fails, set <span class="arithmatex">\(\lambda_{t+1,j}=0\)</span>.</p>
+<p><strong>Key intuition:</strong> An error rate close to &frac12; means stump <span class="arithmatex">\(j\)</span> is no better than random guessing on the weighted data — not worth the complexity cost <span class="arithmatex">\(C_0\)</span>. An error rate close to 0 means the stump is very useful.</p>
+<p>FastSparse cycles through features in order of accuracy, alternating between coordinate descent steps and "swap steps" (replacing one stump with a better one).</p>
+<h3 id="44-when-to-use-gams">4.4 When to Use GAMs</h3>
+<p><strong>Good for:</strong> tabular data with meaningful continuous features; binary classification or regression; datasets where individual feature effects are important.</p>
+<p><strong>Not suited for:</strong> data where strong pairwise or higher-order interactions dominate; multiclass problems (decision trees are better); datasets with many binary features (step functions become uninformative).</p>
+<hr />
+<h2 id="5-references">5. References</h2>
+<ol>
+<li><strong>Breiman, L.</strong> (2001). Random forests. <em>Machine Learning</em>, 45(1), 5–32. [Original random forests paper.]</li>
+<li><strong>Fisher, A., Rudin, C., &amp; Dominici, F.</strong> (2019). All models are wrong, but many are useful: Learning a variable's importance by studying an entire class of prediction models simultaneously. <em>Journal of Machine Learning Research</em>, 20(177), 1–81. [MR, CMR, MCR framework.]</li>
+<li><strong>Lundberg, S. M. &amp; Lee, S.-I.</strong> (2017). A unified approach to interpreting model predictions. <em>NeurIPS 2017</em>. [SHAP values and TreeSHAP.]</li>
+<li><strong>Freund, Y. &amp; Schapire, R. E.</strong> (1997). A decision-theoretic generalization of on-line learning and an application to boosting. <em>Journal of Computer and System Sciences</em>, 55(1), 119–139. [Original AdaBoost paper with training error bound.]</li>
+<li><strong>Hastie, T. &amp; Tibshirani, R.</strong> (1990). <em>Generalized Additive Models</em>. Chapman &amp; Hall. [Foundational GAM reference.]</li>
+<li><strong>Lou, Y., Caruana, R., Gehrke, J., &amp; Ridgeway, G.</strong> (2013). Accurate intelligible models with pairwise interactions. <em>KDD 2013</em>. [GA²M with interaction terms.]</li>
+<li><strong>Hastie, T., Tibshirani, R., &amp; Friedman, J.</strong> (2009). <em>The Elements of Statistical Learning</em> (2<sup>nd</sup> ed.). Springer. Ch. 10 (Boosting and additive trees), Ch. 9 (GAMs).</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

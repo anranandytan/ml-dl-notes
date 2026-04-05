@@ -1,0 +1,2338 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/17_ParticleFilter/">
+      
+      
+        <link rel="prev" href="../16_KalmanFilter/">
+      
+      
+        <link rel="next" href="../18_CRF/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>17 · Particle Filter - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#17-particle-filter" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              17 · Particle Filter
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-nonlinear-state-space-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Nonlinear State Space Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-bayesian-filtering-recursion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Bayesian Filtering Recursion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-importance-sampling-for-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Importance Sampling for Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Importance Sampling for Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-basic-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Basic Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sequential-importance-sampling-sis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sequential Importance Sampling (SIS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Sequential Importance Sampling (SIS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-from-filtering-to-path-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 From Filtering to Path Posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-factoring-the-path-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Factoring the Path Posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-recursive-weight-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Recursive Weight Update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-sis-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 SIS Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-weight-degeneracy-and-resampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Weight Degeneracy and Resampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Weight Degeneracy and Resampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-degeneracy-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Degeneracy Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-resampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Resampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-choice-of-proposal-the-bootstrap-filter-sir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Choice of Proposal: The Bootstrap Filter (SIR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-algorithm-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full Algorithm Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_GenerativeModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-nonlinear-state-space-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Nonlinear State Space Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-bayesian-filtering-recursion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Bayesian Filtering Recursion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-importance-sampling-for-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Importance Sampling for Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Importance Sampling for Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-basic-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Basic Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-sequential-importance-sampling-sis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Sequential Importance Sampling (SIS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Sequential Importance Sampling (SIS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-from-filtering-to-path-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 From Filtering to Path Posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-factoring-the-path-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Factoring the Path Posterior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-recursive-weight-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Recursive Weight Update
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-sis-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 SIS Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-weight-degeneracy-and-resampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Weight Degeneracy and Resampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Weight Degeneracy and Resampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-the-degeneracy-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 The Degeneracy Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-resampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Resampling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-choice-of-proposal-the-bootstrap-filter-sir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Choice of Proposal: The Bootstrap Filter (SIR)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-full-algorithm-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Full Algorithm Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="17-particle-filter">17 — Particle Filter</h1>
+<blockquote>
+<p><strong>Keywords:</strong> sequential Monte Carlo, importance sampling, sequential importance sampling, SIR filter, bootstrap filter, weight degeneracy, resampling, nonlinear filtering</p>
+</blockquote>
+<hr />
+<h2 id="1-motivation-intuition">1. Motivation &amp; Intuition</h2>
+<p>The Kalman filter is the optimal Bayesian filter for linear systems with Gaussian noise, but real-world systems are often <strong>nonlinear</strong> and driven by <strong>non-Gaussian</strong> noise:</p>
+<ul>
+<li>A robot navigating by sonar (highly nonlinear range measurements, non-Gaussian clutter).</li>
+<li>Tracking a manoeuvring aircraft (nonlinear dynamics, sudden direction changes).</li>
+<li>Speech recognition with heavy-tailed noise.</li>
+</ul>
+<p>For such systems, the posterior <span class="arithmatex">\(P(z_t|x_{1:t})\)</span> is no longer Gaussian and cannot be represented exactly by a mean and covariance. Extended and Unscented Kalman filters approximate it as Gaussian, but this can break down badly.</p>
+<p><strong>Particle filters</strong> (also called Sequential Monte Carlo, SMC) represent the posterior as a <strong>weighted set of samples</strong> (particles):</p>
+<div class="arithmatex">\[P(z_t|x_{1:t}) \approx \sum_{i=1}^N \hat{w}_t^{(i)}\,\delta(z_t - z_t^{(i)})\]</div>
+<p>Each particle <span class="arithmatex">\(z_t^{(i)}\)</span> is a hypothesis about the hidden state; its weight <span class="arithmatex">\(\hat{w}_t^{(i)}\)</span> reflects how well that hypothesis explains the observations. As <span class="arithmatex">\(N\to\infty\)</span>, this approximation converges to the true posterior by the law of large numbers, for <strong>any</strong> nonlinear, non-Gaussian model.</p>
+<p><strong>"Generate and Test":</strong> The particle filter proposes candidate states (generate), weights them by how well they explain the data (test), and periodically concentrates particles in high-probability regions (resample).</p>
+<hr />
+<h2 id="2-historical-context">2. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1949</td>
+<td>Monte Carlo methods introduced for nuclear physics simulations (Metropolis, Ulam).</td>
+</tr>
+<tr>
+<td>1993</td>
+<td><strong>Gordon, Salmond &amp; Smith</strong> introduce the Bootstrap Filter (SIR particle filter) — the first practical particle filter — for tracking applications.</td>
+</tr>
+<tr>
+<td>1996</td>
+<td><strong>Kitagawa</strong> independently develops the Monte Carlo filter; <strong>Liu &amp; Chen</strong> introduce the sequential importance sampling framework.</td>
+</tr>
+<tr>
+<td>1998</td>
+<td><strong>Doucet</strong> generalises SIS to arbitrary proposals; <strong>Pitt &amp; Shephard</strong> introduce the auxiliary particle filter.</td>
+</tr>
+<tr>
+<td>2001</td>
+<td><strong>Doucet, de Freitas &amp; Gordon</strong> edit the landmark book <em>Sequential Monte Carlo Methods in Practice</em>, consolidating the field.</td>
+</tr>
+<tr>
+<td>2002</td>
+<td><strong>Arulampalam et al.</strong> publish a widely-read tutorial on particle filters for target tracking.</td>
+</tr>
+<tr>
+<td>2010s</td>
+<td>Particle filters applied at scale: simultaneous localisation and mapping (SLAM), financial time series, probabilistic robotics.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-nonlinear-state-space-model">3. Nonlinear State Space Model</h2>
+<p>A particle filter applies to the <strong>general nonlinear state space model</strong>:</p>
+<div class="arithmatex">\[z_t = g(z_{t-1},\, u_t,\, \varepsilon_t) \qquad \text{(state transition)}$$
+$$x_t = h(z_t,\, u_t,\, \delta_t) \qquad \text{(observation model)}\]</div>
+<p>where <span class="arithmatex">\(g\)</span> and <span class="arithmatex">\(h\)</span> are arbitrary (nonlinear) functions, <span class="arithmatex">\(u_t\)</span> is a known control input, and the noise terms <span class="arithmatex">\(\varepsilon_t \sim p_\varepsilon\)</span>, <span class="arithmatex">\(\delta_t \sim p_\delta\)</span> can follow any distribution (not necessarily Gaussian).</p>
+<p>This gives the conditional distributions:</p>
+<div class="arithmatex">\[P(z_t \mid z_{t-1}) \quad\text{(transition density, from }g\text{)}$$
+$$P(x_t \mid z_t) \quad\text{(likelihood, from }h\text{)}\]</div>
+<p><strong>Comparison with Kalman filter:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Kalman Filter</th>
+<th>Particle Filter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dynamics</td>
+<td>Linear: <span class="arithmatex">\(z_t = Az_{t-1}+B+\varepsilon\)</span></td>
+<td>Nonlinear: <span class="arithmatex">\(z_t = g(z_{t-1},\varepsilon)\)</span></td>
+</tr>
+<tr>
+<td>Noise</td>
+<td>Gaussian</td>
+<td>Any distribution</td>
+</tr>
+<tr>
+<td>Posterior</td>
+<td>Exactly Gaussian: <span class="arithmatex">\(\mathcal{N}(\mu_t,\Sigma_t)\)</span></td>
+<td>Approximated by <span class="arithmatex">\(N\)</span> weighted particles</td>
+</tr>
+<tr>
+<td>Cost per step</td>
+<td><span class="arithmatex">\(O(d_z^3)\)</span></td>
+<td><span class="arithmatex">\(O(N\cdot d_z)\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-bayesian-filtering-recursion">4. Bayesian Filtering Recursion</h2>
+<p>The filtering goal is to maintain the posterior <span class="arithmatex">\(P(z_t|x_{1:t})\)</span> as new observations arrive. As derived for the Kalman filter, the recursion has two steps:</p>
+<p><strong>Step 1 — Predict:</strong> Propagate the previous posterior through the dynamics:</p>
+<div class="arithmatex">\[P(z_t \mid x_{1:t-1}) = \int P(z_t \mid z_{t-1})\,P(z_{t-1} \mid x_{1:t-1})\,dz_{t-1}\]</div>
+<p><strong>Step 2 — Update:</strong> Incorporate the new observation <span class="arithmatex">\(x_t\)</span> via Bayes' theorem:</p>
+<div class="arithmatex">\[P(z_t \mid x_{1:t}) \propto P(x_t \mid z_t)\,P(z_t \mid x_{1:t-1})\]</div>
+<p>For nonlinear/non-Gaussian models, both integrals are intractable — the particle filter approximates them with Monte Carlo.</p>
+<hr />
+<h2 id="5-importance-sampling-for-filtering">5. Importance Sampling for Filtering</h2>
+<h3 id="51-basic-idea">5.1 Basic Idea</h3>
+<p>We want to approximate expectations under the filtering posterior:</p>
+<div class="arithmatex">\[\mathbb{E}[f(z_t)] = \int f(z_t)\,p(z_t|x_{1:t})\,dz_t\]</div>
+<p>Introduce a tractable <strong>proposal</strong> distribution <span class="arithmatex">\(q(z_t|x_{1:t})\)</span> and rewrite:</p>
+<div class="arithmatex">\[= \int f(z_t)\,\frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}\,q(z_t|x_{1:t})\,dz_t = \mathbb{E}_q\left[f(z_t)\,w_t\right], \quad w_t = \frac{p(z_t|x_{1:t})}{q(z_t|x_{1:t})}\]</div>
+<p>Drawing <span class="arithmatex">\(N\)</span> samples <span class="arithmatex">\(z_t^{(i)} \sim q\)</span> gives the Monte Carlo estimator with <strong>unnormalised weights</strong> <span class="arithmatex">\(w_t^{(i)}\)</span>:</p>
+<div class="arithmatex">\[\mathbb{E}[f(z_t)] \approx \frac{\sum_{i=1}^N w_t^{(i)}\,f(z_t^{(i)})}{\sum_{i=1}^N w_t^{(i)}} = \sum_{i=1}^N \hat{w}_t^{(i)}\,f(z_t^{(i)})\]</div>
+<p>where the <strong>normalised weights</strong> are <span class="arithmatex">\(\hat{w}_t^{(i)} = w_t^{(i)}/\sum_j w_t^{(j)}\)</span>, satisfying <span class="arithmatex">\(\sum_i\hat{w}_t^{(i)} = 1\)</span>.</p>
+<p>Note: <span class="arithmatex">\(w_t^{(i)} \propto p/q\)</span> and <span class="arithmatex">\(\hat{w}_t^{(i)}\)</span> are different — the normalisation constant (which we cannot compute) cancels in the ratio, making self-normalised importance sampling applicable even when <span class="arithmatex">\(p\)</span> is known only up to a constant.</p>
+<hr />
+<h2 id="6-sequential-importance-sampling-sis">6. Sequential Importance Sampling (SIS)</h2>
+<h3 id="61-from-filtering-to-path-posterior">6.1 From Filtering to Path Posterior</h3>
+<p>Instead of approximating <span class="arithmatex">\(P(z_t|x_{1:t})\)</span> at each <span class="arithmatex">\(t\)</span> independently, SIS works with the <strong>path posterior</strong> <span class="arithmatex">\(P(z_{1:t}|x_{1:t})\)</span> — the joint posterior over the entire trajectory up to time <span class="arithmatex">\(t\)</span>. This enables a <strong>recursive weight update</strong>.</p>
+<h3 id="62-factoring-the-path-posterior">6.2 Factoring the Path Posterior</h3>
+<p>We derive a recursion for <span class="arithmatex">\(P(z_{1:t}|x_{1:t})\)</span>, dropping normalisation constants:</p>
+<div class="arithmatex">\[P(z_{1:t}|x_{1:t}) \propto P(z_{1:t}, x_{1:t})\]</div>
+<p>Factor out <span class="arithmatex">\(x_t\)</span>:
+$<span class="arithmatex">\(= P(x_t \mid z_{1:t}, x_{1:t-1})\cdot P(z_{1:t}, x_{1:t-1})\)</span>$</p>
+<p>Apply <strong>output independence</strong> (<span class="arithmatex">\(x_t\)</span> depends only on <span class="arithmatex">\(z_t\)</span>):
+$<span class="arithmatex">\(= P(x_t \mid z_t)\cdot P(z_{1:t}, x_{1:t-1})\)</span>$</p>
+<p>Factor out <span class="arithmatex">\(z_t\)</span> using the <strong>Markov assumption</strong> (<span class="arithmatex">\(z_t\)</span> depends only on <span class="arithmatex">\(z_{t-1}\)</span>):
+$<span class="arithmatex">\(= P(x_t \mid z_t)\cdot P(z_t \mid z_{t-1})\cdot P(z_{1:t-1}, x_{1:t-1})\)</span>$</p>
+<p>Factor the remaining joint into the path posterior and marginal:
+$<span class="arithmatex">\(= P(x_t \mid z_t)\cdot P(z_t \mid z_{t-1})\cdot P(z_{1:t-1} \mid x_{1:t-1})\cdot P(x_{1:t-1})\)</span>$</p>
+<p>Dropping <span class="arithmatex">\(P(x_{1:t-1})\)</span> (constant w.r.t. the state path):</p>
+<div class="arithmatex">\[\boxed{P(z_{1:t}|x_{1:t}) \propto P(x_t|z_t)\,P(z_t|z_{t-1})\,P(z_{1:t-1}|x_{1:t-1})}\]</div>
+<h3 id="63-recursive-weight-update">6.3 Recursive Weight Update</h3>
+<p>Assume the proposal factorises as:
+$<span class="arithmatex">\(q(z_{1:t}|x_{1:t}) = q(z_t \mid z_{1:t-1}, x_{1:t})\cdot q(z_{1:t-1}|x_{1:t-1})\)</span>$</p>
+<p>The unnormalised importance weight at time <span class="arithmatex">\(t\)</span> is:</p>
+<div class="arithmatex">\[w_t^{(i)} \propto \frac{P(z_{1:t}|x_{1:t})}{q(z_{1:t}|x_{1:t})} \propto \frac{P(x_t|z_t)\,P(z_t|z_{t-1})\,P(z_{1:t-1}|x_{1:t-1})}{q(z_t|z_{1:t-1},x_{1:t})\,q(z_{1:t-1}|x_{1:t-1})}\]</div>
+<div class="arithmatex">\[= \frac{P(x_t|z_t)\,P(z_t|z_{t-1})}{q(z_t|z_{1:t-1},x_{1:t})}\cdot\underbrace{\frac{P(z_{1:t-1}|x_{1:t-1})}{q(z_{1:t-1}|x_{1:t-1})}}_{= w_{t-1}^{(i)}}\]</div>
+<div class="arithmatex">\[\boxed{w_t^{(i)} \propto w_{t-1}^{(i)}\cdot\frac{P(x_t \mid z_t^{(i)})\,P(z_t^{(i)} \mid z_{t-1}^{(i)})}{q(z_t^{(i)} \mid z_{1:t-1}^{(i)},\, x_{1:t})}}\]</div>
+<p>This is the <strong>SIS weight update</strong>: the new weight is the old weight multiplied by the <strong>incremental weight ratio</strong> — the likelihood of the new observation times the prior transition, divided by the proposal density at the new particle. No access to <span class="arithmatex">\(P(x_{1:t})\)</span> is needed.</p>
+<h3 id="64-sis-algorithm">6.4 SIS Algorithm</h3>
+<div class="highlight"><pre><span></span><code>Initialise (t=0):
+  For i = 1, ..., N:
+    Sample z_0^(i) ~ q(z_0)
+    Set w_0^(i) = p(z_0^(i)) / q(z_0^(i))
+  Normalise: ŵ_0^(i) = w_0^(i) / Σ_j w_0^(j)
+
+For t = 1, 2, ...:
+  [Propagate]
+  For i = 1, ..., N:
+    Sample z_t^(i)  ~ q(z_t | z_{t-1}^(i), x_{1:t})
+    Update weight:
+      w_t^(i) ∝ w_{t-1}^(i) · P(x_t | z_t^(i)) · P(z_t^(i) | z_{t-1}^(i))
+                              / q(z_t^(i) | z_{t-1}^(i), x_{1:t})
+
+  [Normalise]
+    ŵ_t^(i) = w_t^(i) / Σ_j w_t^(j)
+
+  [Estimate]
+    E[f(z_t)] ≈ Σ_i ŵ_t^(i) f(z_t^(i))
+</code></pre></div>
+<hr />
+<h2 id="7-weight-degeneracy-and-resampling">7. Weight Degeneracy and Resampling</h2>
+<h3 id="71-the-degeneracy-problem">7.1 The Degeneracy Problem</h3>
+<p>A fundamental problem with SIS: after a few time steps, all but one or a few particles have negligible weight. This <strong>weight degeneracy</strong> means most particles contribute nothing to the estimate, wasting computation.</p>
+<p>Formally, the variance of the weights increases monotonically over time and cannot be reduced by choice of proposal (Liu &amp; Chen, 1995). The <strong>effective sample size</strong>:</p>
+<div class="arithmatex">\[N_{\text{eff}} = \frac{1}{\sum_{i=1}^N (\hat{w}_t^{(i)})^2} \in [1, N]\]</div>
+<p>measures how many equally-weighted particles the current weighted set is equivalent to. When <span class="arithmatex">\(N_{\text{eff}} \ll N\)</span>, degeneracy is severe.</p>
+<h3 id="72-resampling">7.2 Resampling</h3>
+<p>The standard fix: <strong>resample</strong> the particles whenever degeneracy becomes severe (<span class="arithmatex">\(N_{\text{eff}} &lt; N/2\)</span>, say). Resampling draws <span class="arithmatex">\(N\)</span> new particles from the current weighted set with replacement, with probabilities proportional to <span class="arithmatex">\(\hat{w}_t^{(i)}\)</span>, then resets all weights to <span class="arithmatex">\(1/N\)</span>.</p>
+<p>Common resampling schemes (in order of efficiency):
+1. <strong>Multinomial resampling:</strong> Draw <span class="arithmatex">\(N\)</span> samples independently from <span class="arithmatex">\(\{\hat{w}_t^{(i)}\}\)</span>. Simple but high variance.
+2. <strong>Systematic resampling:</strong> Use a single uniform random variable with <span class="arithmatex">\(N\)</span> evenly spaced offsets. Lower variance, <span class="arithmatex">\(O(N)\)</span>.
+3. <strong>Stratified resampling:</strong> Draw one sample uniformly from each of <span class="arithmatex">\(N\)</span> strata. Similar variance to systematic.</p>
+<p>Resampling <strong>concentrates particles in high-probability regions</strong> but introduces <strong>sample impoverishment</strong>: after resampling, multiple particles may be at the same location, reducing diversity.</p>
+<h3 id="73-choice-of-proposal-the-bootstrap-filter-sir">7.3 Choice of Proposal: The Bootstrap Filter (SIR)</h3>
+<p>The simplest and most widely used choice of proposal is the <strong>prior transition</strong>:</p>
+<div class="arithmatex">\[q(z_t \mid z_{t-1}^{(i)}, x_{1:t}) = P(z_t \mid z_{t-1}^{(i)})\]</div>
+<p>With this choice, the transition density in the numerator and the proposal in the denominator cancel:</p>
+<div class="arithmatex">\[w_t^{(i)} \propto w_{t-1}^{(i)}\cdot\frac{P(x_t \mid z_t^{(i)})\,\cancel{P(z_t^{(i)} \mid z_{t-1}^{(i)})}}{\cancel{P(z_t^{(i)} \mid z_{t-1}^{(i)})}} = w_{t-1}^{(i)}\cdot P(x_t \mid z_t^{(i)})\]</div>
+<p>With resampling between steps (<span class="arithmatex">\(w_{t-1}^{(i)} = 1/N\)</span> after each resample):</p>
+<div class="arithmatex">\[\hat{w}_t^{(i)} \propto P(x_t \mid z_t^{(i)})\]</div>
+<p>The weight of each particle is simply the <strong>likelihood of the new observation given the particle's position</strong>. This is the <strong>Bootstrap Filter</strong> (Gordon et al., 1993), also called the SIR particle filter:</p>
+<div class="highlight"><pre><span></span><code>Bootstrap Filter:
+  For i = 1, ..., N:
+    1. [Predict]   Sample z_t^(i) ~ P(z_t | z_{t-1}^(i))   [propagate via dynamics]
+    2. [Weight]    w_t^(i) = P(x_t | z_t^(i))               [likelihood weight]
+  3. [Normalise]   ŵ_t^(i) = w_t^(i) / Σ_j w_t^(j)
+  4. [Resample]    Draw N new particles from {z_t^(i)} with probs {ŵ_t^(i)}
+                   Reset all weights to 1/N
+</code></pre></div>
+<p><strong>Advantage:</strong> No knowledge of <span class="arithmatex">\(P(x_t|z_t)\)</span> in closed form is needed for the proposal — only the ability to evaluate it pointwise for weighting. Extremely simple to implement.</p>
+<p><strong>Disadvantage:</strong> Sampling from the prior ignores the current observation <span class="arithmatex">\(x_t\)</span>. If <span class="arithmatex">\(P(x_t|z_t)\)</span> is very peaked (informative observation), most prior samples will fall in low-likelihood regions and get negligible weight, causing severe degeneracy. Better proposals incorporate <span class="arithmatex">\(x_t\)</span> to guide particles toward high-likelihood regions.</p>
+<hr />
+<h2 id="8-full-algorithm-comparison">8. Full Algorithm Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Proposal</th>
+<th>Weight</th>
+<th>Resampling</th>
+<th>Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SIS</strong></td>
+<td>Any <span class="arithmatex">\(q(z_t\mid z_{t-1},x_{1:t})\)</span></td>
+<td><span class="arithmatex">\(w_t \propto w_{t-1}\cdot\frac{P(x_t\mid z_t)P(z_t\mid z_{t-1})}{q(z_t\mid z_{t-1},x_{1:t})}\)</span></td>
+<td>No</td>
+<td>Degenerates</td>
+</tr>
+<tr>
+<td><strong>Bootstrap (SIR)</strong></td>
+<td><span class="arithmatex">\(P(z_t\mid z_{t-1})\)</span></td>
+<td><span class="arithmatex">\(w_t \propto P(x_t\mid z_t)\)</span></td>
+<td>Yes</td>
+<td><span class="arithmatex">\(O(N)\)</span> per step</td>
+</tr>
+<tr>
+<td><strong>Auxiliary PF</strong></td>
+<td><span class="arithmatex">\(P(z_t\mid z_{t-1},x_t)\)</span> approx.</td>
+<td>Adjusted</td>
+<td>Yes</td>
+<td><span class="arithmatex">\(O(N)\)</span> per step, better ESS</td>
+</tr>
+<tr>
+<td><strong>Optimal proposal</strong></td>
+<td><span class="arithmatex">\(P(z_t\mid z_{t-1},x_t)\)</span> exact</td>
+<td><span class="arithmatex">\(w_t \propto P(x_t\mid z_{t-1})\)</span></td>
+<td>Yes</td>
+<td>Minimises variance; often intractable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-summary">9. Summary</h2>
+<div class="highlight"><pre><span></span><code>State space: z_t = g(z_{t-1}, ε_t),  x_t = h(z_t, δ_t)    [nonlinear, non-Gaussian]
+
+Represent posterior as N weighted particles:
+  P(z_t | x_{1:t}) ≈ Σ_i ŵ_t^(i) δ(z_t - z_t^(i))
+
+SIS weight recursion (key formula):
+  w_t^(i) ∝ w_{t-1}^(i) · P(x_t | z_t^(i)) · P(z_t^(i) | z_{t-1}^(i))
+                          / q(z_t^(i) | z_{t-1}^(i), x_{1:t})
+
+Bootstrap filter (simplest case, q = prior):
+  Propagate: z_t^(i) ~ P(z_t | z_{t-1}^(i))
+  Weight:    ŵ_t^(i) ∝ P(x_t | z_t^(i))
+  Resample to avoid degeneracy
+</code></pre></div>
+<hr />
+<h2 id="10-references">10. References</h2>
+<ol>
+<li><strong>Gordon, N. J., Salmond, D. J., &amp; Smith, A. F. M.</strong> (1993). Novel approach to nonlinear/non-Gaussian Bayesian state estimation. <em>IEE Proceedings F — Radar and Signal Processing</em>, 140(2), 107–113. [Original Bootstrap/SIR particle filter.]</li>
+<li><strong>Kitagawa, G.</strong> (1996). Monte Carlo filter and smoother for non-Gaussian nonlinear state space models. <em>Journal of Computational and Graphical Statistics</em>, 5(1), 1–25. [Independent derivation of the particle filter.]</li>
+<li><strong>Liu, J. S. &amp; Chen, R.</strong> (1998). Sequential Monte Carlo methods for dynamic systems. <em>Journal of the American Statistical Association</em>, 93(443), 1032–1044. [SIS framework; importance of resampling.]</li>
+<li><strong>Arulampalam, M. S., Maskell, S., Gordon, N., &amp; Clapp, T.</strong> (2002). A tutorial on particle filters for online nonlinear/non-Gaussian Bayesian tracking. <em>IEEE Transactions on Signal Processing</em>, 50(2), 174–188. [The most widely cited tutorial on particle filters.]</li>
+<li><strong>Doucet, A., de Freitas, N., &amp; Gordon, N.</strong> (Eds.) (2001). <em>Sequential Monte Carlo Methods in Practice</em>. Springer. [Comprehensive edited volume covering all aspects of SMC.]</li>
+<li><strong>Doucet, A. &amp; Johansen, A. M.</strong> (2009). A tutorial on particle filtering and smoothing: Fifteen years later. In Crisan, D. &amp; Rozovskii, B. (Eds.), <em>The Oxford Handbook of Nonlinear Filtering</em>, pp. 656–704. Oxford University Press. [Modern, comprehensive tutorial.]</li>
+<li><strong>Pitt, M. K. &amp; Shephard, N.</strong> (1999). Filtering via simulation: Auxiliary particle filters. <em>Journal of the American Statistical Association</em>, 94(446), 590–599. [Auxiliary particle filter — better proposal using a look-ahead step.]</li>
+<li><strong>Thrun, S., Burgard, W., &amp; Fox, D.</strong> (2005). <em>Probabilistic Robotics</em>. MIT Press. Ch. 4 (Nonparametric filters). [Particle filters in robotics and SLAM.]</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

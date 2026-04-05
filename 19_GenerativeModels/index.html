@@ -1,0 +1,2577 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Step-by-step derivations in machine learning and probabilistic deep learning, ordered by knowledge dependency.
+">
+      
+      
+        <meta name="author" content="Anran (Andy) Tan">
+      
+      
+        <link rel="canonical" href="https://anranandytan.github.io/ml-dl-notes/19_GenerativeModels/">
+      
+      
+        <link rel="prev" href="../18_CRF/">
+      
+      
+        <link rel="next" href="../20_RBM/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>19 · Generative Models - ML & DL Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#19-generative-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ML &amp; DL Notes" class="md-header__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML & DL Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              19 · Generative Models
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ML &amp; DL Notes" class="md-nav__button md-logo" aria-label="ML & DL Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ML & DL Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/anranandytan/ml-dl-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    anranandytan/ml-dl-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. Foundations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. Foundations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_LearningTheory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Statistical Learning Theory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Regression & Linear Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Regression & Linear Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_BayesianRegression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Bayesian Regression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_LinearMethods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Logistic Regression & SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. Kernel Methods & GPs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. Kernel Methods & GPs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Kernel Methods
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_GaussianProcess/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Gaussian Process
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Tree Methods & Neural Nets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Tree Methods & Neural Nets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_DecisionTrees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Decision Trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Ensembles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Ensembles & Boosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_NeuralNetworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Neural Networks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Probabilistic Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Probabilistic Graphical Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_GraphicalModels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 · Gaussian Graphical Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_EM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 · EM Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_VariationalInference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 · Variational Inference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_MCMC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 · MCMC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Sequential Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Sequential Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_HMM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 · Hidden Markov Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_KalmanFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 · Kalman Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_ParticleFilter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 · Particle Filter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_CRF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 · Conditional Random Field
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Deep Generative Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Deep Generative Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 · Generative Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-taxonomy-of-generative-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Taxonomy of Generative Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Taxonomy of Generative Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-model-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Model Families
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-model-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Model Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-key-dimensions-for-classifying-generative-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Key Dimensions for Classifying Generative Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Key Dimensions for Classifying Generative Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-explicit-vs-implicit-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Explicit vs. Implicit Density
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-directed-vs-undirected-graphical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Directed vs. Undirected Graphical Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-latent-variable-vs-fully-observed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Latent Variable vs. Fully-Observed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-tractable-vs-intractable-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Tractable vs. Intractable Inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-shallow-vs-deep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Shallow vs. Deep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-parametric-vs-non-parametric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Parametric vs. Non-Parametric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-likelihood-based-vs-likelihood-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Likelihood-Based vs. Likelihood-Free
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-stochastic-backpropagation-and-the-reparameterisation-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Stochastic Backpropagation and the Reparameterisation Trick
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Stochastic Backpropagation and the Reparameterisation Trick">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-problem-gradients-through-random-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The Problem: Gradients Through Random Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-reparameterisation-of-a-gaussian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Reparameterisation of a Gaussian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-gradient-via-the-chain-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Gradient via the Chain Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-conditional-reparameterisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Conditional Reparameterisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-generalisation-other-reparametrisable-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Generalisation: Other Reparametrisable Distributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparative-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparative Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20_RBM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 · Restricted Boltzmann Machine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21_VAE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    21 · Variational Autoencoder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22_GAN/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    22 · GAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23_Diffusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    23 · Diffusion Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VIII. Unsupervised & Modern
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VIII. Unsupervised & Modern
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../24_Clustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    24 · Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../25_SpectralClustering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    25 · Spectral Clustering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../26_Transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    26 · Transformers & RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-motivation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Motivation &amp; Intuition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-historical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Historical Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-taxonomy-of-generative-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Taxonomy of Generative Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Taxonomy of Generative Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-model-families" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Model Families
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-model-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Model Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-key-dimensions-for-classifying-generative-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Key Dimensions for Classifying Generative Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Key Dimensions for Classifying Generative Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-explicit-vs-implicit-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Explicit vs. Implicit Density
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-directed-vs-undirected-graphical-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Directed vs. Undirected Graphical Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-latent-variable-vs-fully-observed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Latent Variable vs. Fully-Observed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-tractable-vs-intractable-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Tractable vs. Intractable Inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-shallow-vs-deep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Shallow vs. Deep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-parametric-vs-non-parametric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 Parametric vs. Non-Parametric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-likelihood-based-vs-likelihood-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Likelihood-Based vs. Likelihood-Free
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-stochastic-backpropagation-and-the-reparameterisation-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Stochastic Backpropagation and the Reparameterisation Trick
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Stochastic Backpropagation and the Reparameterisation Trick">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-the-problem-gradients-through-random-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 The Problem: Gradients Through Random Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-reparameterisation-of-a-gaussian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Reparameterisation of a Gaussian
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-gradient-via-the-chain-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Gradient via the Chain Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-conditional-reparameterisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Conditional Reparameterisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-generalisation-other-reparametrisable-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Generalisation: Other Reparametrisable Distributions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-comparative-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Comparative Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="19-generative-models">19 — Generative Models</h1>
+<blockquote>
+<p><strong>Keywords:</strong> generative model, explicit density, implicit density, latent variable, reparameterisation trick, stochastic backpropagation, VAE, GAN, normalising flow, diffusion model</p>
+</blockquote>
+<hr />
+<h2 id="1-motivation-intuition">1. Motivation &amp; Intuition</h2>
+<p>A <strong>generative model</strong> learns the underlying probability distribution <span class="arithmatex">\(p(x)\)</span> of data. Once learned, it can:</p>
+<ul>
+<li><strong>Generate</strong> new, realistic samples <span class="arithmatex">\(x \sim p_\theta(x)\)</span>.</li>
+<li><strong>Evaluate</strong> the likelihood <span class="arithmatex">\(p_\theta(x)\)</span> of a given observation.</li>
+<li><strong>Infer</strong> latent structure — discovering interpretable low-dimensional representations of high-dimensional data.</li>
+<li><strong>Complete</strong> missing data, perform anomaly detection, or enable data augmentation.</li>
+</ul>
+<p>Generative models sit at the heart of modern machine learning: language models (autoregressive), image synthesis (diffusion, GAN), representation learning (VAE), and density estimation (flows) are all instances.</p>
+<p><strong>Generative vs. Discriminative.</strong> A discriminative model learns <span class="arithmatex">\(p(y|x)\)</span> — the label given the input. A generative model learns <span class="arithmatex">\(p(x)\)</span> or <span class="arithmatex">\(p(x, y)\)</span> — the joint data distribution. Generative models are harder to train but more expressive: they can answer any probabilistic query about <span class="arithmatex">\(x\)</span>, not just classification.</p>
+<hr />
+<h2 id="2-historical-context">2. Historical Context</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1950s–80s</td>
+<td>Classical statistical generative models: Gaussian mixtures, HMMs, factor analysis, Kalman filters.</td>
+</tr>
+<tr>
+<td>1986</td>
+<td><strong>Hinton &amp; Sejnowski</strong> introduce the Boltzmann Machine — the first deep (undirected) generative model.</td>
+</tr>
+<tr>
+<td>1995</td>
+<td><strong>Helmholtz Machine</strong> (Dayan et al.) introduces the wake-sleep algorithm; precursor to VAEs.</td>
+</tr>
+<tr>
+<td>2001</td>
+<td><strong>Blei, Ng &amp; Jordan</strong> introduce Latent Dirichlet Allocation (LDA), a mixed-membership model for text.</td>
+</tr>
+<tr>
+<td>2013–14</td>
+<td><strong>VAE</strong> (Kingma &amp; Welling; Rezende, Mohamed &amp; Wierstra): variational inference + reparameterisation trick enable scalable deep generative models.</td>
+</tr>
+<tr>
+<td>2014</td>
+<td><strong>GAN</strong> (Goodfellow et al.): adversarial training as an alternative to likelihood maximisation.</td>
+</tr>
+<tr>
+<td>2015</td>
+<td><strong>Normalising flows</strong> (Rezende &amp; Mohamed; Dinh et al.): exact likelihood with invertible neural networks.</td>
+</tr>
+<tr>
+<td>2016</td>
+<td><strong>PixelCNN / WaveNet</strong> (van den Oord et al.): autoregressive models achieve state-of-the-art image and audio generation.</td>
+</tr>
+<tr>
+<td>2020–22</td>
+<td><strong>Diffusion models</strong> (Ho et al.; Song et al.) surpass GANs on image quality; flow matching (Lipman et al.) offers a cleaner training framework.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-taxonomy-of-generative-models">3. Taxonomy of Generative Models</h2>
+<h3 id="31-model-families">3.1 Model Families</h3>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Representative Models</th>
+<th>Key Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naive Bayes</strong></td>
+<td>Naive Bayes classifier</td>
+<td><span class="arithmatex">\(p(x) = \prod_j p(x_j)\)</span>; feature independence</td>
+</tr>
+<tr>
+<td><strong>Mixture models</strong></td>
+<td>GMM, topic models</td>
+<td>Discrete latent cluster variable <span class="arithmatex">\(z\)</span></td>
+</tr>
+<tr>
+<td><strong>Time-series models</strong></td>
+<td>HMM, Kalman Filter, Particle Filter</td>
+<td>Sequential latent state <span class="arithmatex">\(z_t\)</span></td>
+</tr>
+<tr>
+<td><strong>Non-parametric Bayes</strong></td>
+<td>Gaussian Process, Dirichlet Process</td>
+<td>Infinite-dimensional priors</td>
+</tr>
+<tr>
+<td><strong>Mixed-membership</strong></td>
+<td>LDA, pLSA</td>
+<td>Each observation belongs to multiple latent topics</td>
+</tr>
+<tr>
+<td><strong>Factorial models</strong></td>
+<td>FA, P-PCA, ICA, Sparse Coding</td>
+<td>Continuous latent factor <span class="arithmatex">\(z\)</span>; linear decoder</td>
+</tr>
+<tr>
+<td><strong>Energy-based</strong></td>
+<td>Boltzmann Machine, RBM</td>
+<td><span class="arithmatex">\(p(x) \propto e^{-E(x)}\)</span>; unnormalised density</td>
+</tr>
+<tr>
+<td><strong>VAE</strong></td>
+<td>VAE, <span class="arithmatex">\(\beta\)</span>-VAE, IWAE</td>
+<td>Amortised variational inference; learned encoder/decoder</td>
+</tr>
+<tr>
+<td><strong>GAN</strong></td>
+<td>GAN, DCGAN, StyleGAN, WGAN</td>
+<td>Adversarial game; implicit density</td>
+</tr>
+<tr>
+<td><strong>Autoregressive</strong></td>
+<td>PixelCNN, GPT, WaveNet</td>
+<td><span class="arithmatex">\(p(x) = \prod_t p(x_t \mid x_{&lt;t})\)</span>; exact likelihood</td>
+</tr>
+<tr>
+<td><strong>Flow-based</strong></td>
+<td>RealNVP, Glow, FFJORD</td>
+<td>Invertible map; exact likelihood via change-of-variables</td>
+</tr>
+<tr>
+<td><strong>Diffusion / Score</strong></td>
+<td>DDPM, DDIM, Flow Matching</td>
+<td>Iterative denoising; score matching</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-model-evolution">3.2 Model Evolution</h3>
+<p>Several families are best understood as progressions from simpler classical methods:</p>
+<div class="highlight"><pre><span></span><code>PCA  ──▶  Probabilistic PCA (P-PCA)  ──▶  Factor Analysis (FA)
+                                               ↕
+K-means  ──────────────────────────▶  Gaussian Mixture Model (GMM)
+
+Autoencoder  ──────────────────────▶  Variational Autoencoder (VAE)
+
+LSA  ──▶  pLSA  ──▶  Latent Dirichlet Allocation (LDA)
+</code></pre></div>
+<p>These progressions share a common theme: start with a hard-assignment or deterministic method, then introduce a probabilistic (Bayesian) treatment to gain uncertainty quantification and principled inference.</p>
+<hr />
+<h2 id="4-key-dimensions-for-classifying-generative-models">4. Key Dimensions for Classifying Generative Models</h2>
+<h3 id="41-explicit-vs-implicit-density">4.1 Explicit vs. Implicit Density</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+<th>Advantage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Explicit density</strong></td>
+<td><span class="arithmatex">\(p_\theta(x)\)</span> can be evaluated directly</td>
+<td>VAE (approximate), flows (exact), autoregressive (exact)</td>
+<td>Can compute likelihood; useful for anomaly detection, compression</td>
+</tr>
+<tr>
+<td><strong>Implicit density</strong></td>
+<td><span class="arithmatex">\(p_\theta(x)\)</span> is not directly accessible; only sampling is possible</td>
+<td>GAN</td>
+<td>Greater flexibility; no need to normalise</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-directed-vs-undirected-graphical-model">4.2 Directed vs. Undirected Graphical Model</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Directed (Bayesian network)</strong></td>
+<td><span class="arithmatex">\(p(x) = \prod_i p(x_i \mid \text{parents}(x_i))\)</span>; clear ancestral sampling</td>
+<td>HMM, VAE, diffusion</td>
+</tr>
+<tr>
+<td><strong>Undirected (MRF)</strong></td>
+<td><span class="arithmatex">\(p(x) = \frac{1}{Z}\prod_c \psi_c(x_c)\)</span>; no ordering, partition function <span class="arithmatex">\(Z\)</span> intractable</td>
+<td>RBM, Boltzmann Machine, MRF/CRF</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-latent-variable-vs-fully-observed">4.3 Latent Variable vs. Fully-Observed</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latent variable</strong></td>
+<td>Part of the generative story is unobserved (<span class="arithmatex">\(z\)</span>)</td>
+<td>GMM, HMM, VAE, LDA</td>
+</tr>
+<tr>
+<td><strong>Fully-observed</strong></td>
+<td>All variables in the model are observed</td>
+<td>Autoregressive models, flows</td>
+</tr>
+</tbody>
+</table>
+<p>Latent variable models are more compact and interpretable but require integrating out <span class="arithmatex">\(z\)</span>, which is often intractable.</p>
+<h3 id="44-tractable-vs-intractable-inference">4.4 Tractable vs. Intractable Inference</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tractable</strong></td>
+<td>Posterior <span class="arithmatex">\(p(z\mid x)\)</span> or likelihood <span class="arithmatex">\(p(x)\)</span> has closed form</td>
+<td>Linear-Gaussian models (Kalman filter), P-PCA</td>
+</tr>
+<tr>
+<td><strong>Intractable</strong></td>
+<td>Must approximate via variational inference (ELBO) or MCMC</td>
+<td>Deep VAEs, LDA, Boltzmann machines</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-shallow-vs-deep">4.5 Shallow vs. Deep</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shallow</strong></td>
+<td>Single hidden layer or single stochastic layer</td>
+<td>GMM, RBM, FA</td>
+</tr>
+<tr>
+<td><strong>Deep</strong></td>
+<td>Multiple stochastic layers or deep neural network decoders</td>
+<td>Deep Boltzmann Machine, VAE with deep encoder/decoder</td>
+</tr>
+</tbody>
+</table>
+<h3 id="46-parametric-vs-non-parametric">4.6 Parametric vs. Non-Parametric</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Parametric</strong></td>
+<td>Fixed number of parameters</td>
+<td>GMM (<span class="arithmatex">\(K\)</span> components), neural network</td>
+</tr>
+<tr>
+<td><strong>Non-parametric</strong></td>
+<td>Number of parameters grows with data</td>
+<td>Gaussian Process, Dirichlet Process mixture</td>
+</tr>
+</tbody>
+</table>
+<h3 id="47-likelihood-based-vs-likelihood-free">4.7 Likelihood-Based vs. Likelihood-Free</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Training Signal</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Likelihood-based</strong></td>
+<td>Maximise <span class="arithmatex">\(\log p_\theta(x)\)</span> or ELBO</td>
+<td>VAE, flows, autoregressive, diffusion</td>
+</tr>
+<tr>
+<td><strong>Likelihood-free</strong></td>
+<td>Adversarial signal, score matching, moment matching</td>
+<td>GAN, MMD-based models</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-stochastic-backpropagation-and-the-reparameterisation-trick">5. Stochastic Backpropagation and the Reparameterisation Trick</h2>
+<h3 id="51-the-problem-gradients-through-random-nodes">5.1 The Problem: Gradients Through Random Nodes</h3>
+<p>Suppose we want to minimise a loss <span class="arithmatex">\(J_\theta = \mathbb{E}_{p_\theta}[L(Y)]\)</span> by gradient descent on <span class="arithmatex">\(\theta\)</span>. Naively computing <span class="arithmatex">\(\nabla_\theta \mathbb{E}_{p_\theta}[L(Y)]\)</span> requires differentiating through the sampling operation, which is not directly possible.</p>
+<p>A log-derivative trick exists (REINFORCE) but has high variance. The <strong>reparameterisation trick</strong> gives a lower-variance, computationally efficient alternative when the distribution <span class="arithmatex">\(p_\theta\)</span> is reparametrisable.</p>
+<h3 id="52-reparameterisation-of-a-gaussian">5.2 Reparameterisation of a Gaussian</h3>
+<p>For <span class="arithmatex">\(Y \sim \mathcal{N}(\mu, \sigma^2)\)</span> with parameters <span class="arithmatex">\(\theta = (\mu, \sigma)\)</span>, introduce an auxiliary noise variable:</p>
+<div class="arithmatex">\[Z \sim \mathcal{N}(0, 1), \qquad Y = \mu + \sigma Z\]</div>
+<p>The random variable <span class="arithmatex">\(Y\)</span> is now a <strong>deterministic function</strong> of <span class="arithmatex">\(\theta\)</span> and the noise <span class="arithmatex">\(Z\)</span>:</p>
+<div class="arithmatex">\[Y = f(\mu, \sigma, Z)\]</div>
+<p>Sampling <span class="arithmatex">\(Y \sim p_\theta\)</span> is equivalent to: (1) draw <span class="arithmatex">\(Z\sim\mathcal{N}(0,1)\)</span>; (2) compute <span class="arithmatex">\(Y = \mu + \sigma Z\)</span> deterministically. The randomness is isolated in <span class="arithmatex">\(Z\)</span>, which does <strong>not depend on <span class="arithmatex">\(\theta\)</span></strong>.</p>
+<p>Monte Carlo estimate of <span class="arithmatex">\(\mathbb{E}_{Y}[L(Y)]\)</span> with <span class="arithmatex">\(N\)</span> samples:</p>
+<div class="arithmatex">\[J_\theta(Y) \approx \frac{1}{N}\sum_{i=1}^N L(Y^{(i)}), \qquad Z^{(i)} \sim \mathcal{N}(0,1), \quad Y^{(i)} = \mu + \sigma Z^{(i)}\]</div>
+<h3 id="53-gradient-via-the-chain-rule">5.3 Gradient via the Chain Rule</h3>
+<p>Since <span class="arithmatex">\(Y = f(\mu, \sigma, Z)\)</span> is differentiable in <span class="arithmatex">\((\mu, \sigma)\)</span> with <span class="arithmatex">\(Z\)</span> fixed:</p>
+<div class="arithmatex">\[\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \nabla_\theta Y = \nabla_Y J_\theta \cdot \frac{\partial(\mu + \sigma Z)}{\partial\theta}\]</div>
+<p>Separating the two parameters:</p>
+<div class="arithmatex">\[\frac{\partial Y}{\partial \mu} = 1, \qquad \frac{\partial Y}{\partial \sigma} = Z\]</div>
+<div class="arithmatex">\[\boxed{\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \mu}}_{1} \cdot \nabla_\theta \mu + \nabla_Y J_\theta \cdot \underbrace{\frac{\partial Y}{\partial \sigma}}_{Z} \cdot \nabla_\theta \sigma}\]</div>
+<p>This is a standard backpropagation chain rule — no special treatment of stochastic nodes needed. Modern autodiff frameworks (PyTorch, JAX) implement this automatically.</p>
+<h3 id="54-conditional-reparameterisation">5.4 Conditional Reparameterisation</h3>
+<p>For a conditional distribution <span class="arithmatex">\(p(Y|X) = \mathcal{N}(\mu_\theta(X),\, \sigma_\theta^2(X))\)</span> — where the mean and variance are outputs of a neural network with parameters <span class="arithmatex">\(\theta\)</span> — the reparameterisation is:</p>
+<div class="arithmatex">\[Z \sim \mathcal{N}(0, 1), \qquad Y = \mu_\theta(X) + \sigma_\theta(X)\cdot Z\]</div>
+<p>The gradient w.r.t. <span class="arithmatex">\(\theta\)</span> is:</p>
+<div class="arithmatex">\[\nabla_\theta J_\theta = \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \mu_\theta}\cdot\nabla_\theta \mu_\theta(X) + \nabla_Y J_\theta \cdot \frac{\partial Y}{\partial \sigma_\theta}\cdot\nabla_\theta \sigma_\theta(X)\]</div>
+<p>with <span class="arithmatex">\(\frac{\partial Y}{\partial \mu_\theta} = 1\)</span> and <span class="arithmatex">\(\frac{\partial Y}{\partial \sigma_\theta} = Z\)</span>.</p>
+<p>This is the <strong>core mechanism of the VAE encoder</strong>: <span class="arithmatex">\(\mu_\theta(x)\)</span> and <span class="arithmatex">\(\sigma_\theta(x)\)</span> are the encoder outputs, <span class="arithmatex">\(Z\sim\mathcal{N}(0,I)\)</span> is sampled once per training step, and <span class="arithmatex">\(z = \mu_\theta(x) + \sigma_\theta(x)\odot Z\)</span> is the latent code passed to the decoder. The gradient flows through <span class="arithmatex">\(\mu_\theta\)</span> and <span class="arithmatex">\(\sigma_\theta\)</span> via standard backpropagation.</p>
+<h3 id="55-generalisation-other-reparametrisable-distributions">5.5 Generalisation: Other Reparametrisable Distributions</h3>
+<p>The trick extends to any distribution from which we can draw samples via a deterministic transformation of a fixed base noise:</p>
+<table>
+<thead>
+<tr>
+<th>Distribution</th>
+<th>Reparameterisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathcal{N}(\mu, \Sigma)\)</span></td>
+<td><span class="arithmatex">\(Y = \mu + L Z\)</span>, <span class="arithmatex">\(Z\sim\mathcal{N}(0,I)\)</span>, <span class="arithmatex">\(L = \text{chol}(\Sigma)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\text{Exp}(\lambda)\)</span></td>
+<td><span class="arithmatex">\(Y = -\frac{\log U}{\lambda}\)</span>, <span class="arithmatex">\(U\sim\text{Uniform}(0,1)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\text{Concrete/Gumbel-Softmax}\)</span></td>
+<td>Continuous relaxation of discrete distributions via Gumbel noise</td>
+</tr>
+</tbody>
+</table>
+<p>For distributions that are not reparametrisable (e.g., discrete), alternatives include the REINFORCE estimator or the straight-through estimator.</p>
+<hr />
+<h2 id="6-comparative-overview">6. Comparative Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Density</th>
+<th>Training</th>
+<th>Inference</th>
+<th>Strengths</th>
+<th>Weaknesses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GMM</strong></td>
+<td>Explicit</td>
+<td>EM</td>
+<td>Exact</td>
+<td>Simple, interpretable</td>
+<td>Limited expressiveness</td>
+</tr>
+<tr>
+<td><strong>VAE</strong></td>
+<td>Approximate</td>
+<td>ELBO + reparam.</td>
+<td>Amortised</td>
+<td>Stable training, smooth latent space</td>
+<td>Blurry samples</td>
+</tr>
+<tr>
+<td><strong>GAN</strong></td>
+<td>Implicit</td>
+<td>Adversarial</td>
+<td>None needed</td>
+<td>Sharp samples</td>
+<td>Mode collapse, unstable training</td>
+</tr>
+<tr>
+<td><strong>Flow</strong></td>
+<td>Exact</td>
+<td>MLE</td>
+<td>Exact (invertible)</td>
+<td>Exact likelihood, efficient sampling</td>
+<td>Architecture constrained to be invertible</td>
+</tr>
+<tr>
+<td><strong>Autoregressive</strong></td>
+<td>Exact</td>
+<td>MLE</td>
+<td>Sequential (<span class="arithmatex">\(O(d)\)</span> steps)</td>
+<td>State-of-the-art density estimation</td>
+<td>Slow sampling</td>
+</tr>
+<tr>
+<td><strong>Diffusion</strong></td>
+<td>Approximate</td>
+<td>Score matching / ELBO</td>
+<td>Iterative (<span class="arithmatex">\(T\)</span> steps)</td>
+<td>High-quality samples, stable training</td>
+<td>Slow sampling (mitigated by DDIM/distillation)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-references">7. References</h2>
+<ol>
+<li><strong>Goodfellow, I., Bengio, Y., &amp; Courville, A.</strong> (2016). <em>Deep Learning</em>. MIT Press. Ch. 20 (Deep Generative Models). [Free online: deeplearningbook.org]</li>
+<li><strong>Kingma, D. P. &amp; Welling, M.</strong> (2014). Auto-encoding variational Bayes. <em>ICLR 2014</em>. [VAE and reparameterisation trick.]</li>
+<li><strong>Rezende, D. J., Mohamed, S., &amp; Wierstra, D.</strong> (2014). Stochastic backpropagation and approximate inference in deep generative models. <em>ICML 2014</em>. [Stochastic backpropagation / reparameterisation, introduced independently from Kingma &amp; Welling.]</li>
+<li><strong>Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., &amp; Bengio, Y.</strong> (2014). Generative adversarial nets. <em>NeurIPS 2014</em>.</li>
+<li><strong>Blei, D. M., Ng, A. Y., &amp; Jordan, M. I.</strong> (2003). Latent Dirichlet Allocation. <em>Journal of Machine Learning Research</em>, 3, 993–1022.</li>
+<li><strong>Tipping, M. E. &amp; Bishop, C. M.</strong> (1999). Probabilistic principal component analysis. <em>Journal of the Royal Statistical Society: Series B</em>, 61(3), 611–622. [P-PCA; connects PCA to FA via the EM algorithm.]</li>
+<li><strong>Dinh, L., Sohl-Dickstein, J., &amp; Bengio, S.</strong> (2017). Density estimation using Real-valued Non-Volume Preserving (Real NVP) transformations. <em>ICLR 2017</em>. [Flow-based generative models.]</li>
+<li><strong>van den Oord, A., Kalchbrenner, N., &amp; Kavukcuoglu, K.</strong> (2016). Pixel recurrent neural networks. <em>ICML 2016</em>. [PixelRNN/PixelCNN; autoregressive image generation.]</li>
+<li><strong>Ho, J., Jain, A., &amp; Abbeel, P.</strong> (2020). Denoising diffusion probabilistic models. <em>NeurIPS 2020</em>. [DDPM.]</li>
+<li><strong>Bond-Taylor, S., Leach, A., Long, Y., &amp; Willcocks, C. G.</strong> (2022). Deep generative modelling: A comparative review of VAEs, GANs, normalizing flows, energy-based and autoregressive models. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, 44(11), 7327–7347. [Comprehensive survey covering all major generative model families.]</li>
+<li><strong>Hinton, G. E. &amp; Sejnowski, T. J.</strong> (1986). Learning and relearning in Boltzmann machines. In Rumelhart, D. E. &amp; McClelland, J. L. (eds.), <em>Parallel Distributed Processing</em>, Vol. 1, pp. 282–317. MIT Press.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "navigation.sections", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
