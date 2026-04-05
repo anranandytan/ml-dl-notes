@@ -1,18 +1,14 @@
 /*
- * extra.css — overrides for mkdocs-material to match anranandytan.github.io
+ * extra.css — overrides for mkdocs-material
+ * Matches anranandytan.github.io colour tokens and typography
  *
- * Design tokens lifted directly from style.css:
- *   --ink   #111111   body text
- *   --mid   #555553   secondary text, labels
- *   --light #999997   captions, metadata
- *   --rule  #e4e3e0   dividers
- *   --bg    #ffffff   page background
- *   --bg2   #f8f7f5   subtle surface
- *   --link  #1a4a8a   hyperlinks
- *
- * Typography:
- *   Body      → Georgia, 'Times New Roman', serif
- *   UI / meta → 'Helvetica Neue', Arial, sans-serif
+ * --ink   #111111   body text
+ * --mid   #555553   secondary / labels
+ * --light #999997   captions, metadata
+ * --rule  #e4e3e0   dividers
+ * --bg    #ffffff   page background
+ * --bg2   #f8f7f5   subtle surface
+ * --link  #1a4a8a   hyperlinks
  */
 
 /* ── 1. COLOUR PALETTE ───────────────────────────────────────────────── */
@@ -33,10 +29,10 @@
   --md-default-bg-color--lighter:  #f8f7f5;
   --md-default-bg-color--lightest: #f8f7f5;
 
-  --md-code-bg-color:   #f8f7f5;
-  --md-code-fg-color:   #111111;
-  --md-typeset-color:   #111111;
-  --md-typeset-a-color: #1a4a8a;
+  --md-code-bg-color:  #f8f7f5;
+  --md-code-fg-color:  #111111;
+  --md-typeset-color:  #111111;
+  --md-typeset-a-color:#1a4a8a;
 }
 
 [data-md-color-scheme="slate"] {
@@ -54,24 +50,43 @@
   --md-default-bg-color--lighter:  #1a1a18;
   --md-default-bg-color--lightest: #1a1a18;
 
-  --md-code-bg-color:   #1a1a18;
-  --md-code-fg-color:   #f0efec;
-  --md-typeset-color:   #f0efec;
-  --md-typeset-a-color: #7aabf0;
+  --md-code-bg-color:  #1a1a18;
+  --md-code-fg-color:  #f0efec;
+  --md-typeset-color:  #f0efec;
+  --md-typeset-a-color:#7aabf0;
 }
 
 
-/* ── 2. TYPOGRAPHY ───────────────────────────────────────────────────── */
+/* ── 2. LAYOUT — let Material manage the grid ────────────────────────── */
+/*
+ * Do NOT constrain .md-grid — it contains the nav sidebar + content + toc.
+ * Constraining it to 900px squashes everything into ~440px of usable width.
+ * Instead let Material use its default responsive layout and only add
+ * comfortable padding to the content area.
+ */
 
-/* Body: serif, matching style.css */
+.md-content__inner {
+  padding: 1.5rem 1.5rem 3rem;
+  max-width: 820px;          /* limits prose width without squashing layout */
+}
+
+/* On wide screens give content a bit more breathing room */
+@media screen and (min-width: 76.25em) {
+  .md-content__inner {
+    padding: 2rem 2rem 3rem;
+  }
+}
+
+
+/* ── 3. TYPOGRAPHY ───────────────────────────────────────────────────── */
+
 .md-typeset {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.95rem;
-  line-height: 1.75;
+  font-size:   0.94rem;
+  line-height: 1.8;
   color: var(--md-default-fg-color);
 }
 
-/* Headings: keep serif, not bold */
 .md-typeset h1,
 .md-typeset h2,
 .md-typeset h3,
@@ -82,27 +97,35 @@
   color: var(--md-default-fg-color);
 }
 
-.md-typeset h1 { font-size: 1.6rem;  margin-bottom: 0.25rem; }
-.md-typeset h2 { font-size: 1.15rem; margin-top: 2.2rem; }
-.md-typeset h3 { font-size: 1rem;    margin-top: 1.6rem; }
-
-/* Thin rule under h2 instead of the heavy Material line */
+.md-typeset h1 { font-size: 1.55rem; margin-bottom: 0.3rem; }
 .md-typeset h2 {
+  font-size: 1.12rem;
+  margin-top: 2.4rem;
   border-bottom: 1px solid var(--md-default-fg-color--lightest);
   padding-bottom: 0.3rem;
 }
+.md-typeset h3 { font-size: 1rem;    margin-top: 1.6rem; }
+.md-typeset h4 { font-size: 0.94rem; margin-top: 1.2rem; }
 
-/* Navigation and UI: sans-serif */
+.md-typeset p  { margin-bottom: 1rem; }
+
+.md-typeset a {
+  color: var(--md-typeset-a-color);
+  text-decoration: none;
+}
+.md-typeset a:hover { text-decoration: underline; }
+
+/* Navigation, header, footer: sans-serif */
 .md-nav,
 .md-header,
 .md-tabs,
 .md-footer,
-.md-search,
-.md-typeset .md-button {
+.md-search {
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* ── 3. HEADER ───────────────────────────────────────────────────────── */
+
+/* ── 4. HEADER ───────────────────────────────────────────────────────── */
 
 .md-header {
   background-color: var(--md-default-bg-color);
@@ -110,42 +133,37 @@
   box-shadow: none;
 }
 
-.md-header__title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.95rem;
-  font-weight: normal;
-  color: var(--md-default-fg-color);
-}
-
-/* Remove the coloured top bar that Material adds */
 .md-header[data-md-state="shadow"] {
   box-shadow: none;
   border-bottom: 1px solid var(--md-default-fg-color--lightest);
 }
 
-
-/* ── 4. LEFT NAVIGATION ──────────────────────────────────────────────── */
-
-.md-nav {
-  font-size: 0.78rem;
+.md-header__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.92rem;
+  font-weight: normal;
+  color: var(--md-default-fg-color);
 }
 
-/* Section labels: uppercase small caps, matching .label in style.css */
-.md-nav__title {
+
+/* ── 5. NAVIGATION SIDEBAR ───────────────────────────────────────────── */
+
+.md-nav {
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.76rem;
+}
+
+.md-nav__title {
+  font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--md-default-fg-color--lighter);
-  padding: 0.4rem 0.6rem;
 }
 
 .md-nav__link {
   color: var(--md-default-fg-color--light);
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.78rem;
-  transition: color 0.15s;
+  transition: color 0.12s;
 }
 
 .md-nav__link:hover,
@@ -153,41 +171,14 @@
   color: var(--md-default-fg-color);
 }
 
-.md-nav__link--active {
-  font-weight: 700;
-}
-
-
-/* ── 5. PAGE CONTENT AREA ────────────────────────────────────────────── */
-
-/* Max width: 900px matching style.css --max */
-.md-grid { max-width: 900px; }
-
-/* Content padding */
-.md-content__inner {
-  padding: 2rem 1rem 3rem;
-}
-
-/* Paragraphs */
-.md-typeset p {
-  margin-bottom: 1rem;
-}
-
-/* Links */
-.md-typeset a {
-  color: var(--md-typeset-a-color);
-  text-decoration: none;
-}
-.md-typeset a:hover {
-  text-decoration: underline;
-}
+.md-nav__link--active { font-weight: 700; }
 
 
 /* ── 6. TABLES ───────────────────────────────────────────────────────── */
 
 .md-typeset table:not([class]) {
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.84rem;
+  font-size: 0.83rem;
   border-collapse: collapse;
   width: 100%;
 }
@@ -198,7 +189,7 @@
 }
 
 .md-typeset table:not([class]) th {
-  font-size: 0.68rem;
+  font-size: 0.67rem;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -213,56 +204,55 @@
   color: var(--md-default-fg-color--light);
 }
 
-.md-typeset table:not([class]) tr:last-child td {
-  border-bottom: none;
-}
+.md-typeset table:not([class]) tr:last-child td { border-bottom: none; }
 
-/* Remove the alternating row colours Material adds */
-.md-typeset table:not([class]) tr:nth-child(even) td {
-  background: transparent;
-}
+/* Remove alternating row shading */
+.md-typeset table:not([class]) tr:nth-child(even) td { background: transparent; }
 
 
 /* ── 7. CODE BLOCKS ──────────────────────────────────────────────────── */
 
 .md-typeset code {
-  font-size: 0.84em;
+  font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+  font-size: 0.83em;
   background: var(--md-code-bg-color);
   border-radius: 0;
   padding: 0.1em 0.35em;
   color: var(--md-code-fg-color);
-  font-family: 'SF Mono', 'Fira Mono', 'Consolas', monospace;
 }
 
 .md-typeset pre {
   border-radius: 0;
   border-left: 2px solid var(--md-default-fg-color--lightest);
-  padding: 1rem 1.2rem;
   background: var(--md-code-bg-color);
 }
 
 .md-typeset pre code {
   background: transparent;
   padding: 0;
+  font-size: 0.85em;
 }
 
 
 /* ── 8. MATH ─────────────────────────────────────────────────────────── */
 
-/* Give display math a little breathing room */
+/* Horizontal scroll for wide equations on mobile */
 .md-typeset .arithmatex {
   overflow-x: auto;
-  margin: 1.2rem 0;
+  margin: 1rem 0;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* MathJax rendered output */
 mjx-container[display="true"] {
-  margin: 1.2rem auto;
   overflow-x: auto;
+  margin: 1rem auto;
 }
 
+/* Slightly reduce MathJax font size to help equations fit */
+mjx-container { font-size: 0.97em; }
 
-/* ── 9. BLOCKQUOTES (keyword / hint blocks) ──────────────────────────── */
+
+/* ── 9. BLOCKQUOTES ──────────────────────────────────────────────────── */
 
 .md-typeset blockquote {
   border-left: 2px solid var(--md-default-fg-color--lightest);
@@ -278,40 +268,25 @@ mjx-container[display="true"] {
 .md-footer {
   background: var(--md-default-bg-color);
   border-top: 1px solid var(--md-default-fg-color--lightest);
-  color: var(--md-default-fg-color--lighter);
   font-size: 0.73rem;
 }
 
-.md-footer-meta {
-  background: transparent;
-}
-
-.md-footer__link {
-  color: var(--md-default-fg-color--light);
-}
+.md-footer-meta { background: transparent; }
+.md-footer__link { color: var(--md-default-fg-color--light); }
 
 
-/* ── 11. SEARCH ──────────────────────────────────────────────────────── */
-
-.md-search__input {
-  border-radius: 0;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.85rem;
-}
-
-
-/* ── 12. BACK-TO-TOP BUTTON ──────────────────────────────────────────── */
+/* ── 11. BACK-TO-TOP ─────────────────────────────────────────────────── */
 
 .md-top {
   background: var(--md-default-bg-color);
   border: 1.5px solid var(--md-default-fg-color);
   color: var(--md-default-fg-color);
   border-radius: 0;
+  box-shadow: none;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  box-shadow: none;
 }
 
 .md-top:hover {
@@ -320,21 +295,10 @@ mjx-container[display="true"] {
 }
 
 
-/* ── 13. REMOVE MATERIAL FLOURISHES ──────────────────────────────────── */
+/* ── 12. STRIP MATERIAL DECORATION ──────────────────────────────────── */
 
-/* No rounded corners anywhere */
-.md-button,
-.md-tag,
-[class*="md-"] {
-  border-radius: 0 !important;
-}
+/* No rounded corners */
+.md-button, .md-tag { border-radius: 0 !important; }
 
-/* Suppress the animated underline on nav items */
-.md-tabs__link::after {
-  display: none;
-}
-
-/* Remove the primary-colour header bar at very top */
-.md-header::before {
-  display: none;
-}
+/* No animated tab underline */
+.md-tabs__link::after { display: none; }
