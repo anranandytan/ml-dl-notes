@@ -77,7 +77,7 @@ So $\Phi(x) := k(x,\cdot)\in H_k$ and $k(x,z)=\langle\Phi(x),\Phi(z)\rangle_{H_k
 
 Define the feature map $\Phi(x) = k(\cdot,x)$. The RKHS is:
 
-$$H_k = \left\{ f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i) : \alpha_i\in\mathbb{R},\ m<\infty\right\}$$
+$$H_k = \left\lbrace f(\cdot) = \sum_{i=1}^m\alpha_ik(\cdot,x_i) : \alpha_i\in\mathbb{R},\ m<\infty\right\rbrace$$
 
 (with completion for infinite sums). The inner product for $f=\sum_i\alpha_ik(\cdot,x_i)$ and $g=\sum_j\beta_jk(\cdot,x_j')$:
 

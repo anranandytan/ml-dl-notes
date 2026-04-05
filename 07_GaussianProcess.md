@@ -134,7 +134,7 @@ The $\sigma^2 I$ term adds noise variance to the diagonal of the kernel matrix.
 
 For test inputs $X^{\ast}=(x_1^{\ast},\ldots,x_M^{\ast})^\top$, the **joint prior** over $(Y, f(X^{\ast}))$ is Gaussian. By the GP prior:
 
-$$\begin{pmatrix}Y \\ f(X^{\ast})\end{pmatrix} \sim \mathcal{N}\!\left(\mathbf{0}, 
+$$\begin{pmatrix}Y \\ f(X^{\ast})\end{pmatrix} \sim \mathcal{N}\left(\mathbf{0}, 
 \begin{pmatrix}
 K(X,X)+\sigma^2 I & K(X,X^{\ast}) \\
 K(X^{\ast},X)        & K(X^{\ast},X^{\ast})
@@ -149,8 +149,11 @@ where:
 
 We use the standard formula for conditioning a joint Gaussian. If
 
-$$\begin{pmatrix}a\\b\end{pmatrix}\sim\mathcal{N}\!\left(
-\begin{pmatrix}\mu_a\\\mu_b\end{pmatrix}, 
+$$\begin{pmatrix}
+a \\
+b
+\end{pmatrix}\sim\mathcal{N}\left(
+\begin{pmatrix}\mu_a \\ \mu_b\end{pmatrix}, 
 \begin{pmatrix}
 \Sigma_{aa} & \Sigma_{ab}\\
 \Sigma_{ba} & \Sigma_{bb}

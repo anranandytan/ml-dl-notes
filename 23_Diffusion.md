@@ -56,38 +56,38 @@ $$p(x) = \frac{1}{(2\pi)^{d/2}\det(\Sigma)^{1/2}} \exp\left(-\frac{1}{2}(x-\mu)^
 4. Paths $t \mapsto B_t$ are almost surely continuous.
 
 **Consequence.** If $x_0 \sim p_0$ and $dx_t = dB_t$ (pure noise injection), then:
-$$x_t - x_0 \sim \mathcal{N}(0,\, tI), \qquad x_t \sim p_t = p_0 * \mathcal{N}(0,\, tI)$$
+$$x_t - x_0 \sim \mathcal{N}(0,  tI), \qquad x_t \sim p_t = p_0 * \mathcal{N}(0,  tI)$$
 At large $t$, $p_t$ approaches a Gaussian regardless of $p_0$.
 
 ### 3.3 Ordinary Differential Equations and the Chain Rule
 
-For the ODE $dx_t = v_t(x_t)\,dt$ and a smooth function $F : \mathbb{R}^d \to \mathbb{R}$, the standard chain rule gives:
+For the ODE $dx_t = v_t(x_t) dt$ and a smooth function $F : \mathbb{R}^d \to \mathbb{R}$, the standard chain rule gives:
 
-$$\frac{d}{dt}F(x_t) = \langle \nabla F(x_t),\, v_t(x_t) \rangle$$
+$$\frac{d}{dt}F(x_t) = \langle \nabla F(x_t),  v_t(x_t) \rangle$$
 
 To derive this from first principles using Euler discretisation: $x_{t+\delta} \approx x_t + \delta v(x_t)$, so:
-$$F(x_{t+\delta}) \approx F(x_t) + \langle \nabla F(x_t), \delta v(x_t)\rangle + \frac{\delta^2}{2} v(x_t)^\top \nabla^2 F(x_t)\, v(x_t) + O(\delta^3)$$
+$$F(x_{t+\delta}) \approx F(x_t) + \langle \nabla F(x_t), \delta v(x_t)\rangle + \frac{\delta^2}{2} v(x_t)^\top \nabla^2 F(x_t)  v(x_t) + O(\delta^3)$$
 
 Dividing by $\delta$ and letting $\delta \to 0$, the $O(\delta)$ term dominates and:
 $$\frac{d}{dt}F(x_t) = \langle \nabla F(x_t), v(x_t)\rangle$$
 
-**Example.** If $v(x_t) = -\nabla F(x_t)$ (gradient flow), then $\frac{d}{dt}F(x_t) = -\|\nabla F(x_t)\|^2 \leq 0$: the function decreases along trajectories, so this ODE finds a minimum of $F$.
+**Example.** If $v(x_t) = -\nabla F(x_t)$ (gradient flow), then $\frac{d}{dt}F(x_t) = -\lVert \nabla F(x_t)\rVert^2 \leq 0$: the function decreases along trajectories, so this ODE finds a minimum of $F$.
 
 ### 3.4 Stochastic Differential Equations and Itô's Lemma
 
-When $dx_t = dB_t$ (pure Brownian motion), the standard chain rule breaks down because Brownian increments are of order $\sqrt{\delta}$, not $\delta$. Let $\xi := \frac{B_{t+\delta}-B_t}{\sqrt{\delta}} \sim \mathcal{N}(0, I)$, so $x_{t+\delta} \approx x_t + \sqrt{\delta}\,\xi$.
+When $dx_t = dB_t$ (pure Brownian motion), the standard chain rule breaks down because Brownian increments are of order $\sqrt{\delta}$, not $\delta$. Let $\xi := \frac{B_{t+\delta}-B_t}{\sqrt{\delta}} \sim \mathcal{N}(0, I)$, so $x_{t+\delta} \approx x_t + \sqrt{\delta} \xi$.
 
 Taylor-expanding $F$ around $x_t$:
-$$F(x_{t+\delta}) \approx F(x_t) + \langle \nabla F(x_t),\, \sqrt{\delta}\,\xi \rangle + \frac{1}{2}(\sqrt{\delta}\,\xi)^\top \nabla^2 F(x_t)(\sqrt{\delta}\,\xi) + O(\delta^{3/2})$$
+$$F(x_{t+\delta}) \approx F(x_t) + \langle \nabla F(x_t),  \sqrt{\delta} \xi \rangle + \frac{1}{2}(\sqrt{\delta} \xi)^\top \nabla^2 F(x_t)(\sqrt{\delta} \xi) + O(\delta^{3/2})$$
 
 Taking expectations (using $\mathbb{E}[\xi] = 0$ and $\mathbb{E}[\xi\xi^\top] = I$):
 
 $$\frac{d}{dt}\mathbb{E}[F(x_t)] = \lim_{\delta \to 0}\frac{\mathbb{E}[F(x_{t+\delta})]-\mathbb{E}[F(x_t)]}{\delta}$$
 
-The first-order term vanishes: $\mathbb{E}[\langle \nabla F(x_t), \sqrt{\delta}\,\xi\rangle] = \sqrt{\delta}\langle \nabla F(x_t), \mathbb{E}[\xi]\rangle = 0$.
+The first-order term vanishes: $\mathbb{E}[\langle \nabla F(x_t), \sqrt{\delta} \xi\rangle] = \sqrt{\delta}\langle \nabla F(x_t), \mathbb{E}[\xi]\rangle = 0$.
 
 The second-order term survives:
-$$\frac{1}{2\delta}\mathbb{E}\left[\delta\,\xi^\top \nabla^2 F(x_t)\,\xi\right] = \frac{1}{2}\mathbb{E}\left[\text{tr}(\nabla^2 F(x_t)\,\mathbb{E}[\xi\xi^\top])\right] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 F(x_t))]$$
+$$\frac{1}{2\delta}\mathbb{E}\left[\delta \xi^\top \nabla^2 F(x_t) \xi\right] = \frac{1}{2}\mathbb{E}\left[\text{tr}(\nabla^2 F(x_t) \mathbb{E}[\xi\xi^\top])\right] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 F(x_t))]$$
 
 Therefore, **Itô's lemma** for $dx_t = dB_t$:
 
@@ -95,11 +95,11 @@ $$\boxed{\frac{d}{dt}\mathbb{E}[F(x_t)] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla
 
 The extra $\frac{1}{2}\text{tr}(\nabla^2 F)$ term compared to the ODE case is the **Itô correction** — a direct consequence of Brownian motion having quadratic variation $\langle B, B\rangle_t = t$.
 
-**Example.** For $F(x) = \|x\|^2$: $\nabla^2 F = 2I$, so $\text{tr}(\nabla^2 F) = 2d$. With $dx_t = dB_t$:
-$$\frac{d}{dt}\mathbb{E}[\|x_t\|^2] = \frac{1}{2}\mathbb{E}[2d] = d$$
-Integrating: $\mathbb{E}[\|x_T\|^2] = \mathbb{E}[\|x_0\|^2] + dT$. This is consistent with $x_T = x_0 + B_T$ and $\mathbb{E}[\|B_T\|^2] = dT$. ✓
+**Example.** For $F(x) = \lVert x\rVert^2$: $\nabla^2 F = 2I$, so $\text{tr}(\nabla^2 F) = 2d$. With $dx_t = dB_t$:
+$$\frac{d}{dt}\mathbb{E}[\lVert x_t\rVert^2] = \frac{1}{2}\mathbb{E}[2d] = d$$
+Integrating: $\mathbb{E}[\lVert x_T\rVert^2] = \mathbb{E}[\lVert x_0\rVert^2] + dT$. This is consistent with $x_T = x_0 + B_T$ and $\mathbb{E}[\lVert B_T\rVert^2] = dT$.
 
-**General SDE.** For $dx_t = v_t(x_t)\,dt + g(t)\,dB_t$ (drift $v_t$ plus diffusion $g(t)$):
+**General SDE.** For $dx_t = v_t(x_t) dt + g(t) dB_t$ (drift $v_t$ plus diffusion $g(t)$):
 
 $$\boxed{\frac{d}{dt}\mathbb{E}[F(x_t)] = \mathbb{E}[\langle \nabla F(x_t), v_t(x_t)\rangle] + \frac{g(t)^2}{2}\mathbb{E}[\text{tr}(\nabla^2 F(x_t))]}$$
 
@@ -111,31 +111,31 @@ Two fundamental SDE types for diffusion models:
 
 **Variance-Exploding (VE) SDE:** $dx_t = dB_t$
 
-$$\frac{d}{dt}\mathbb{E}[\|x_t\|^2] = d \quad \Rightarrow \quad \mathbb{E}[\|x_t\|^2] = \mathbb{E}[\|x_0\|^2] + dt \to \infty$$
+$$\frac{d}{dt}\mathbb{E}[\lVert x_t\rVert^2] = d \quad \Rightarrow \quad \mathbb{E}[\lVert x_t\rVert^2] = \mathbb{E}[\lVert x_0\rVert^2] + dt \to \infty$$
 
 The variance grows without bound. Simple but the scale of $x_t$ drifts far from data.
 
-**Variance-Preserving (VP) SDE:** $d\bar{x}_t = -\frac{1}{2}\bar{x}_t\,dt + dB_t$
+**Variance-Preserving (VP) SDE:** $d\bar{x}_t = -\frac{1}{2}\bar{x}_t dt + dB_t$
 
-Using Itô's lemma with $F(x) = \|x\|^2$, $\nabla F = 2x$, $\nabla^2 F = 2I$:
+Using Itô's lemma with $F(x) = \lVert x\rVert^2$, $\nabla F = 2x$, $\nabla^2 F = 2I$:
 
-$$\frac{d}{dt}\mathbb{E}[\|\bar{x}_t\|^2] = \mathbb{E}\left[\left\langle 2\bar{x}_t, -\tfrac{1}{2}\bar{x}_t\right\rangle\right] + \frac{1}{2}\mathbb{E}[2d] = -\mathbb{E}[\|\bar{x}_t\|^2] + d$$
+$$\frac{d}{dt}\mathbb{E}[\lVert \bar{x}_t\rVert^2] = \mathbb{E}\left[\left\langle 2\bar{x}_t, -\tfrac{1}{2}\bar{x}_t\right\rangle\right] + \frac{1}{2}\mathbb{E}[2d] = -\mathbb{E}[\lVert \bar{x}_t\rVert^2] + d$$
 
-This ODE (in $m(t) = \mathbb{E}[\|\bar{x}_t\|^2]$) has solution:
+This ODE (in $m(t) = \mathbb{E}[\lVert \bar{x}_t\rVert^2]$) has solution:
 $$m(t) = e^{-t}(m(0) - d) + d$$
 
 As $t \to \infty$, $m(t) \to d$, meaning the variance stabilises — hence "variance-preserving" in steady state. Crucially, for well-initialised data the variance stays approximately constant throughout the process.
 
 The explicit solution of the VP SDE is:
-$$\bar{x}_t = e^{-t/2}x_0 + \int_0^t e^{-(t-s)/2}\,dB_s$$
+$$\bar{x}_t = e^{-t/2}x_0 + \int_0^t e^{-(t-s)/2} dB_s$$
 
-The stochastic integral $\int_0^t e^{-(t-s)/2}\,dB_s$ is Gaussian with variance $\int_0^t e^{-(t-s)}\,ds = 1 - e^{-t}$. So:
+The stochastic integral $\int_0^t e^{-(t-s)/2} dB_s$ is Gaussian with variance $\int_0^t e^{-(t-s)} ds = 1 - e^{-t}$. So:
 
-$$\bar{x}_t = e^{-t/2}x_0 + \sqrt{1-e^{-t}}\,\epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
+$$\bar{x}_t = e^{-t/2}x_0 + \sqrt{1-e^{-t}} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
 
 This is a weighted mixture of the clean data and noise, with the data term decaying exponentially. In the DDPM literature, defining $\alpha_t = \frac{1}{1+\sigma_t^2}$ (where $\sigma_t = \sqrt{\frac{1-\alpha_t}{\alpha_t}}$), this is written as:
 
-$$\bar{x}_t = \sqrt{\alpha_t}\,x_0 + \sqrt{1-\alpha_t}\,\epsilon$$
+$$\bar{x}_t = \sqrt{\alpha_t} x_0 + \sqrt{1-\alpha_t} \epsilon$$
 
 ---
 
@@ -145,36 +145,36 @@ The **Fokker-Planck equation** describes how the probability density $p_t(x)$ of
 
 ### 4.1 Integration by Parts (Key Tool)
 
-For smooth functions $f : \mathbb{R}^d \to \mathbb{R}$ and $g : \mathbb{R}^d \to \mathbb{R}^d$ decaying sufficiently fast at infinity, the Gauss divergence theorem gives $\int_{\mathbb{R}^d} \text{div}(fg)\,dx = 0$. Expanding the product rule:
+For smooth functions $f : \mathbb{R}^d \to \mathbb{R}$ and $g : \mathbb{R}^d \to \mathbb{R}^d$ decaying sufficiently fast at infinity, the Gauss divergence theorem gives $\int_{\mathbb{R}^d} \text{div}(fg) dx = 0$. Expanding the product rule:
 
-$$\text{div}(f(x)g(x)) = \langle \nabla f(x), g(x)\rangle + f(x)\,\text{div}(g(x))$$
+$$\text{div}(f(x)g(x)) = \langle \nabla f(x), g(x)\rangle + f(x) \text{div}(g(x))$$
 
-Integrating and using $\int \text{div}(fg)\,dx = 0$:
+Integrating and using $\int \text{div}(fg) dx = 0$:
 
-$$\boxed{\int_{\mathbb{R}^d} f(x)\,\text{div}(g(x))\,dx = -\int_{\mathbb{R}^d} \langle \nabla f(x), g(x)\rangle\,dx}$$
+$$\boxed{\int_{\mathbb{R}^d} f(x) \text{div}(g(x)) dx = -\int_{\mathbb{R}^d} \langle \nabla f(x), g(x)\rangle dx}$$
 
 This is the **integration by parts formula** (Green's identity in $\mathbb{R}^d$) and is used repeatedly below.
 
 ### 4.2 Derivation of Fokker-Planck
 
-Consider $dx_t = v_t(x_t)\,dt$. For any smooth test function $f$:
+Consider $dx_t = v_t(x_t) dt$. For any smooth test function $f$:
 
 **Side A** — differentiate the integral:
-$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \frac{d}{dt}\int f(x)\,p_t(x)\,dx = \int f(x)\,\frac{\partial}{\partial t}p_t(x)\,dx$$
+$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \frac{d}{dt}\int f(x) p_t(x) dx = \int f(x) \frac{\partial}{\partial t}p_t(x) dx$$
 
 **Side B** — apply the ODE chain rule and use integration by parts:
-$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \mathbb{E}[\langle \nabla f(x_t), v_t(x_t)\rangle] = \int \langle \nabla f(x), v_t(x)\rangle p_t(x)\,dx = -\int f(x)\,\text{div}(p_t(x)v_t(x))\,dx$$
+$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \mathbb{E}[\langle \nabla f(x_t), v_t(x_t)\rangle] = \int \langle \nabla f(x), v_t(x)\rangle p_t(x) dx = -\int f(x) \text{div}(p_t(x)v_t(x)) dx$$
 
 Since $f$ is arbitrary, equating the integrands:
 $$\frac{\partial}{\partial t}p_t(x) = -\text{div}(p_t(x)v_t(x)) \qquad \textbf{(Continuity equation)}$$
 
 For $dx_t = dB_t$, Side B uses Itô's lemma instead:
-$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 f)] = \frac{1}{2}\int \text{div}(\nabla f(x))\,p_t(x)\,dx = \frac{1}{2}\int f(x)\,\text{div}(\nabla p_t(x))\,dx$$
+$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \frac{1}{2}\mathbb{E}[\text{tr}(\nabla^2 f)] = \frac{1}{2}\int \text{div}(\nabla f(x)) p_t(x) dx = \frac{1}{2}\int f(x) \text{div}(\nabla p_t(x)) dx$$
 
 where the last step applies integration by parts twice. So for $dx_t = dB_t$:
 $$\frac{\partial}{\partial t}p_t(x) = \frac{1}{2}\text{div}(\nabla p_t(x)) = \frac{1}{2}\Delta p_t(x) \qquad \textbf{(Heat equation)}$$
 
-Combining both cases for the general SDE $dx_t = v_t(x_t)\,dt + g(t)\,dB_t$:
+Combining both cases for the general SDE $dx_t = v_t(x_t) dt + g(t) dB_t$:
 
 $$\boxed{\frac{\partial}{\partial t}p_t(x) = -\text{div}(p_t(x)v_t(x)) + \frac{g(t)^2}{2}\text{div}(\nabla p_t(x))}$$
 
@@ -194,13 +194,13 @@ This is a vector field pointing in the direction of increasing log-density — i
 ### 5.2 Score for the VE SDE
 
 Under $dx_t = dB_t$, the marginal density at time $t$ is:
-$$p_t(x) = \int p_0(x_0)\,q_t(x \mid x_0)\,dx_0, \qquad q_t(x \mid x_0) = \mathcal{N}(x \mid x_0,\, tI) = \frac{1}{(2\pi t)^{d/2}} e^{-\frac{\|x-x_0\|^2}{2t}}$$
+$$p_t(x) = \int p_0(x_0) q_t(x \mid x_0) dx_0, \qquad q_t(x \mid x_0) = \mathcal{N}(x \mid x_0,  tI) = \frac{1}{(2\pi t)^{d/2}} e^{-\frac{\lVert x-x_0\rVert^2}{2t}}$$
 
 Differentiating $\log p_t(x)$ with respect to $x$:
-$$\nabla \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)} = \frac{\int p_0(x_0)\,\nabla_x q_t(x \mid x_0)\,dx_0}{p_t(x)}$$
+$$\nabla \log p_t(x) = \frac{\nabla_x p_t(x)}{p_t(x)} = \frac{\int p_0(x_0) \nabla_x q_t(x \mid x_0) dx_0}{p_t(x)}$$
 
 Computing $\nabla_x q_t(x \mid x_0) = q_t(x \mid x_0) \cdot \frac{x_0 - x}{t}$, so:
-$$\nabla \log p_t(x) = \frac{\int p_0(x_0)\,q_t(x \mid x_0)\,\frac{x_0-x}{t}\,dx_0}{p_t(x)} = \mathbb{E}\left[\frac{x_0 - x_t}{t}\,\bigg|\,x_t = x\right]$$
+$$\nabla \log p_t(x) = \frac{\int p_0(x_0) q_t(x \mid x_0) \frac{x_0-x}{t} dx_0}{p_t(x)} = \mathbb{E}\left[\frac{x_0 - x_t}{t} \bigg| x_t = x\right]$$
 
 $$\boxed{\nabla \log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{t}}$$
 
@@ -210,38 +210,38 @@ $$\boxed{\nabla \log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{t}}$$
 
 2. The $\frac{1}{t}$ factor scales the magnitude: at small $t$ (little noise), the score has large magnitude; at large $t$ (high noise), the score is small. This scale variation complicates training.
 
-3. Writing the noise explicitly: $x_t = x_0 + \sqrt{t}\,\varepsilon$ with $\varepsilon \sim \mathcal{N}(0, I)$, so $x_0 - x_t = -\sqrt{t}\,\varepsilon$:
-$$\nabla \log p_t(x) = \frac{\mathbb{E}[-\sqrt{t}\,\varepsilon \mid x_t = x]}{t} = -\frac{\mathbb{E}[\varepsilon \mid x_t = x]}{\sqrt{t}}$$
+3. Writing the noise explicitly: $x_t = x_0 + \sqrt{t} \varepsilon$ with $\varepsilon \sim \mathcal{N}(0, I)$, so $x_0 - x_t = -\sqrt{t} \varepsilon$:
+$$\nabla \log p_t(x) = \frac{\mathbb{E}[-\sqrt{t} \varepsilon \mid x_t = x]}{t} = -\frac{\mathbb{E}[\varepsilon \mid x_t = x]}{\sqrt{t}}$$
 
 ### 5.3 Denoising Score Matching Loss
 
 We want to train a network $s_\theta(x_t, t)$ to approximate $\nabla\log p_t(x_t)$. The naive objective:
-$$\min_\theta \mathbb{E}\left[\|s_\theta(x_t, t) - \nabla\log p_t(x_t)\|^2\right]$$
+$$\min_\theta \mathbb{E}\left[\lVert s_\theta(x_t, t) - \nabla\log p_t(x_t)\rVert^2\right]$$
 is intractable because $\nabla\log p_t(x_t)$ requires integrating over all $x_0$.
 
-**Denoising score matching** (Vincent, 2011) replaces this with a tractable surrogate. Define $h_{x_0}(v) = \|v - \frac{x_0-x_t}{t}\|^2$. Then:
-$$L(v) = \mathbb{E}_{x_0 \mid x_t}\left[\left\|v - \nabla\log p_t(x_t)\right\|^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
+**Denoising score matching** (Vincent, 2011) replaces this with a tractable surrogate. Define $h_{x_0}(v) = \lVert v - \frac{x_0-x_t}{t}\rVert^2$. Then:
+$$L(v) = \mathbb{E}_{x_0 \mid x_t}\left[\left\lVert v - \nabla\log p_t(x_t)\right\rVert^2\right] = \mathbb{E}_{x_0 \mid x_t}[h_{x_0}(v)] + \text{const}$$
 
 Since each $h_{x_0}(v)$ is convex in $v$ and the expectation of a convex function is convex, $L(v)$ is convex. Setting $\nabla_v L(v^{\ast}) = 0$:
 $$\mathbb{E}_{x_0 \mid x_t}\left[2(v^{\ast} - \tfrac{x_0-x_t}{t})\right] = 0  \Rightarrow  v^{\ast} = \frac{\mathbb{E}[x_0 \mid x_t] - x_t}{t} = \nabla\log p_t(x_t)$$
 
 Therefore, minimising over $(x_0, x_t)$ jointly:
 
-$$\boxed{\min_\theta \mathbb{E}_{x_0,\, \varepsilon \sim \mathcal{N}(0, tI),\, x_t = x_0+\varepsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\|^2\right]}$$
+$$\boxed{\min_\theta \mathbb{E}_{x_0,\varepsilon \sim \mathcal{N}(0,tI), x_t = x_0+\varepsilon}\left[\left\lVert s_\theta(x_t, t) - \frac{x_0 - x_t}{t}\right\rVert^2\right]}$$
 
 Under infinite capacity, the minimiser equals $\nabla\log p_t(x_t)$. This expectation is tractable: sample $x_0$ from data, sample $\varepsilon$, form $x_t = x_0 + \varepsilon$, then evaluate the squared error.
 
 ### 5.4 Reparameterised Training Objectives
 
-Training $s_\theta$ to match $\nabla\log p_t$ directly is unstable because $\|\nabla\log p_t\|$ grows as $t\to 0$. Three equivalent parameterisations, each numerically better in different regimes:
+Training $s_\theta$ to match $\nabla\log p_t$ directly is unstable because $\lVert\nabla\log p_t\rVert$ grows as $t\to 0$. Three equivalent parameterisations, each numerically better in different regimes:
 
 | Target | Network | Loss | Relationship |
 |--------|---------|------|-------------|
-| Score prediction | $s_\theta(x_t, t) \approx \nabla\log p_t$ | $\mathbb{E}[\|s_\theta - \frac{x_0-x_t}{t}\|^2]$ | Direct |
-| Noise prediction | $\varepsilon_\theta(x_t, t) \approx \varepsilon$ | $\mathbb{E}[\|\varepsilon_\theta + \varepsilon\|^2]$ | $\varepsilon_\theta = -\sqrt{t}\,s_\theta$ |
-| $x_0$ prediction | $D_\theta(x_t, t) \approx x_0$ | $\mathbb{E}[\|D_\theta - x_0\|^2]$ | $D_\theta = x_t + t\,s_\theta$ |
+| Score prediction | $s_\theta(x_t, t) \approx \nabla\log p_t$ | $\mathbb{E}[\lVert s_\theta - \frac{x_0-x_t}{t}\rVert^2]$ | Direct |
+| Noise prediction | $\varepsilon_\theta(x_t, t) \approx \varepsilon$ | $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$ | $\varepsilon_\theta = -\sqrt{t} s_\theta$ |
+| $x_0$ prediction | $D_\theta(x_t, t) \approx x_0$ | $\mathbb{E}[\lVert D_\theta - x_0\rVert^2]$ | $D_\theta = x_t + t s_\theta$ |
 
-To see the noise-prediction form: write $x_t = x_0 + \sqrt{t}\,\varepsilon$ (with $\varepsilon \sim \mathcal{N}(0,I)$). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t}\,\varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t}\,s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\|\varepsilon_\theta + \varepsilon\|^2]$. This is the **DDPM** loss.
+To see the noise-prediction form: write $x_t = x_0 + \sqrt{t} \varepsilon$ (with $\varepsilon \sim \mathcal{N}(0,I)$). Then $\frac{x_0-x_t}{t} = \frac{-\sqrt{t} \varepsilon}{t} = -\frac{\varepsilon}{\sqrt{t}}$. Define $\varepsilon_\theta$ so that $\varepsilon_\theta(x_t,t) = -\sqrt{t} s_\theta(x_t,t)$, i.e. $s_\theta \approx \sqrt{t}\nabla\log p_t$; then the loss becomes $\mathbb{E}[\lVert \varepsilon_\theta + \varepsilon\rVert^2]$. This is the **DDPM** loss.
 
 ---
 
@@ -250,26 +250,26 @@ To see the noise-prediction form: write $x_t = x_0 + \sqrt{t}\,\varepsilon$ (wit
 ### 6.1 General Forward SDE
 
 Consider the general SDE with noise schedule $g(t)$:
-$$dx_t = g(t)\,dB_t$$
+$$dx_t = g(t) dB_t$$
 
-The induced marginal density satisfies $p_t = p_0 * \mathcal{N}(0, \sigma_t^2 I)$ where $\sigma_t^2 = \int_0^t g(s)^2\,ds$.
+The induced marginal density satisfies $p_t = p_0 * \mathcal{N}(0, \sigma_t^2 I)$ where $\sigma_t^2 = \int_0^t g(s)^2 ds$.
 
 The score generalises to:
 $$\nabla\log p_t(x) = \frac{\mathbb{E}[x_0 \mid x_t = x] - x}{\sigma_t^2}$$
 
 and the score matching loss is:
-$$\min_\theta \mathbb{E}_{x_0,\,\epsilon\sim\mathcal{N}(0,I),\,x_t = x_0+\sigma_t\epsilon}\left[\left\|s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\|^2\right]$$
+$$\min_\theta \mathbb{E}_{x_0, \epsilon\sim\mathcal{N}(0,I), x_t = x_0+\sigma_t\epsilon}\left[\left\lVert s_\theta(x_t, t) - \frac{x_0-x_t}{\sigma_t^2}\right\rVert^2\right]$$
 
 ### 6.2 Probability Flow ODE
 
-For the SDE $dx_t = g(t)\,dB_t$, the **probability flow ODE** (Song et al., 2020) has the same marginal distributions $p_t$ as the SDE but is deterministic:
+For the SDE $dx_t = g(t) dB_t$, the **probability flow ODE** (Song et al., 2020) has the same marginal distributions $p_t$ as the SDE but is deterministic:
 
-$$dx_t = -\frac{g(t)^2}{2}\nabla\log p_t(x_t)\,dt$$
+$$dx_t = -\frac{g(t)^2}{2}\nabla\log p_t(x_t) dt$$
 
-To verify: the Fokker-Planck equation for this ODE is $\partial_t p_t = \frac{g(t)^2}{2}\text{div}(p_t\nabla\log p_t) = \frac{g(t)^2}{2}\text{div}(\nabla p_t)$, which matches the Fokker-Planck of the original SDE ✓.
+To verify: the Fokker-Planck equation for this ODE is $\partial_t p_t = \frac{g(t)^2}{2}\text{div}(p_t\nabla\log p_t) = \frac{g(t)^2}{2}\text{div}(\nabla p_t)$, which matches the Fokker-Planck of the original SDE.
 
 In practice, writing $g(t)^2 = 2\sigma_t\dot{\sigma}_t$ (where $\dot{\sigma}_t = d\sigma_t/dt$):
-$$dx_t = -\dot{\sigma}_t\sigma_t\nabla\log p_t(x_t)\,dt = \frac{\dot{\sigma}_t}{\sigma_t}(x_t - \mathbb{E}[x_0|x_t])\,dt$$
+$$dx_t = -\dot{\sigma}_t\sigma_t\nabla\log p_t(x_t) dt = \frac{\dot{\sigma}_t}{\sigma_t}(x_t - \mathbb{E}[x_0|x_t]) dt$$
 
 ### 6.3 Reverse Process: DDIM Sampler
 
@@ -277,12 +277,12 @@ To generate samples, run the probability flow ODE backward from $t = T$ (noise) 
 
 $$x_{t-\delta} = x_t + (\sigma_{t-\delta} - \sigma_t)\cdot\frac{\varepsilon_\theta(x_t, t)}{\sigma_t}\cdot\sigma_t = x_t + \frac{\sigma_{t-\delta}-\sigma_t}{\sigma_t}\cdot\varepsilon_\theta(x_t,t)\cdot\sigma_t$$
 
-More precisely, from the ODE $dx_t = \dot{\sigma}_t\sigma_t\nabla\log p_t(x_t)\,dt$ (going forward), the reverse step integrates:
-$$x_{t-\delta} = x_t + \nabla\log p_t(x_t)\int_{t-\delta}^{t}\dot{\sigma}_s\sigma_s\,ds = x_t + \nabla\log p_t(x_t)\cdot\frac{\sigma_t^2 - \sigma_{t-\delta}^2}{2}$$
+More precisely, from the ODE $dx_t = \dot{\sigma}_t\sigma_t\nabla\log p_t(x_t) dt$ (going forward), the reverse step integrates:
+$$x_{t-\delta} = x_t + \nabla\log p_t(x_t)\int_{t-\delta}^{t}\dot{\sigma}_s\sigma_s ds = x_t + \nabla\log p_t(x_t)\cdot\frac{\sigma_t^2 - \sigma_{t-\delta}^2}{2}$$
 
 In terms of $\varepsilon_\theta(x_t, t) = \sigma_t\nabla\log p_t(x_t)$:
 
-$$\boxed{x_{t-\delta} = x_t + (\sigma_{t-\delta}-\sigma_t)\,\varepsilon_\theta(x_t, t)}$$
+$$\boxed{x_{t-\delta} = x_t + (\sigma_{t-\delta}-\sigma_t) \varepsilon_\theta(x_t, t)}$$
 
 This is the **DDIM** update rule. Since it is deterministic (no added noise), we can take large steps ($\delta$ large) and need far fewer steps than stochastic DDPM sampling.
 
@@ -292,7 +292,7 @@ $$\bar{x}_{t-\delta} = \sqrt{\alpha_{t-\delta}}\left(\frac{\bar{x}_t}{\sqrt{\alp
 ### 6.4 Stochastic Sampler: Reverse SDE + Langevin
 
 For a stochastic reverse process, mix in Langevin noise with coefficient $c(r)$. Let $y_r = x_{T-r}$ (reverse time), $q_r = p_{T-r}$. The reverse SDE is:
-$$dy_r = \frac{1}{2}g(T-r)^2\nabla\log q_r(y_r)\,dr + \frac{1}{2}c(r)^2\nabla\log q_r(y_r)\,dr + c(r)\,dW_r$$
+$$dy_r = \frac{1}{2}g(T-r)^2\nabla\log q_r(y_r) dr + \frac{1}{2}c(r)^2\nabla\log q_r(y_r) dr + c(r) dW_r$$
 
 where $W_r$ is a fresh Brownian motion independent of the forward process. Setting $c(r) = 0$ recovers the deterministic reverse ODE.
 
@@ -301,39 +301,39 @@ where $W_r$ is a fresh Brownian motion independent of the forward process. Setti
 ## 7. Langevin Dynamics and Stationary Distribution
 
 Given a target distribution $\pi(x) \propto e^{-U(x)}$, **Langevin dynamics** are defined by the SDE:
-$$dx_t = \frac{1}{2}\nabla\log\pi(x_t)\,dt + dB_t$$
+$$dx_t = \frac{1}{2}\nabla\log\pi(x_t) dt + dB_t$$
 
 **Claim:** $\pi$ is the stationary distribution of this SDE.
 
 **Proof via Fokker-Planck.** Assume $q_t = \pi$. Then:
-$$\frac{\partial}{\partial t}q_t(x) = -\text{div}\left(q_t(x)\,\frac{1}{2}\nabla\log\pi(x)\right) + \frac{1}{2}\text{div}(\nabla q_t(x))$$
+$$\frac{\partial}{\partial t}q_t(x) = -\text{div}\left(q_t(x) \frac{1}{2}\nabla\log\pi(x)\right) + \frac{1}{2}\text{div}(\nabla q_t(x))$$
 
 $$= -\frac{1}{2}\text{div}(\pi(x)\nabla\log\pi(x)) + \frac{1}{2}\text{div}(\nabla\pi(x))$$
 
 Since $\pi\nabla\log\pi = \pi\cdot\frac{\nabla\pi}{\pi} = \nabla\pi$:
 
-$$= -\frac{1}{2}\text{div}(\nabla\pi(x)) + \frac{1}{2}\text{div}(\nabla\pi(x)) = 0 \checkmark$$
+$$= -\frac{1}{2}\text{div}(\nabla\pi(x)) + \frac{1}{2}\text{div}(\nabla\pi(x)) = 0$$
 
 The time derivative of $q_t$ is zero when $q_t = \pi$, confirming stationarity.
 
 ### 7.1 Time Reparameterisation
 
 A more general Langevin SDE uses a time-varying diffusion coefficient $c(t)$:
-$$dx_t = \frac{c(t)^2}{2}\nabla\log\pi(x_t)\,dt + c(t)\,dB_t$$
+$$dx_t = \frac{c(t)^2}{2}\nabla\log\pi(x_t) dt + c(t) dB_t$$
 
 The stationary distribution is still $\pi$ (by the same verification), but the speed of convergence is scaled by $c(t)^2$.
 
 Euler–Maruyama discretisation:
-$$x_{t+\delta} \approx x_t + \nabla\log\pi(x_t)\int_t^{t+\delta}\frac{c(s)^2}{2}\,ds + \sqrt{\int_t^{t+\delta}c(s)^2\,ds} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
+$$x_{t+\delta} \approx x_t + \nabla\log\pi(x_t)\int_t^{t+\delta}\frac{c(s)^2}{2} ds + \sqrt{\int_t^{t+\delta}c(s)^2 ds} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
 
 ### 7.2 Convergence Rate (Log-Sobolev Inequality)
 
 If $\pi \propto e^{-U(x)}$ satisfies the **$\rho$-Log-Sobolev Inequality (LSI)** — meaning for any smooth $f$ with $\mathbb{E}_\pi[f^2]=1$:
-$$\text{Ent}_\pi(f^2) := \mathbb{E}_\pi[f^2\log f^2] \leq \frac{2}{\rho}\mathbb{E}_\pi[\|\nabla f\|^2]$$
+$$\text{Ent}_\pi(f^2) := \mathbb{E}_\pi[f^2\log f^2] \leq \frac{2}{\rho}\mathbb{E}_\pi[\lVert \nabla f\rVert^2]$$
 
 then the Langevin dynamics converge exponentially fast:
 
-$$D_{\text{KL}}(q_t \| \pi) \leq e^{-2\rho t}\,D_{\text{KL}}(q_0 \| \pi)$$
+$$D_{\text{KL}}(q_t \,\|\, \pi) \leq e^{-2\rho t} D_{\text{KL}}(q_0 \,\|\, \pi)$$
 
 By Pinsker's inequality ($d_{\text{TV}}^2 \leq \frac{1}{2}D_{\text{KL}}$) and the Otto–Villani theorem ($W_2^2 \leq \frac{2}{\rho}D_{\text{KL}}$):
 $$d_{\text{TV}}(q_t, \pi) \leq Ce^{-\rho t}, \qquad W_2(q_t, \pi) \leq C'e^{-\rho t}$$
@@ -354,12 +354,12 @@ $$\nabla_x\log p_t(x \mid c) = \nabla_x\log p_t(x) + \nabla_x\log p_t(c \mid x)$
 This decomposes the conditional score into the unconditional score (from a pre-trained diffusion model) plus the classifier score $\nabla_x\log p_t(c \mid x)$ (from a classifier trained on noisy inputs).
 
 The corresponding ODE becomes:
-$$dx_t = -\frac{g(t)^2}{2}\Big[\nabla\log p_t(x_t) + \nabla\log p_t(c \mid x_t)\Big]\,dt$$
+$$dx_t = -\frac{g(t)^2}{2}\Big[\nabla\log p_t(x_t) + \nabla\log p_t(c \mid x_t)\Big] dt$$
 
 **Guidance scale.** Introduce a scale $\omega \geq 0$ to amplify or dampen the classifier signal:
-$$\nabla\log p_t(x \mid c;\,\omega) = \nabla\log p_t(x) + \omega\,\nabla\log p_t(c \mid x)$$
+$$\nabla\log p_t(x \mid c; \omega) = \nabla\log p_t(x) + \omega \nabla\log p_t(c \mid x)$$
 
-This corresponds to a tempered distribution $p_t(x \mid c;\,\omega) \propto p_t(x)\,p_t(c \mid x)^\omega$.
+This corresponds to a tempered distribution $p_t(x \mid c; \omega) \propto p_t(x) p_t(c \mid x)^\omega$.
 
 | $\omega$ | Effect |
 |----------|--------|
@@ -376,14 +376,14 @@ This corresponds to a tempered distribution $p_t(x \mid c;\,\omega) \propto p_t(
 $$\nabla\log p_t(c \mid x_t) = \nabla\log p_t(x_t \mid c) - \nabla\log p_t(x_t)$$
 
 Substituting into the guided score:
-$$\nabla\log p_t(x \mid c;\,\omega) = \nabla\log p_t(x) + \omega\Big[\nabla\log p_t(x \mid c) - \nabla\log p_t(x)\Big]$$
+$$\nabla\log p_t(x \mid c; \omega) = \nabla\log p_t(x) + \omega\Big[\nabla\log p_t(x \mid c) - \nabla\log p_t(x)\Big]$$
 
-$$= (1-\omega)\,\nabla\log p_t(x) + \omega\,\nabla\log p_t(x \mid c)$$
+$$= (1-\omega) \nabla\log p_t(x) + \omega \nabla\log p_t(x \mid c)$$
 
 **Training:** Train a single network $\varepsilon_\theta(x_t, t, c)$ that handles both conditional and unconditional generation. During training, randomly drop the condition (replace $c$ with a null token $\varnothing$) with some probability (typically 10–20%). The same network then approximates both $\varepsilon_\theta(x_t,t,c)$ and $\varepsilon_\theta(x_t,t,\varnothing) \approx$ unconditional noise.
 
 **Inference:** Combine the two outputs with scale $\omega$:
-$$\tilde{\varepsilon}_\theta(x_t, t, c) = (1-\omega)\,\varepsilon_\theta(x_t, t, \varnothing) + \omega\,\varepsilon_\theta(x_t, t, c)$$
+$$\tilde{\varepsilon}_\theta(x_t, t, c) = (1-\omega) \varepsilon_\theta(x_t, t, \varnothing) + \omega \varepsilon_\theta(x_t, t, c)$$
 
 In practice, $\omega \in [1.5, 7.5]$ gives a good trade-off between sample quality and diversity. CFG does not require a separate classifier and scales naturally to open-domain conditioning.
 
@@ -400,24 +400,24 @@ Score-based diffusion models train by matching the gradient of a density — an 
 Let $p_0$ (data) and $p_1 = \mathcal{N}(0, I)$ (noise) be two distributions. Define a linear interpolation between samples $x_0 \sim p_0$ and $x_1 \sim p_1$:
 $$x_t = (1-t)x_0 + tx_1, \quad t \in [0,1]$$
 
-Let $p_t$ be the density of $x_t$. We want a vector field $v_t(x)$ such that the ODE $dx_t = v_t(x_t)\,dt$ has marginals $p_t$ — i.e., starting from $p_0$ and following $v_t$ for time 1 arrives at $p_1$.
+Let $p_t$ be the density of $x_t$. We want a vector field $v_t(x)$ such that the ODE $dx_t = v_t(x_t) dt$ has marginals $p_t$ — i.e., starting from $p_0$ and following $v_t$ for time 1 arrives at $p_1$.
 
 By the **continuity equation** (Fokker-Planck without diffusion):
-$$\frac{\partial}{\partial t}p_t(x) = -\text{div}(p_t(x)\,v_t(x))$$
+$$\frac{\partial}{\partial t}p_t(x) = -\text{div}(p_t(x) v_t(x))$$
 
 ### 9.3 Computing the Marginal Velocity
 
 For any smooth test function $f$:
 
-$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\int p_0(x_0)p_1(x_1)\,\langle\nabla f(x_0 + t(x_1-x_0)),\, x_1-x_0\rangle\,dx_0\,dx_1$$
+$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\int p_0(x_0)p_1(x_1) \langle\nabla f(x_0 + t(x_1-x_0)),  x_1-x_0\rangle dx_0 dx_1$$
 
 (differentiating through the definition $x_t = (1-t)x_0 + tx_1$). After a change of variables $x_1 \to x_t = (1-t)x_0 + tx_1$ (Jacobian $t^{-d}$), the density of $x_t$ is:
-$$p_t(x) = \int p_0(x_0)\,p_1\left(\frac{x-(1-t)x_0}{t}\right)t^{-d}\,dx_0$$
+$$p_t(x) = \int p_0(x_0) p_1\left(\frac{x-(1-t)x_0}{t}\right)t^{-d} dx_0$$
 
 Substituting and simplifying the expectation:
-$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\nabla f(x_t)\cdot p_t(x_t)\,\frac{x_t - \mathbb{E}[x_0 \mid x_t]}{t}\,dx_t$$
+$$\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\nabla f(x_t)\cdot p_t(x_t) \frac{x_t - \mathbb{E}[x_0 \mid x_t]}{t} dx_t$$
 
-Comparing with $\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\nabla f(x)\,p_t(x)\,v_t(x)\,dx$ (from the continuity equation), we identify:
+Comparing with $\frac{d}{dt}\mathbb{E}[f(x_t)] = \int\nabla f(x) p_t(x) v_t(x) dx$ (from the continuity equation), we identify:
 
 $$\boxed{v_t(x) = \frac{x - \mathbb{E}[x_0 \mid x_t = x]}{t}}$$
 
@@ -427,7 +427,7 @@ $$\boxed{v_t(x) = \frac{x - \mathbb{E}[x_0 \mid x_t = x]}{t}}$$
 
 The conditional velocity given $(x_0, x_1)$ is simply $\dot{x}_t = x_1 - x_0$ (constant along each trajectory). The **flow matching loss** regresses the network $u_t(x;\theta)$ toward this conditional target:
 
-$$L(\theta) = \mathbb{E}_{x_0,\,x_1,\,t}\left[\left\|u_t(x_t;\,\theta) - (x_1 - x_0)\right\|_2^2\right], \quad x_t = (1-t)x_0 + tx_1$$
+$$L(\theta) = \mathbb{E}_{x_0, x_1, t}\left[\left\lVert u_t(x_t; \theta) - (x_1 - x_0)\right\rVert_2^2\right], \quad x_t = (1-t)x_0 + tx_1$$
 
 This is **simulation-free**: no ODE integration is required during training — just sample $t, x_0, x_1$, form $x_t$, and evaluate the squared error.
 
@@ -444,7 +444,7 @@ Substituting into $v_t(x) = \frac{x-\mathbb{E}[x_0|x_t=x]}{t}$:
 $$v_t(x) = \frac{x}{t} - \frac{1}{t}\cdot\frac{x+t^2\nabla\log p_t(x)}{1-t} = \frac{x(1-t)-x-t^2\nabla\log p_t(x)}{t(1-t)} = -\frac{x}{1-t} - \frac{t}{1-t}\nabla\log p_t(x)$$
 
 For comparison, under the VE path $y_s = y_0 + s\epsilon$ (noise schedule $\sigma=s$), the probability flow ODE is:
-$$dy_s = \frac{y_s - \mathbb{E}[y_0 \mid y_s]}{s}\,ds = -s\nabla\log q_s(y_s)\,ds$$
+$$dy_s = \frac{y_s - \mathbb{E}[y_0 \mid y_s]}{s} ds = -s\nabla\log q_s(y_s) ds$$
 
 The two formulations are related by the time-variance mapping $\sigma = \frac{t}{1-t}$ (i.e., $t = \frac{\sigma}{1+\sigma}$). Both describe the same physics — moving mass from data to noise — but with different time parameterisations. The **velocity field and the score function are two sides of the same coin**, connected by the denoising expectation $\mathbb{E}[x_0 \mid x_t]$.
 

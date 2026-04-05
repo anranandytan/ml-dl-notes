@@ -96,7 +96,7 @@ The state $z_t$ and observation $x_t$ are jointly Gaussian given $x_{1:t-1}$:
 $$\begin{pmatrix}z_t \\ x_t\end{pmatrix}
 \mid x_{1:t-1}
 \sim
-\mathcal{N}\!\left(
+\mathcal{N}\left(
 \begin{pmatrix}\mu_{t}^{\ast} \\ C\mu_{t}^{\ast}+D\end{pmatrix},\quad
 \begin{pmatrix}
 \Sigma_{t}^{\ast} & \Sigma_{t}^{\ast}C^{\top} \\

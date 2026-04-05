@@ -156,7 +156,7 @@ $$= \exp\left(-\frac{1}{2}x^\top\Lambda x + h^\top x\right)$$
 
 Decomposing by pairs of variables:
 
-$$= \exp\Bigl( \sum_i \bigl(-\tfrac{1}{2}\lambda_{ii}x_i^2+h_ix_i\bigr) + \sum_{i<j} \bigl(-\lambda_{ij}x_ix_j\bigr) \Bigr)$$
+$$= \exp\left(\sum_i \left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right) + \sum_{i<j}\left(-\lambda_{ij}x_ix_j\right)\right)$$
 
 This gives us:
 - **Node potential** for $x_i$: $\psi_i(x_i)\propto\exp\left(-\frac{1}{2}\lambda_{ii}x_i^2+h_ix_i\right)$

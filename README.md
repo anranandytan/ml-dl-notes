@@ -1,133 +1,74 @@
 # Machine Learning & Deep Learning Notes
 
-Personal course notes covering probabilistic machine learning, deep generative models, and classical machine learning. All derivations are step-by-step, with historical context and references to primary sources.
+Personal course notes on machine learning and probabilistic deep learning. Files are numbered by knowledge dependency — each topic builds on those before it. All derivations are step-by-step with references to primary sources.
 
 ---
 
 ## Contents
 
-### Part I — Deep Learning & Probabilistic Models
-
-#### I-A: Bayesian Methods and Inference
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [DL_01_BayesianRegression.md](DL_01_BayesianRegression.md) | Bayesian Regression | MAP, conjugate prior, posterior, marginal likelihood, kernel trick |
-| [DL_02_GaussianProcess.md](DL_02_GaussianProcess.md) | Gaussian Process | Weight-space view, GP regression, Mercer kernel, marginal likelihood |
-| [DL_03_GaussianGraphicalModels.md](DL_03_GaussianGraphicalModels.md) | Gaussian Graphical Models | Precision matrix, conditional independence, BN, MRF, graphical Lasso |
-| [DL_04_EM.md](DL_04_EM.md) | EM Algorithm | ELBO, E-step, M-step, monotone convergence, Fisher's missing information |
-| [DL_05_SGVI.md](DL_05_SGVI.md) | Variational Inference | CAVI, score function estimator, control variates, reparameterisation trick |
-| [DL_06_MCMC.md](DL_06_MCMC.md) | MCMC | Metropolis-Hastings, Gibbs sampling, detailed balance, HMC, NUTS |
-
-#### I-B: Sequential Models
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [DL_07_HMM.md](DL_07_HMM.md) | Hidden Markov Model | Forward-backward, Baum-Welch, Viterbi, log-space scaling, multiple sequences |
-| [DL_08_KalmanFilter.md](DL_08_KalmanFilter.md) | Kalman Filter | Linear Gaussian SSM, predict-update, Kalman gain, RTS smoother |
-| [DL_09_ParticleFilter.md](DL_09_ParticleFilter.md) | Particle Filter | SIS, bootstrap filter, ESS, resampling, auxiliary particle filter |
-
-#### I-C: Generative Models
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [DL_10_GenerativeModels.md](DL_10_GenerativeModels.md) | Generative Models (Overview) | Taxonomy, explicit vs. implicit density, reparameterisation trick |
-| [DL_11_RBM.md](DL_11_RBM.md) | Boltzmann Machine & RBM | Energy function, conditional independence, CD, persistent CD, DBN |
-| [DL_12_VAE.md](DL_12_VAE.md) | VAE | ELBO, encoder/decoder, reparameterisation, posterior collapse, β-VAE |
-| [DL_13_GAN.md](DL_13_GAN.md) | GAN | Minimax game, optimal discriminator, JSD, mode collapse, WGAN |
-| [DL_14_Diffusion.md](DL_14_Diffusion.md) | Diffusion Models | Score matching, VE/VP-SDE, DDPM, DDIM, classifier-free guidance |
-
-#### I-D: Structured Prediction & Graph Methods
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [DL_15_CRF.md](DL_15_CRF.md) | Conditional Random Field | Label bias, log-linear model, forward-backward, Viterbi, vs. HMM |
-| [DL_16_SpectralClustering.md](DL_16_SpectralClustering.md) | Spectral Clustering | Graph Laplacian, normalised cut, random-walk Laplacian, eigengap heuristic |
+| # | File | Topic | Key Concepts |
+|---|------|-------|--------------|
+| 01 | [01_Fundamentals.md](01_Fundamentals.md) | ML Fundamentals | Problem taxonomy, loss functions, bias-variance, ROC/PR curves, cross-validation |
+| 02 | [02_LearningTheory.md](02_LearningTheory.md) | Statistical Learning Theory | Hoeffding, Ockham bound, PAC learning, VC dimension, growth function |
+| 03 | [03_Regression.md](03_Regression.md) | Regression | OLS, Ridge, Lasso, elastic net, effective degrees of freedom |
+| 04 | [04_BayesianRegression.md](04_BayesianRegression.md) | Bayesian Regression | Conjugate prior, posterior, marginal likelihood, kernel trick |
+| 05 | [05_LinearMethods.md](05_LinearMethods.md) | Logistic Regression, Convex Opt., SVM | MLE, KKT, strong duality, support vectors, kernel SVM, SMO |
+| 06 | [06_Kernels.md](06_Kernels.md) | Kernel Methods | RKHS, Mercer's theorem, representer theorem, kernel ridge regression |
+| 07 | [07_GaussianProcess.md](07_GaussianProcess.md) | Gaussian Process | Weight-space vs. function-space, GP regression, marginal likelihood |
+| 08 | [08_DecisionTrees.md](08_DecisionTrees.md) | Decision Trees | Entropy/Gini, C4.5, CART, GOSDT, branch-and-bound |
+| 09 | [09_Ensembles.md](09_Ensembles.md) | Ensembles, Boosting & GAMs | Random forest, AdaBoost, gradient boosting, MR/CMR/SHAP/MCR |
+| 10 | [10_NeuralNetworks.md](10_NeuralNetworks.md) | Neural Networks | Backprop, batch norm, Adam, ResNet, dropout, contrastive learning |
+| 11 | [11_GraphicalModels.md](11_GraphicalModels.md) | Gaussian Graphical Models | Precision matrix, conditional independence, MRF, graphical Lasso |
+| 12 | [12_EM.md](12_EM.md) | EM Algorithm | ELBO, E/M-step, monotone convergence, Fisher's missing information |
+| 13 | [13_VariationalInference.md](13_VariationalInference.md) | Variational Inference | CAVI, score function estimator, control variates, reparameterisation |
+| 14 | [14_MCMC.md](14_MCMC.md) | Markov Chain Monte Carlo | Metropolis-Hastings, Gibbs, detailed balance, HMC, NUTS |
+| 15 | [15_HMM.md](15_HMM.md) | Hidden Markov Model | Forward-backward, Baum-Welch, Viterbi, log-space scaling |
+| 16 | [16_KalmanFilter.md](16_KalmanFilter.md) | Kalman Filter | Linear Gaussian SSM, predict-update, Kalman gain, RTS smoother |
+| 17 | [17_ParticleFilter.md](17_ParticleFilter.md) | Particle Filter | SIS, bootstrap filter, ESS, resampling |
+| 18 | [18_CRF.md](18_CRF.md) | Conditional Random Field | Log-linear model, forward-backward, Viterbi, vs. HMM |
+| 19 | [19_GenerativeModels.md](19_GenerativeModels.md) | Generative Models (Overview) | Taxonomy: explicit/implicit, directed/undirected, reparameterisation |
+| 20 | [20_RBM.md](20_RBM.md) | Boltzmann Machine & RBM | Energy function, conditional independence, contrastive divergence |
+| 21 | [21_VAE.md](21_VAE.md) | Variational Autoencoder | ELBO, encoder/decoder, reparameterisation, posterior collapse |
+| 22 | [22_GAN.md](22_GAN.md) | GAN | Minimax game, optimal discriminator, Jensen-Shannon divergence, WGAN |
+| 23 | [23_Diffusion.md](23_Diffusion.md) | Diffusion Models | Score matching, VE/VP-SDE, DDPM, DDIM, classifier-free guidance |
+| 24 | [24_Clustering.md](24_Clustering.md) | Clustering | K-means, K-means++, DBSCAN, hierarchical agglomerative |
+| 25 | [25_SpectralClustering.md](25_SpectralClustering.md) | Spectral Clustering | Graph Laplacian, normalised cut, random-walk Laplacian, eigengap |
+| 26 | [26_Transformers.md](26_Transformers.md) | Transformers, RLHF & Ethics | Self-attention, positional encoding, RLHF, DPO |
 
 ---
 
-### Part II — Classical Machine Learning
+## Dependency Map
 
-#### II-A: Foundations
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_01_Fundamentals.md](ML_01_Fundamentals.md) | Fundamentals | Problem taxonomy, bias-variance tradeoff, loss functions, ROC/PR curves, CV |
-
-#### II-B: Tree Methods and Ensembles
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_02_DecisionTrees.md](ML_02_DecisionTrees.md) | Decision Trees | Entropy/Gini, C4.5, CART, GOSDT, branch-and-bound |
-| [ML_03_Ensembles.md](ML_03_Ensembles.md) | Ensembles, Boosting & GAMs | Random forest, MR/CMR/SHAP/MCR, AdaBoost, gradient boosting, GAM/FastSparse |
-
-#### II-C: Neural Networks
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_04_NeuralNetworks.md](ML_04_NeuralNetworks.md) | Neural Networks | Backprop, batch norm, Adam, ResNet, dropout, contrastive learning |
-
-#### II-D: Linear Methods and Optimisation
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_05_LinearMethods.md](ML_05_LinearMethods.md) | Logistic Regression, Convex Opt., SVM | Logit, MLE, KKT, kernel SVM, SMO |
-
-#### II-E: Kernel Methods
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_06_Kernels.md](ML_06_Kernels.md) | Kernel Methods | RKHS, Mercer, representer theorem, kernel ridge regression |
-| [ML_07_Regression.md](ML_07_Regression.md) | Regression | OLS, Ridge, Lasso, elastic net, effective degrees of freedom |
-
-#### II-F: Learning Theory
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_08_LearningTheory.md](ML_08_LearningTheory.md) | Statistical Learning Theory | Hoeffding, Ockham bound, PAC learning, VC dimension |
-
-#### II-G: Unsupervised Methods
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_09_Clustering.md](ML_09_Clustering.md) | Clustering | K-means, K-means++, DBSCAN, hierarchical agglomerative |
-
-#### II-H: Modern Methods
-
-| File | Topic | Key Concepts |
-|------|-------|--------------|
-| [ML_10_Transformers.md](ML_10_Transformers.md) | Transformers, RLHF & Ethics | Self-attention, positional encoding, RLHF, DPO, AI ethics |
-
----
-
-## Recommended Reading Order
-
-**Probabilistic ML (Part I)**
 ```
-DL_01 → DL_02 → DL_04 → DL_05 → DL_06     Bayesian chain
-DL_07 → DL_08 → DL_09                       Sequential models
-DL_10 → DL_11 → DL_12 → DL_13 → DL_14     Generative models
-DL_03 → DL_15 → DL_16                       Graphical models
-```
+01 Fundamentals ──► 02 Learning Theory          core framework
+         │
+         ▼
+03 Regression ──────────────────────────────────────────────┐
+         │                                                   │
+         ▼                                                   ▼
+04 Bayesian Regression ──► 07 Gaussian Process    (Bayesian view of 03 and 06)
+         │
+         ▼
+05 Linear Methods ──► 06 Kernels ──► 07 Gaussian Process
 
-**Classical ML (Part II)**
-```
-ML_01 → ML_02 → ML_03                       Supervised learning
-ML_05 → ML_06 → ML_07                       Linear and kernel methods
-ML_04 → ML_10                               Neural networks
-ML_08                                        Theory
-ML_09 + DL_16                               Clustering
-```
+08 Decision Trees ──► 09 Ensembles
+                                       └──► 10 Neural Networks ──► 26 Transformers
 
-**Cross-Part Connections**
-```
-DL_01 ↔ ML_07    MAP estimation = regularisation
-DL_02 ↔ ML_06    Kernel trick / RKHS
-DL_04 ↔ DL_12    EM → variational EM → VAE
-DL_05 ↔ DL_12    SGVI = VAE training
-DL_13 ↔ ML_04    Adversarial training
-DL_16 ↔ ML_09    Spectral vs. compactness clustering
-DL_15 ↔ DL_07    CRF generalises HMM (global normalisation)
+11 Graphical Models
+         │
+         ├──► 12 EM ──┬──► 13 Variational Inference ──► 21 VAE
+         │            └──► 14 MCMC
+         │
+         └──► 15 HMM ──► 16 Kalman Filter ──► 17 Particle Filter
+                    └──► 18 CRF
+
+19 Generative Models (Overview)
+         ├──► 20 RBM
+         ├──► 21 VAE       (needs 12, 13)
+         ├──► 22 GAN       (needs 10)
+         └──► 23 Diffusion (needs 13)
+
+24 Clustering ──► 25 Spectral Clustering
 ```
 
 ---
@@ -150,11 +91,11 @@ DL_15 ↔ DL_07    CRF generalises HMM (global normalisation)
 | $\alpha_t(i)$, $\beta_t(i)$ | HMM forward/backward variables |
 | $K_t$ | Kalman gain |
 | $\hat{w}_t^{(i)}$ | Normalised particle weight |
-| $Q$, $K$, $V$ | Transformer Query/Key/Value matrices |
+| $Q$, $K$, $V$ | Transformer Query/Key/Value |
 
 ---
 
-## Core References
+## Core Textbooks
 
 - **Bishop, C. M.** (2006). *Pattern Recognition and Machine Learning*. Springer.
 - **Murphy, K. P.** (2012). *Machine Learning: A Probabilistic Perspective*. MIT Press.

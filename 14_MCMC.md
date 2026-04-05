@@ -93,7 +93,7 @@ At each iteration $t$:
 1. Sample a candidate $\theta^{\ast} \sim q(\theta^{\ast} \mid \theta^{(t)})$.
 2. Compute the **acceptance ratio**:
 
-$$\alpha = \min\!\left(1, \frac{\tilde{\pi}(\theta^{\ast}) q(\theta^{(t)} \mid \theta^{\ast})}{\tilde{\pi}(\theta^{(t)}) q(\theta^{\ast} \mid \theta^{(t)})}\right)$$
+$$\alpha = \min\left(1, \frac{\tilde{\pi}(\theta^{\ast}) q(\theta^{(t)} \mid \theta^{\ast})}{\tilde{\pi}(\theta^{(t)}) q(\theta^{\ast} \mid \theta^{(t)})}\right)$$
 
 3. Accept: set $\theta^{(t+1)} = \theta^{\ast}$ with probability $\alpha$; otherwise set $\theta^{(t+1)} = \theta^{(t)}$.
 
@@ -111,7 +111,7 @@ $$\pi(\theta)  q(\theta' \mid \theta) \alpha(\theta, \theta') = \pi(\theta)  q(\
 
 **Case 1:** $\pi(\theta')q(\theta\mid\theta') \geq \pi(\theta)q(\theta'\mid\theta)$. Then $\alpha(\theta,\theta')=1$ and:
 
-$$\pi(\theta) q(\theta'\mid\theta)\cdot 1 = \pi(\theta') q(\theta\mid\theta')\cdot\frac{\pi(\theta) q(\theta'\mid\theta)}{\pi(\theta') q(\theta\mid\theta')} = \pi(\theta') q(\theta\mid\theta') \alpha(\theta',\theta) \checkmark$$
+$$\pi(\theta) q(\theta'\mid\theta)\cdot 1 = \pi(\theta') q(\theta\mid\theta')\cdot\frac{\pi(\theta) q(\theta'\mid\theta)}{\pi(\theta') q(\theta\mid\theta')} = \pi(\theta') q(\theta\mid\theta') \alpha(\theta',\theta) $$
 
 **Case 2:** $\pi(\theta')q(\theta\mid\theta') < \pi(\theta)q(\theta'\mid\theta)$. Symmetric by swapping the roles of $\theta$ and $\theta'$.
 
@@ -127,7 +127,7 @@ $$\pi(\theta) q(\theta'\mid\theta)\cdot 1 = \pi(\theta') q(\theta\mid\theta')\cd
 
 $q(\theta' \mid \theta) = q(\theta')$ (proposal does not depend on current state). Then:
 
-$$\alpha = \min\!\left(1,  \frac{\pi(\theta^{\ast})q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^{\ast})}\right) = \min\!\left(1,  \frac{w(\theta^{\ast})}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
+$$\alpha = \min\left(1,  \frac{\pi(\theta^{\ast})q(\theta^{(t)})}{\pi(\theta^{(t)})q(\theta^{\ast})}\right) = \min\left(1,  \frac{w(\theta^{\ast})}{w(\theta^{(t)})}\right), \qquad w(\theta) = \frac{\pi(\theta)}{q(\theta)}$$
 
 This is the importance weight ratio. Works well when $q$ is a good approximation to $\pi$; breaks down when $\pi/q$ has heavy tails.
 
